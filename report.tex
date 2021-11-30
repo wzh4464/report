@@ -1,0 +1,33 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usefonttheme[onlymath]{serif}
+\usetheme{Berlin}
+\title{Report 22th June}
+\author{WU Zihan}
+\subtitle{Detection of Ellipse}
+\begin{document}
+    \maketitle
+    \begin{frame}
+        \frametitle{Two major ways}
+        
+        \begin{columns}
+            \begin{column}{.5\linewidth}
+                Hough Transform
+                \begin{itemize}
+                    \item Slow
+                    \item Sacrifice accuracy for efficiency
+                \end{itemize}
+            \end{column}
+            \begin{column}{.5\linewidth}
+                Edge Following
+                \begin{itemize}
+                    \item Derived from Arc-support LS 
+                    \item use greyscale image (gradient)
+                    \item Greedy for efficiency
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    
+    \end{frame}
+
+\end{document}
