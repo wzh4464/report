@@ -7,9 +7,33 @@
 \subtitle{Detection of Ellipse}
 \begin{document}
     \maketitle
+
+    \begin{frame}
+        \frametitle{Project Target}
+    
+        To detect ellipses in the images/videos.
+        \begin{columns}
+            \begin{column}{.5\linewidth}
+                \begin{figure}
+                    \includegraphics[width=0.8\linewidth]{pic/source.jpg}
+                    \caption{Input}
+                \end{figure}
+            \end{column}
+            \begin{column}{.5\linewidth}
+                \begin{figure}
+                    \includegraphics[width=0.8\linewidth]{pic/ideaoutput.jpg}
+                    \caption{Output}
+                \end{figure}
+            \end{column}
+        \end{columns}
+    
+    \end{frame}
+
     \begin{frame}
         \frametitle{Two major ways}
         
+        
+
         \begin{columns}
             \begin{column}{.5\linewidth}
                 Hough Transform
@@ -33,7 +57,13 @@
     \begin{frame}
         \frametitle{Methods}
     
-        
+        \begin{itemize}
+            \item Detect the arc segements
+            \item Form to acrs 
+            \item Predict the 5 parameters for ellipses
+            \item Co-cluster
+            \item Validation
+        \end{itemize}
     
     \end{frame}
 
