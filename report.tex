@@ -179,39 +179,60 @@
                     \caption{Arc Segment Example}
                 \end{figure}
             \end{column}
-
-            \begin{column}
-                {0.6\linewidth}
-                $$x^2 + bxy +cy^2+dx+ey+f=0;$$
-                $$\begin{pmatrix}
-                    x & y & 1
-                \end{pmatrix}
-                \begin{pmatrix}
-                    1 & \frac{b}{2} & \frac{d}{2} \\
-                    \frac{b}{2} & c & \frac{e}{2} \\
-                    \frac{d}{2} & \frac{e}{2} & f
-                \end{pmatrix}
-                \begin{pmatrix}
-                    x\\y\\1
-                \end{pmatrix} = O_{3\times3};$$
-                \begin{align*}
-                    \begin{pmatrix}
-                        x_1 & y_1 & 1 \\
-                        \vdots & \vdots & \vdots \\
-                        x_n & y_n & 1
+            
+            \begin{column}{0.6\linewidth}
+                \begin{onlyenv}<1>
+                    $$x^2 + bxy +cy^2+dx+ey+f=0;$$
+                    $$\begin{pmatrix}
+                        x & y & 1
                     \end{pmatrix}
                     \begin{pmatrix}
-                        1 & \cfrac{b}{2} & \cfrac{d}{2} \\
-                        \cfrac{b}{2} & c & \cfrac{e}{2} \\
-                        \cfrac{d}{2} & \cfrac{e}{2} & f
+                        1 & \frac{b}{2} & \frac{d}{2} \\
+                        \frac{b}{2} & c & \frac{e}{2} \\
+                        \frac{d}{2} & \frac{e}{2} & f
                     \end{pmatrix}
                     \begin{pmatrix}
-                        x_1 & \dots & x_n\\y_1 & \dots & y_n\\1 & \dots &1
-                    \end{pmatrix} = O_{3\times3}.
-                \end{align*}
+                        x\\y\\1
+                    \end{pmatrix} = O_{3\times3};$$
+                    \begin{align*}
+                        \begin{pmatrix}
+                            x_1 & y_1 & 1 \\
+                            \vdots & \vdots & \vdots \\
+                            x_n & y_n & 1
+                        \end{pmatrix}
+                        \begin{pmatrix}
+                            1 & \cfrac{b}{2} & \cfrac{d}{2} \\
+                            \cfrac{b}{2} & c & \cfrac{e}{2} \\
+                            \cfrac{d}{2} & \cfrac{e}{2} & f
+                        \end{pmatrix}
+                        \begin{pmatrix}
+                            x_1 & \dots & x_n\\y_1 & \dots & y_n\\1 & \dots &1
+                        \end{pmatrix} = O_{3\times3}.
+                    \end{align*}
+                \end{onlyenv}
+                \begin{onlyenv}<2>
+                    We can also alter it into:
+                    \[\mathbf{D} \mathbf{\alpha} = \mathbf{0},\]
+                    where \[
+                        \mathbf{D} =
+                        \begin{pmatrix}
+                            _{1}^{2} & x_{1} y_{1} & y_{1}^{2} & x_{1} & y_{1} & 1 \\
+                            x_{2}^{2} & x_{2} y_{2} & y_{2}^{2} & x_{2} & y_{2} & 1 \\
+                            \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+                            x_{n}^{2} & x_{n} y_{n} & y_{n}{ }^{2} & x_{n} & y_{n} & 1
+                        \end{pmatrix};
+                    \]
+                    \[
+                        \mathbf{\alpha}^{\mathbf{T}} = \begin{pmatrix}
+                            1 & b & c & d &e & f
+                        \end{pmatrix}
+                    \]
+                \end{onlyenv}
+                
             \end{column}
         \end{columns}
-    
+        
     \end{frame}
+    
 
 \end{document}
