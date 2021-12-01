@@ -13,7 +13,6 @@
 \subtitle{Detection of Ellipse}
 \begin{document}
     \maketitle
-
     \begin{frame}
         \frametitle{Project Target}
     
@@ -166,8 +165,52 @@
                 \end{figure}
             \end{column}
         \end{columns}
-        
-        
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Arc Segments' Result}
+    
+        \begin{columns}
+            \begin{column}
+                {0.3\linewidth}
+                \begin{figure}
+                    \includegraphics[width=\linewidth]{pic/arc.png}
+                    \caption{Arc Segment Example}
+                \end{figure}
+            \end{column}
+
+            \begin{column}
+                {0.6\linewidth}
+                $$x^2 + bxy +cy^2+dx+ey+f=0;$$
+                $$\begin{pmatrix}
+                    x & y & 1
+                \end{pmatrix}
+                \begin{pmatrix}
+                    1 & \frac{b}{2} & \frac{d}{2} \\
+                    \frac{b}{2} & c & \frac{e}{2} \\
+                    \frac{d}{2} & \frac{e}{2} & f
+                \end{pmatrix}
+                \begin{pmatrix}
+                    x\\y\\1
+                \end{pmatrix} = O_{3\times3};$$
+                \begin{align*}
+                    \begin{pmatrix}
+                        x_1 & y_1 & 1 \\
+                        \vdots & \vdots & \vdots \\
+                        x_n & y_n & 1
+                    \end{pmatrix}
+                    \begin{pmatrix}
+                        1 & \cfrac{b}{2} & \cfrac{d}{2} \\
+                        \cfrac{b}{2} & c & \cfrac{e}{2} \\
+                        \cfrac{d}{2} & \cfrac{e}{2} & f
+                    \end{pmatrix}
+                    \begin{pmatrix}
+                        x_1 & \dots & x_n\\y_1 & \dots & y_n\\1 & \dots &1
+                    \end{pmatrix} = O_{3\times3}.
+                \end{align*}
+            \end{column}
+        \end{columns}
     
     \end{frame}
 
