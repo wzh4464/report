@@ -2,6 +2,8 @@
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage{tikz,tkz-euclide}
+\usepackage{subfigure}
+\usepackage{parskip}
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{calc,patterns}
 \usefonttheme[onlymath]{serif}
@@ -99,12 +101,73 @@
         \frametitle{Methods}
     
         \begin{itemize}
-            \item Detect the arc segements
-            \item Form to acrs 
-            \item Predict the 5 parameters for ellipses
-            \item Co-cluster
-            \item Validation
+            \item To detect the arc segements;
+            \item (To form arcs;)
+            \item To predict the 5 parameters for ellipses;
+            \item Co-clustering;
+            \item Validation.
         \end{itemize}
+    
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{LSD: A Fast Line Segment Detector with a False Detection Control}
+        \framesubtitle{IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE}
+        \begin{columns}
+            \begin{column}{.5\linewidth}
+                \begin{itemize}
+                    \item Finding line-support region (region growing algorithm)
+                    \item Rectangular Approximation of Regions
+                    \item Validation
+                \end{itemize}
+                \begin{figure}
+                    \includegraphics[width=\linewidth]{pic/region.png}
+                    \caption{Region generation}
+                \end{figure}
+            \end{column}
+            \begin{column}{.5\linewidth}
+                
+                \begin{figure}
+                    \includegraphics[width=.5\linewidth]{pic/rect.png}
+                    \caption{Rectangular Approximation}
+                \end{figure}
+            \end{column}
+        \end{columns}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Arc segments' result}
+    
+        \begin{columns}
+            \begin{column}{.5\linewidth}
+                \begin{figure}[htbp]
+                    \centering
+                    \subfigure{
+                        \includegraphics[width=0.7\linewidth]{pic/666.jpg}
+                    }
+                    \quad
+                    \subfigure{
+                        \includegraphics[width=0.7\linewidth]{pic/hockey.jpg}
+                    }
+                    \caption{Source Images}
+                \end{figure}
+            \end{column}
+            \begin{column}{.5\linewidth}
+                \begin{figure}[htbp]
+                    \centering
+                    \subfigure{
+                        \includegraphics[width=0.7\linewidth]{pic/arc_666.pdf}
+                    }
+                    \quad
+                    \subfigure{
+                        \includegraphics[width=0.7\linewidth]{pic/arc_hockey.jpg}
+                    }
+                    \caption{Arc Detection Results}
+                \end{figure}
+            \end{column}
+        \end{columns}
+        
+        
     
     \end{frame}
 
