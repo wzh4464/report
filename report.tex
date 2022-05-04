@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage{tikz,tkz-euclide}
@@ -7,11 +7,13 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{calc,patterns}
 \usefonttheme[onlymath]{serif}
-\usetheme{Berlin}
-\title{Detection of Ellipses}
+% \usetheme{Berlin}
+\title{Detection of 3D circles / Ellipses in a photo}
 \author{WU Zihan}
-% \subtitle{Detection of Ellipse}
+\subtitle{Supervisor: Prof. YAN Hong}
 \begin{document}
+\setbeamertemplate{background}
+{\includegraphics[width=\paperwidth]{EE8001 Presentation Template.pdf}} 
     \maketitle
     \begin{frame}
         \frametitle{Catalogue}
@@ -40,7 +42,7 @@
     \end{frame}
     \section{Background}
     \subsection{Definition}
-    \begin{frame}
+    \begin{frame}[allowframebreaks]
         \frametitle{Ellipse}
 
         To describe an ellispe we need 5 parameters:
@@ -49,7 +51,7 @@
 
         Or in another way, we need the coordinates of ellipse's center ($x_0, y_0$), semi-major/semi-minor axes ($a,b$),
         and a rotation angle ($\varphi$).
-        \begin{center}
+        \begin{figure}
             \begin{tikzpicture}
                 \tikzstyle{every node}=[font=\tiny]
                 \draw [rotate=30] (1,1) ellipse (2 and 1);
@@ -72,13 +74,14 @@
                 % \draw[->,rotate = 60] (0,0)--(0,3) node[above]{$y''$};
                 % \draw [-,rotate=30] (1,1)--(-1,1);
             \end{tikzpicture}
-        \end{center}
+            \caption{Parameters for the ellipse}
+        \end{figure}
         
 
     \end{frame}
     \subsection{Related Work}
     \begin{frame}
-        \frametitle{Two major ways}
+        \frametitle{Two practical ways}
         
         
 
@@ -161,7 +164,7 @@
                 \begin{figure}[htbp]
                     \centering
                     \subfigure{
-                        \includegraphics[width=0.7\linewidth]{pic/arc_666.pdf}
+                        \includegraphics[width=0.7\linewidth]{pic/arc_666.png}
                     }
                     \quad
                     \subfigure{
@@ -239,12 +242,117 @@
         \end{columns}
         
     \end{frame}
-
-    \begin{frame}
-        \frametitle{}
+    \subsection{cocluster}
+    \begin{frame}[allowframebreaks]
+        \frametitle{Cluster/Co-cocluster}
     
-        
+        After all the $\alpha_i$ ($i$ means the $i$th arc) are predicted,
+        We correlate each two of them, and then do co-cluster.
+
+        Advantage of coclustering:
+        \begin{enumerate}
+            \item Fast for high-demensional cluster jobs;
+            \item Define codistances in parameter space to represent the relativity.
+        \end{enumerate}
+        \framebreak
+
+        \begin{figure}
+            \includegraphics[width=0.8\linewidth]{pic/cocluster.png}
+            \caption{cocluster method}
+        \end{figure}
+        \begin{figure}
+            \includegraphics[width=0.5\linewidth]{pic/cocluster2.png}
+            \caption{cocluster result}
+        \end{figure}
+
     
     \end{frame}
+    \subsection{Validation}
+    \begin{frame}[allowframebreaks]
+        \frametitle{Direct Least Square Fitting of Ellipses}
+        \framesubtitle{PATTERN ANALYSIS AND MACHINE INTELLIGENCE}
+        Lagrange multipliers
+        $$
+        \mathbf{D}=\left[\begin{array}{cccccc}
+        x_{1}^{2} & x_{1} y_{1} & y_{1}^{2} & x_{1} & y_{1} & 1 \\
+        x_{2}^{2} & x_{2} y_{2} & y_{2}^{2} & x_{2} & y_{2} & 1 \\
+        \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+        x_{n}^{2} & x_{n} y_{n} & y_{n}{ }^{2} & x_{n} & y_{n} & 1
+        \end{array}\right]_{n \times 6}
+        $$
+        $$
+        \mathbf{C}=\left[\begin{array}{ccccc}
+        0 & 0 & -1 & \cdots & 0 \\
+        0 & 2 & 0 & & \\
+        -1 & 0 & 0 & & \vdots \\
+        \vdots & & & \ddots & \\
+        0 & & \cdots & & 0
+        \end{array}\right]_{6 \times 6}
+        $$
 
+        \framebreak
+
+        To minimize $||\mathrm{D} \mathrm{a}||^2$
+
+        It turns to an optimization problem.
+        $$
+        \begin{array}{r}
+        2 \mathrm{D}^{\mathrm{T}} \mathrm{D} \mathrm{a}-2 \lambda \mathrm{Ca}=0 \\
+        \mathrm{a}^{T} \mathrm{Ca}=1
+        \end{array}
+        $$
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Pilot Result}
+        \begin{columns}
+            \begin{column}{.5\linewidth}
+                \begin{figure}[htbp]
+                    \centering
+                    \subfigure{
+                        \includegraphics[width=0.7\linewidth]{pic/cup.jpg}
+                    }
+                    \quad
+                    \subfigure{
+                        \includegraphics[width=0.7\linewidth]{pic/coin.jpeg}
+                    }
+                    \caption{Good Examples}
+                \end{figure}
+            \end{column}
+            \begin{column}{.5\linewidth}
+                \begin{figure}[htbp]
+                    \centering
+                    \subfigure{
+                        \includegraphics[width=0.7\linewidth]{pic/Hockeyre.jpg}
+                    }
+                    \quad
+                    \subfigure{
+                        \includegraphics[width=0.7\linewidth]{pic/rice.jpg}
+                    }
+                    \caption{Bad Examples}
+                \end{figure}
+            \end{column}
+        \end{columns}
+        
+
+    \end{frame}
+
+
+
+    \begin{frame}
+        \frametitle{Summary}
+    
+        \begin{enumerate}
+            \item Co-clustering is effective to grouping data with good accuracy taking ellipses for examples. 
+            \item Co-clustering can serve as an unsupervised learning model in grouping problems.
+            
+        \end{enumerate}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Q\&A}
+    
+        Thank you!
+    
+    \end{frame}
 \end{document}
