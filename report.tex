@@ -1,7 +1,7 @@
 % @Author: WU Zihan
 % @Date:   2022-05-04 12:24:46
 % @Last Modified by:   WU Zihan
-% @Last Modified time: 2022-05-04 12:36:19
+% @Last Modified time: 2022-05-04 12:39:53
 \documentclass[aspectratio=169]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
@@ -12,7 +12,7 @@
 \usetikzlibrary{calc,patterns}
 \usefonttheme[onlymath]{serif}
 % \usetheme{Berlin}
-\title{Detection of 3D circles / Ellipses in a photo}
+\title{Accurate Ellipses Detection based on Co-clustering Algorithm}
 \author{WU Zihan}
 \subtitle{Supervisor: Prof. YAN Hong}
 \begin{document}
@@ -68,7 +68,7 @@
     \begin{frame}
         \frametitle{Pilot Result}
         \begin{columns}
-            \begin{column}{.5\linewidth}
+            \begin{column}{.4\linewidth}
                 \begin{figure}[htbp]
                     \centering
                     \subfigure{
@@ -78,10 +78,10 @@
                     \subfigure{
                         \includegraphics[width=0.7\linewidth]{pic/coin.jpeg}
                     }
-                    \caption{Good Examples}
+                    \caption{Easy Examples}
                 \end{figure}
             \end{column}
-            \begin{column}{.5\linewidth}
+            \begin{column}{.4\linewidth}
                 \begin{figure}[htbp]
                     \centering
                     \subfigure{
@@ -91,7 +91,7 @@
                     \subfigure{
                         \includegraphics[width=0.7\linewidth]{pic/rice.jpg}
                     }
-                    \caption{Bad Examples}
+                    \caption{Complex Examples}
                 \end{figure}
             \end{column}
         \end{columns}
