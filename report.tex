@@ -1,3 +1,7 @@
+% @Author: WU Zihan
+% @Date:   2021-12-01 15:15:52
+% @Last Modified by:   WU Zihan
+% @Last Modified time: 2022-08-14 22:00:53
 \documentclass[aspectratio=169]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
@@ -45,11 +49,11 @@
     \begin{frame}[allowframebreaks]
         \frametitle{Ellipse}
 
-        To describe an ellispe we need 5 parameters:
+        To describe an ellipse we need 5 parameters:
 
         $$ Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0 , \text{where } B^2 - 4 AC < 0.$$
 
-        Or in another way, we need the coordinates of ellipse's center ($x_0, y_0$), semi-major/semi-minor axes ($a,b$),
+        Or in another way, we need the coordinates of the ellipse's center ($x_0, y_0$), semi-major/semi-minor axes ($a,b$),
         and a rotation angle ($\varphi$).
         \begin{figure}
             \begin{tikzpicture}
@@ -109,7 +113,7 @@
         \frametitle{Methods}
     
         \begin{itemize}
-            \item To detect the arc segements;
+            \item To detect the arc segments;
             \item (To form arcs;)
             \item To predict the 5 parameters for ellipses;
             \item Co-clustering;
@@ -247,12 +251,12 @@
         \frametitle{Cluster/Co-cocluster}
     
         After all the $\alpha_i$ ($i$ means the $i$th arc) are predicted,
-        We correlate each two of them, and then do co-cluster.
+        We correlate each two of them and then do co-clustering.
 
-        Advantage of coclustering:
+        Advantages of coclustering:
         \begin{enumerate}
-            \item Fast for high-demensional cluster jobs;
-            \item Define codistances in parameter space to represent the relativity.
+            \item Fast for high-dimensional cluster jobs;
+            \item Define co-distance in parameter space to represent the relativity.
         \end{enumerate}
         \framebreak
 
@@ -294,7 +298,7 @@
 
         To minimize $||\mathrm{D} \mathrm{a}||^2$
 
-        It turns to an optimization problem.
+        It turns into an optimization problem.
         $$
         \begin{array}{r}
         2 \mathrm{D}^{\mathrm{T}} \mathrm{D} \mathrm{a}-2 \lambda \mathrm{Ca}=0 \\
@@ -343,7 +347,7 @@
         \frametitle{Summary}
     
         \begin{enumerate}
-            \item Co-clustering is effective to grouping data with good accuracy taking ellipses for examples. 
+            \item Co-clustering is effective in grouping data with good accuracy taking ellipses for example. 
             \item Co-clustering can serve as an unsupervised learning model in grouping problems.
             
         \end{enumerate}
