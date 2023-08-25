@@ -1,3 +1,3 @@
-# report_30_11
+# report_template
 
-This is to show to Dr. Sheheryar what my ellispe project is.
+Template for reports in LaTeX Beamer.
