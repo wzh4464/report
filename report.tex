@@ -2,7 +2,8 @@
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 % \usepackage{tikz,tkz-euclide}
-% \usepackage{subfigure}
+\usepackage{subcaption}
+\usepackage{xcolor}
 % \usepackage{parskip}
 % \usetikzlibrary{arrows.meta}
 % \usetikzlibrary{calc,patterns}
@@ -17,14 +18,78 @@
     \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{Results}
 \begin{frame}
-    \frametitle{Introduction}
-    \begin{itemize}
-        \item The main task of this week is to implement the algorithm of the paper.
-        \item The algorithm is implemented in Python.
-        \item The algorithm is tested on the data of the paper.
-    \end{itemize}
+    \frametitle{Results for simulated data matrix}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \centering
+            \textbf{Experiment settings}
+            % A_{MxN}, M = N = 2000
+            % 15 biclusters preset
+            % Each bicluster has random height and width from 50 to 200
+            % noise level = 1% of the maximum value
+            \begin{itemize}
+                \item $A_{M\times N}$, $M = N = 2000$
+                \item Biclusters number $k = 15$
+                \item Bicluster height $m_i$ and width $n_i$ subject to uniform distribution $U(50, 200)$
+                \item Noise level $\sigma = 0.01 \times \max(A)$
+            \end{itemize}
+            \textbf{Experiment results}
+    \textcolor{red}{$100\%$ on both precision and recall}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \vspace{-1cm}
+            \centering
+            
+            \begin{figure}[htb]
+                \centering
+                \begin{subfigure}[b]{\textwidth}
+                    \centering
+                    \includegraphics[width=0.6\linewidth]{image1.png}
+                    \caption{Ground truth}
+                    \label{fig:image1}
+                \end{subfigure}
+                % \vspace{-0.5cm}
+                \begin{subfigure}[b]{\textwidth}
+                    \centering
+                    \includegraphics[width=0.6\linewidth]{image2.png}
+                    \caption{Biclusters detected}
+                    \label{fig:image2}
+                \end{subfigure}
+                \vspace{-0.8cm}
+                \caption{Comparison of ground truth and detected biclusters}
+                \label{fig:comparison}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{Methods}
+\begin{frame}
+    \frametitle{Methods}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \textbf{Score Function for Biclustering}
+            \begin{itemize}
+                \item $$\langle x, y \rangle = \exp(-\frac{|x - y|^2}{2\alpha|x||y|})$$
+                \item Use the inner product above to substitute for the co-variance
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \textbf{Biclustering}
+            \begin{itemize}
+                \item Biclustering is a special case of clustering
+                \item Biclustering is also called co-clustering
+                \item Biclustering is also called block clustering
+                \item Biclustering is also called two-mode clustering
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
 \end{frame}
 
 
