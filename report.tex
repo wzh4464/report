@@ -85,8 +85,12 @@
                 \item For a bicluster $B \in \mathbb{R}^{T_m \times T_n}$
                 \item Suppose $\max(||B||_1,||B^{\top}||_1) \le B_{\max}$
                 \item If $B$ is a bicluster with $\beta = 1\%$ tolerance, then
-                \item $$ S \le \frac{1-\exp ^{-\frac{1}{2\alpha \min (T_m,T_n) ^2}}}{\min (T_m,T_n) - 1}$$
-                \item In the experiment, $\alpha = 1, S_{\text{th}} = 0.05$
+                \item Denot $\min (T_m, T_n) = t$, then
+                \begin{align*}
+                    S &\le \frac{1-\exp ^{-\frac{1}{2\alpha t ^2}}}{t - 1} \\
+                    &\le \frac{1}{2 \alpha t ^2(t - 1)}
+                \end{align*}
+                \item In the experiment, $\alpha = 0.01, S_{\text{th}} = 0.02$
             \end{itemize}
         \end{column}
     \end{columns}
