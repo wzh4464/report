@@ -13,10 +13,10 @@
 \author{WU Zihan}
 \begin{document}
 \maketitle
-\begin{frame}
-    \frametitle{Outline}
-    \tableofcontents
-\end{frame}
+% \begin{frame}
+%     \frametitle{Outline}
+%     \tableofcontents
+% \end{frame}
 
 \section{Results}
 \begin{frame}
@@ -33,7 +33,7 @@
                 \item $A_{M\times N}$, $M = N = 2000$
                 \item Biclusters number $k = 15$
                 \item Bicluster height $m_i$ and width $n_i$ subject to uniform distribution $U(50, 200)$
-                \item Noise level $\sigma = 0.01 \times \max(A)$
+                \item Noise level $\sigma_{\text{Noise}} = 10^{-5} \times \max(A)$
             \end{itemize}
             \textbf{Experiment results}
     \textcolor{red}{$100\%$ on both precision and recall}
@@ -74,18 +74,19 @@
             \centering
             \textbf{Score Function for Biclustering}
             \begin{itemize}
-                \item $$\langle x, y \rangle = \exp(-\frac{|x - y|^2}{2\alpha|x||y|})$$
+                \item $$\langle x, y \rangle = \exp(-\frac{||x - y||_1^2}{2\alpha||x||_1||y||_1})$$
                 \item Use the inner product above to substitute for the co-variance
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \centering
-            \textbf{Biclustering}
+            \textbf{Selection of $S_{\text{th}}$}
             \begin{itemize}
-                \item Biclustering is a special case of clustering
-                \item Biclustering is also called co-clustering
-                \item Biclustering is also called block clustering
-                \item Biclustering is also called two-mode clustering
+                \item For a bicluster $B \in \mathbb{R}^{T_m \times T_n}$
+                \item Suppose $\max(||B||_1,||B^{\top}||_1) \le B_{\max}$
+                \item If $B$ is a bicluster with $\beta = 1\%$ tolerance, then
+                \item $$ S \le \frac{1-\exp ^{-\frac{1}{2\alpha \min (T_m,T_n) ^2}}}{\min (T_m,T_n) - 1}$$
+                \item In the experiment, $\alpha = 1, S_{\text{th}} = 0.05$
             \end{itemize}
         \end{column}
     \end{columns}
