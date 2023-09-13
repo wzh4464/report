@@ -2,7 +2,7 @@
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 % \usepackage{tikz,tkz-euclide}
-% \usepackage{subfigure}
+\usepackage{subcaption}
 % \usepackage{parskip}
 % \usetikzlibrary{arrows.meta}
 % \usetikzlibrary{calc,patterns}
@@ -12,19 +12,76 @@
 \author{WU Zihan}
 \begin{document}
 \maketitle
+% \begin{frame}
+%     \frametitle{Outline}
+%     \tableofcontents
+% \end{frame}
+
+\section{Probability Model}
 \begin{frame}
-    \frametitle{Outline}
-    \tableofcontents
+    \frametitle{Probability Model}
+    % two columns
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+
+            \begin{itemize}
+                \item Target: Reconstruct biclusters in big matrix;
+                \item Method: Partition the matrix into small blocks and reconstruct biclusters in each block larger than $T_m \times T_n$;
+                \item Probability Model: We construct the probability model to decide $T_p$ re-partition times to ensure the probability of missing biclusters is less than $\epsilon$.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \vspace{-1cm}
+            \centering
+            \begin{figure}[htb]
+                \centering
+                \begin{subfigure}[b]{\textwidth}
+                    \centering
+                    \includegraphics[width=0.6\linewidth]{A.png}
+                    \caption{Original matrix $A$}
+                    \label{fig:image1}
+                \end{subfigure}
+                % \vspace{-0.5cm}
+                \begin{subfigure}[b]{\textwidth}
+                    \centering
+                    \includegraphics[width=0.6\linewidth]{partition.png}
+                    \caption{Partition matrix $A$ into blocks}
+                    \label{fig:image2}
+                \end{subfigure}
+                \vspace{-0.8cm}
+                % \caption{Probability Model}
+                % \label{fig:comparison}
+            \end{figure}
+        \end{column}
+    \end{columns}
 \end{frame}
 
-\section{Introduction}
+\section{Results}
 \begin{frame}
-    \frametitle{Introduction}
-    \begin{itemize}
-        \item The main task of this week is to implement the algorithm of the paper.
-        \item The algorithm is implemented in Python.
-        \item The algorithm is tested on the data of the paper.
-    \end{itemize}
+    \frametitle{Results for simulated data matrix}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \centering
+            \textbf{Experiment settings}
+            \begin{itemize}
+                \item $A \in \mathbb{R}^{M\times N}$, $M = N = 1000$
+                \item Biclusters number $K = 10$
+                \item Bicluster height $\phi_1 = \phi_2 = \cdots = \phi_K = \phi$
+                \item Bicluster width $\psi_1 = \psi_2 = \cdots = \psi_K = \psi$
+                \item Threshold $T_m = T_n = 4$
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Experiment results}
+            $$ T_p \ge \frac{\ln(1 - p_0)}{-2 [m\phi (s^{(k)})^2+ n\psi (t^{(k)})^2]} $$
+            \begin{itemize}
+                \item
+                      According to computation, $T_p \ge 303.024$ to ensure the probability of missing biclusters is less than $1\%$.
+                \item
+                      We set $T_p = 304$ and do $1000$ experiments, in which $992$ successful detections are observed.
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 
