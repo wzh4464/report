@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{affeldt2020EnsembleBlockCoclustering}
+S{\'e}verine Affeldt, Lazhar Labiod, and Mohamed Nadif.
+\newblock Ensemble block co-clustering: {{A}} unified framework for text data.
+\newblock In {\em International {{Conference}} on {{Information}} and {{Knowledge Management}}}, pages 5--14, {Virtual Event Ireland, France}, October 2020. {ACM}.
+
+\bibitem{zheng2017SupervisedAdaptiveIncremental}
+Laiwen Zheng, Hong Huo, Yiyou Guo, and Tao Fang.
+\newblock Supervised {{Adaptive Incremental Clustering}} for data stream of chunks.
+\newblock {\em Neurocomputing}, 219:502--517, January 2017.
+
+\end{thebibliography}
