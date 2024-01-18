@@ -1,0 +1,63 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{yan2017CoclusteringMultidimensionalBig}{article}{}
+      \name{author}{1}{}{%
+        {{hash=b45566a2339fba4e23a5eb3815d55fdb}{%
+           family={Yan},
+           familyi={Y\bibinitperiod},
+           given={Hong},
+           giveni={H\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Institute of Electrical and Electronics Engineers (IEEE)}%
+      }
+      \strng{namehash}{b45566a2339fba4e23a5eb3815d55fdb}
+      \strng{fullhash}{b45566a2339fba4e23a5eb3815d55fdb}
+      \strng{bibnamehash}{b45566a2339fba4e23a5eb3815d55fdb}
+      \strng{authorbibnamehash}{b45566a2339fba4e23a5eb3815d55fdb}
+      \strng{authornamehash}{b45566a2339fba4e23a5eb3815d55fdb}
+      \strng{authorfullhash}{b45566a2339fba4e23a5eb3815d55fdb}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The analysis of a multidimensional data array is necessary in many applications. Although a data set can be very large, it is possible that meaningful and coherent patterns embedded in the data array are much smaller in size. For example, in genomic data, we may want to find a subset of genes that coexpress under a subset of conditions. In this article, I will explain coclustering algorithms for solving the coherent pattern-detection problem. In these methods, a coherent pattern corresponds to a low-rank matrix or tensor and can be represented as an intersection of hyperplanes in a high-dimensional space. We can then extract coherent patterns from the large data array by detecting hyperplanes. Examples will be provided to demonstrate the effectiveness of the coclustering algorithms for solving unsupervised pattern classification problems.}
+      \field{issn}{2333-942X, 2380-1298}
+      \field{journaltitle}{IEEE Systems, Man, and Cybernetics Magazine}
+      \field{langid}{english}
+      \field{month}{4}
+      \field{number}{2}
+      \field{shortjournal}{IEEE Syst. Man Cybern. Mag.}
+      \field{title}{Coclustering of {{Multidimensional Big Data}}: {{A Useful Tool}} for {{Genomic}}, {{Financial}}, and {{Other Data Analysis}}}
+      \field{volume}{3}
+      \field{year}{2017}
+      \field{dateera}{ce}
+      \field{pages}{23\bibrangedash 30}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/msmc.2017.2664218
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

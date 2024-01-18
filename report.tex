@@ -7,6 +7,20 @@
 % \usetikzlibrary{arrows.meta}
 % \usetikzlibrary{calc,patterns}
 \usefonttheme[onlymath]{serif}
+% biblatex with biber
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{ref.bib}
+\usepackage{hyperref}
+
+% 自定义参考文献样式
+\DeclareBibliographyDriver{article}{%
+  \printnames{author}%
+  \setunit{\addspace}%
+    \printfield{title}%
+    \newunit
+  \printfield{journaltitle}%
+  \finentry}
+
 % \usetheme{Berlin}
 \title{Weekly Report}
 \author{WU Zihan}
@@ -21,10 +35,16 @@
 \begin{frame}
     \frametitle{Introduction}
     \begin{itemize}
-        \item The main task of this week is to implement the algorithm of the paper.
+        \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
         \item The algorithm is implemented in Python.
         \item The algorithm is tested on the data of the paper.
     \end{itemize}
+\end{frame}
+
+% biblatex bibliography
+\begin{frame}[allowframebreaks]
+    \frametitle{References}
+    \printbibliography
 \end{frame}
 
 
