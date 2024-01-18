@@ -8,24 +8,40 @@
 % \usetikzlibrary{calc,patterns}
 \usefonttheme[onlymath]{serif}
 % \usetheme{Berlin}
-\title{Weekly Report}
+\title{Progress Report on Paper Writing}
 \author{WU Zihan}
 \begin{document}
 \maketitle
 \begin{frame}
-    \frametitle{Outline}
-    \tableofcontents
+  \frametitle{Progress on paper writing}
+  \begin{itemize}
+    \item Introduction, abstract, conclusion and own experiment parts are finished.
+    \item Contributions: Speed, memory usage and probability guarantees.
+    \item Complexity analysis based on auto-optimal argument picker.
+  \end{itemize}
 \end{frame}
 
-\section{Introduction}
 \begin{frame}
-    \frametitle{Introduction}
-    \begin{itemize}
-        \item The main task of this week is to implement the algorithm of the paper.
-        \item The algorithm is implemented in Python.
-        \item The algorithm is tested on the data of the paper.
-    \end{itemize}
+  \frametitle{Comparative Analysis and Data Cleaning}
+  \begin{itemize}
+    \item Comparison of 3 approaches: SB (Baseline), GLBCO (learning-based), and PNMTF (parallel).
+    \item Data cleaning using stop words, which needs more tuning.
+    \item PNMTF is the fastest, but mainly focuses on sparse matrices.
+  \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{To do list next week}
+  \begin{itemize}
+    \item Comparing speed and biggest memory usage on three datasets (small, medium, large).
+    \item NMI, ARI (gives the accuracy of clustering)
+    \item Change of above metrics within progressing
+    \item Analysis on
+          \begin{itemize}
+            \item document number (scalability)
+            \item cross-dataset performance (adaptability)
+          \end{itemize}
+  \end{itemize}
+\end{frame}
 
 \end{document}
