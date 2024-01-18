@@ -13,3 +13,17 @@
   abstract = {The analysis of a multidimensional data array is necessary in many applications. Although a data set can be very large, it is possible that meaningful and coherent patterns embedded in the data array are much smaller in size. For example, in genomic data, we may want to find a subset of genes that coexpress under a subset of conditions. In this article, I will explain coclustering algorithms for solving the coherent pattern-detection problem. In these methods, a coherent pattern corresponds to a low-rank matrix or tensor and can be represented as an intersection of hyperplanes in a high-dimensional space. We can then extract coherent patterns from the large data array by detecting hyperplanes. Examples will be provided to demonstrate the effectiveness of the coclustering algorithms for solving unsupervised pattern classification problems.},
   langid = {english}
 }
+@article{chen2023ParallelNonNegativeMatrix,
+  title = {Parallel Non-Negative Matrix Tri-Factorization for Text Data Co-Clustering},
+  author = {Chen, Yufu and Lei, Zhiqi and Rao, Yanghui and Xie, Haoran and Wang, Fu Lee and Yin, Jian and Li, Qing},
+  date = {2023-05},
+  journaltitle = {IEEE Transactions on Knowledge and Data Engineering},
+  shortjournal = {IEEE Trans. Knowl. Data Eng.},
+  volume = {35},
+  number = {5},
+  pages = {5132--5146},
+  issn = {1558-2191},
+  doi = {10.1109/TKDE.2022.3145489},
+  abstract = {As a novel paradigm for data mining and dimensionality reduction, Non-negative Matrix Tri-Factorization (NMTF) has attracted much attention due to its notable performance and elegant mathematical derivation, and it has been applied to a plethora of real-world applications, such as text data co-clustering. However, the existing NMTF-based methods usually involve intensive matrix multiplications, which exhibits a major limitation of high computational complexity. With the explosion at both the size and the feature dimension of texts, there is a growing need to develop a parallel and scalable NMTF-based algorithm for text data co-clustering. To this end, we first show in this paper how to theoretically derive the original optimization problem of NMTF by introducing the Lagrangian multipliers. Then, we propose to solve the Lagrange dual objective function in parallel through an efficient distributed implementation. Extensive experiments on five benchmark corpora validate the effectiveness, efficiency, and scalability of our distributed parallel update algorithm for an NMTF-based text data co-clustering method.},
+  eventtitle = {{{IEEE Transactions}} on {{Knowledge}} and {{Data Engineering}}}
+}

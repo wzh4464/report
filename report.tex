@@ -26,26 +26,48 @@
 \author{WU Zihan}
 \begin{document}
 \maketitle
-\begin{frame}
-    \frametitle{Outline}
-    \tableofcontents
-\end{frame}
+% \begin{frame}
+%     \frametitle{Outline}
+%     \tableofcontents
+% \end{frame}
 
 \section{Introduction}
+% Slide 1: Achieving Optimal Speed
+
 \begin{frame}
-    \frametitle{Introduction}
+    \frametitle{Achieving Optimal Speed}
     \begin{itemize}
-        \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-        \item The algorithm is implemented in Python.
-        \item The algorithm is tested on the data of the paper.
+        \item Current implementation has achieved the fastest performance to date. 
+        \item Beat the previous fastest by 10\% on sparse datasets and 5x on non-sparse datasets.
+    \end{itemize}
+\end{frame}
+
+% Slide 2: Universality in Datasets and Models
+\begin{frame}
+    \frametitle{Universality in Datasets and Models}
+    \begin{itemize}
+        \item Algorithm shows universality across different datasets and models.
+        \item Datasets: sparse and non-sparse.
+        \item Models: SVD and NMTF (non-negative matrix tri-factorization).
+        \item Note: Our partitioning and ensembling method can be applied to any matrix-factorization-based co-clustering algorithm.
+    \end{itemize}
+\end{frame}
+
+% Slide 3: Enhanced Performance on Diverse Datasets
+\begin{frame}
+    \frametitle{Enhanced Performance on Diverse Datasets}
+    \begin{itemize}
+        \item Outperforms current fastest by 10\% on sparse datasets, which is achieved by applying our partitioning and ensembling method to the current fastest algorithm.
+        (Reuter's Datasets: 272.2s over 302.5s, sparsity: 0.85)
+        \item Outperforms current fastest by 5x on non-sparse datasets, which is achieved by applying our partitioning and ensembling method on an SVD-based co-clustering algorithm.
+        (Amazon Datasets: 66.7s over 333.2s, sparsity: 0.01)
     \end{itemize}
 \end{frame}
 
 % biblatex bibliography
-\begin{frame}[allowframebreaks]
-    \frametitle{References}
-    \printbibliography
-\end{frame}
-
+% \begin{frame}
+%     \frametitle{References}
+%     \printbibliography
+% \end{frame}
 
 \end{document}
