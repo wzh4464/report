@@ -11,6 +11,10 @@
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{caption}
 
 % 自定义参考文献样式
 \DeclareBibliographyDriver{article}{%
@@ -26,26 +30,60 @@
 \author{WU Zihan}
 \begin{document}
 \maketitle
+
+
+
+
+\section{Result}
 \begin{frame}
-    \frametitle{Outline}
-    \tableofcontents
-\end{frame}
+  % small
+  \fontsize{6pt}{8}\selectfont
+  % caption use 8pt
+  \captionsetup{font={scriptsize}}
 
-\section{Introduction}
-\begin{frame}
-    \frametitle{Introduction}
-    \begin{itemize}
-        \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-        \item The algorithm is implemented in Python.
-        \item The algorithm is tested on the data of the paper.
-    \end{itemize}
-\end{frame}
+  \frametitle{Result}
+  \begin{table}[htbp]
+    \centering
+    \caption{Running time of co-clustering methods on Amazon 1000, CLASSIC4, and RCV1-Large datasets.}
+    \begin{tabular}{@{} l ccccc @{}}
+      \toprule
+      Dataset    & SCC (s) & DeepCC & PNMTF (s) & P-SCC (s) & P-PNMTF (s) \\
+      \midrule
+      Amazon     & 64545.2 & *      & 303.7     & 112.5     & 242.8       \\
+      CLASSIC4   & *       & *      & 17,810    & 22,894    & 3,028       \\
+      RCV1-Large & *       & *      & 277,092   & *         & 208,048     \\
+      % ... more rows here
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+      % \small
+      \item Notes: * indicates that the method can't deal with the dataset.
+    \end{tablenotes}
+  \end{table}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-    \frametitle{References}
-    \printbibliography
+  \begin{table}[htbp]
+    \centering
+    \caption{NMIs and ARIs of co-clustering results on Amazon 1000, CLASSIC4, and RCV1-Large datasets.}
+    \begin{tabular}{@{} l c ccccc @{}}
+      \toprule
+      \multirow{2}{*}{Dataset}    & \multirow{2}{*}{Metric} & \multicolumn{5}{c}{Comparison Methods}                                                         \\
+      \cmidrule{3-7}
+                                  &                         & SCC                                    & DeepCC & PNMTF  & Partitioned SCC & Partitioned PNMTF \\
+      \midrule
+      \multirow{2}{*}{Amazon}     & NMI                     & 0.9223                                 & *      & 0.6894 & 0.8650          & 0.6609            \\
+                                  & ARI                     & 0.7713                                 & *      & 0.6188 & 0.7763          & 0.6057            \\
+      \multirow{2}{*}{CLASSIC4}   & NMI                     & *                                      & *      & 0.5944 & 0.7676          & 0.6073            \\
+                                  & ARI                     & *                                      & *      & 0.4523 & 0.5845          & 0.4469            \\
+      \multirow{2}{*}{RCV1-Large} & NMI                     & *                                      & *      & 0.6519 & *               & 0.6348            \\
+                                  & ARI                     & *                                      & *      & 0.5383 & *               & 0.5298            \\
+      % ... more rows here
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+      % \small
+      \item Notes: * indicates that the method can't deal with the dataset.
+    \end{tablenotes}
+  \end{table}
 \end{frame}
-
 
 \end{document}
