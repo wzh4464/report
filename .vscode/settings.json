@@ -2,6 +2,8 @@
     "cSpell.words": [
         "bioinformatics"
     ],
+    // save when focus is lost
+    "files.autoSave": "onWindowChange",
     "latex-workshop.latex.build.forceRecipeUsage": true,
     "latex-workshop.latex.autoBuild.run": "onFileChange",
     "makefile.configureOnOpen": false,
@@ -13,7 +15,8 @@
         {
             "name": "arara",
             "tools": [
-                "arara"
+                "arara",
+                "clean",
             ]
         },
         {
@@ -51,6 +54,13 @@
                 "-shell-escape",
                 "%DOCFILE%"
             ]
-        }
+        },
+        {
+            "name": "clean",
+            "command": "latexmk",
+            "args": [
+                "-c",
+            ]
+        },
     ],
 }
