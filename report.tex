@@ -1,11 +1,10 @@
+% arara: pdflatex: { options: ["--synctex=1"] }
+% arara: biber if found('log', 'LaTeX Warning: There were undefined references.') || changed('ref.bib')
+% arara: pdflatex: { synctex: yes } until !found('log', 'undefined references')
+
 \documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
-% \usepackage{tikz,tkz-euclide}
-% \usepackage{subfigure}
-% \usepackage{parskip}
-% \usetikzlibrary{arrows.meta}
-% \usetikzlibrary{calc,patterns}
 \usefonttheme[onlymath]{serif}
 % biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
@@ -27,24 +26,24 @@
 \begin{document}
 \maketitle
 \begin{frame}
-    \frametitle{Outline}
-    \tableofcontents
+  \frametitle{Outline}
+  \tableofcontents
 \end{frame}
 
 \section{Introduction}
 \begin{frame}
-    \frametitle{Introduction}
-    \begin{itemize}
-        \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-        \item The algorithm is implemented in Python.
-        \item The algorithm is tested on the data of the paper.
-    \end{itemize}
+  \frametitle{Introduction}
+  \begin{itemize}
+    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
+    \item The algorithm is implemented in Python.
+    \item The algorithm is tested on the data of the paper.
+  \end{itemize}
 \end{frame}
 
 % biblatex bibliography
 \begin{frame}[allowframebreaks]
-    \frametitle{References}
-    \printbibliography
+  \frametitle{References}
+  \printbibliography
 \end{frame}
 
 

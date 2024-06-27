@@ -1,0 +1,56 @@
+{
+    "cSpell.words": [
+        "bioinformatics"
+    ],
+    "latex-workshop.latex.build.forceRecipeUsage": true,
+    "latex-workshop.latex.autoBuild.run": "onFileChange",
+    "makefile.configureOnOpen": false,
+    // pick first recipe
+    "latex-workshop.latex.recipe.default": "first",
+    "latex-workshop.view.autoFocus.enabled": true,
+    // pdf recipe
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "arara",
+            "tools": [
+                "arara"
+            ]
+        },
+        {
+            "name": "pdf-biber-pdf-pdf",
+            "tools": [
+                "pdflatex",
+                "biber",
+                "pdflatex",
+                "pdflatex"
+            ]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "arara",
+            "command": "arara",
+            "args": [
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "biber",
+            "command": "biber",
+            "args": [
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-shell-escape",
+                "%DOCFILE%"
+            ]
+        }
+    ],
+}

@@ -2,10 +2,15 @@ report.aux
 report.fdb_latexmk
 report.log
 report.nav
-report.synctex.gz
+report.synctex*
 report.xdv
 report.fls
 report.out
 report.snm
 report.toc
 .DS_Store
+report.pdf
+report.run.xml
+report.blg
+report.bcf
+report.bbl
