@@ -25,26 +25,126 @@
 \author{WU Zihan}
 \begin{document}
 \maketitle
-\begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item Continuous-Time Random Walk (CTRW)
+    \item Fractional Brownian Motion (FBM)
+    \item Lévy Walk (LW)
+    \item Annealed Transient Time Motion (ATTM)
+    \item Scaled Brownian Motion (SBM)
+  \end{itemize}
 \end{frame}
 
-\section{Introduction}
-\begin{frame}
-  \frametitle{Introduction}
+\begin{frame}{Continuous-Time Random Walk (CTRW)}
+  \textbf{Model Description:}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item Particles perform jumps at random times.
+    \item Waiting times between jumps are distributed according to a specified probability distribution.
+  \end{itemize}
+
+  \textbf{Equation:}
+  \begin{equation}
+    P(x,t) = \int_{0}^{t} \psi(t-t') P_0(x,t') dt'
+  \end{equation}
+
+  \textbf{Parameters:}
+  \begin{itemize}
+    \item $\psi(t)$: Waiting time distribution
+    \item $P_0(x,t)$: Probability distribution of making a jump to position $x$ at time $t$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Fractional Brownian Motion (FBM)}
+  \textbf{Model Description:}
+  \begin{itemize}
+    \item Generalization of Brownian motion with correlated increments.
+    \item Described by the Hurst parameter $H$.
+  \end{itemize}
+
+  \textbf{Equation:}
+  \begin{equation}
+    \langle B_H(t) B_H(s) \rangle = \frac{1}{2} \left( t^{2H} + s^{2H} - |t-s|^{2H} \right)
+  \end{equation}
+
+  \textbf{Parameters:}
+  \begin{itemize}
+    \item $H$: Hurst parameter ($0 < H < 1$)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lévy Walk (LW)}
+  \textbf{Model Description:}
+  \begin{itemize}
+    \item Particles move with constant velocity during each step.
+    \item Step lengths are distributed according to a heavy-tailed distribution.
+  \end{itemize}
+
+  \textbf{Equation:}
+  \begin{equation}
+    P(x,t) = \int_{0}^{\infty} \frac{\tau(x,t')}{t'} \phi(t') dt'
+  \end{equation}
+
+  \textbf{Parameters:}
+  \begin{itemize}
+    \item $\tau(x,t)$: Probability density of being at position $x$ at time $t$
+    \item $\phi(t)$: Step length distribution
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Annealed Transient Time Motion (ATTM)}
+  \textbf{Model Description:}
+  \begin{itemize}
+    \item Diffusion process with a time-dependent diffusivity.
+    \item Characterized by random switching of diffusivity.
+  \end{itemize}
+
+  \textbf{Equation:}
+  \begin{equation}
+    P(x,t) = \int_{0}^{\infty} P_0(x,t|\gamma) \rho(\gamma) d\gamma
+  \end{equation}
+
+  \textbf{Parameters:}
+  \begin{itemize}
+    \item $P_0(x,t|\gamma)$: Probability distribution with diffusivity $\gamma$
+    \item $\rho(\gamma)$: Distribution of diffusivity
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Scaled Brownian Motion (SBM)}
+  \textbf{Model Description:}
+  \begin{itemize}
+    \item Brownian motion with time-dependent diffusivity
+
+    \item Describes anomalous diffusion processes.
+  \end{itemize}
+
+  \textbf{Equation:}
+  \begin{equation}
+    \frac{\partial P(x,t)}{\partial t} = D(t) \frac{\partial^2 P(x,t)}{\partial x^2}
+  \end{equation}
+
+  \textbf{Parameters:}
+  \begin{itemize}
+    \item $D(t)$: Time-dependent diffusivity
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusion}
+  \textbf{Summary:}
+  \begin{itemize}
+    \item CTRW describes random jumps with specific waiting times.
+    \item FBM incorporates memory effects through the Hurst parameter.
+    \item LW models constant velocity motion with heavy-tailed step lengths.
+    \item ATTM accounts for random changes in diffusivity.
+    \item SBM adapts Brownian motion with time-varying diffusivity.
   \end{itemize}
 \end{frame}
 
 % biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
-\end{frame}
+% \begin{frame}[allowframebreaks]
+%   \frametitle{References}
+%   \printbibliography
+% \end{frame}
 
 
 \end{document}
