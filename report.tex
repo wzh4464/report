@@ -7,18 +7,21 @@
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
 % biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
 % 自定义参考文献样式
+\DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
   \setunit{\addspace}%
-    \printfield{title}%
-    \newunit
+  \printfield{title}%
+  \newunit
   \printfield{journaltitle}%
-  \finentry}
+  \setunit{\addspace}%
+  \printfield{year}%
+}
 
 % \usetheme{Berlin}
 \title{Weekly Report}
