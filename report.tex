@@ -2,7 +2,7 @@
 % arara: biber if found('log', 'LaTeX Warning: There were undefined references.') || changed('ref.bib')
 % arara: pdflatex: { synctex: yes } until !found('log', 'undefined references')
 
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
@@ -33,43 +33,215 @@
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{Top Journals}
 \begin{frame}
   \frametitle{Journal Review Metrics and Topics}
 
   \begin{table}[ht]
     \centering
-    \begin{tabular}{|l|c|c|c|c|}
+    % \small  % 设置表格内容为 small
+    \begin{tabular}{|l|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
       \hline
-      \small
-      \textbf{Journal}   & \textbf{Review Time} & \textbf{Acceptance Rate} & \textbf{Ellipse Papers} & \textbf{Co-cluster Papers} \\
+      \scriptsize \textbf{Journal} & \scriptsize \textbf{Review Time (mo)} & \scriptsize \textbf{Acceptance Rate (\%)} & \scriptsize \textbf{Ellipse \newline Papers} & \scriptsize \textbf{Co-cluster \newline Papers} \\
       \hline
-      IEEE TPAMI         & 20.8 mo              & 7.9\%                    & 30                      & 3                          \\
-      IEEE TIP           & 10.8 mo              & 8.1\%                    & 32                      & 4                          \\
-      Expert Syst. Appl. & 7.5 mo               & 13.8\%                   & 24                      & 65                         \\
-      Pattern Recogn.    & 7.5 mo               & 9.0\%                    & 129                     & 71                         \\
-      Knowl.-Based Syst. & 7.2 mo               & 7.8\%                    & 2                       & 41                         \\
+      IEEE TPAMI                   & 20.8                                  & 7.9                                       & 30                                           & 3                                               \\
+      IEEE TIP                     & 10.8                                  & 8.1                                       & 32                                           & 4                                               \\
+      Expert Syst. Appl.           & 7.5                                   & 13.8                                      & 24                                           & 65                                              \\
+      Pattern Recogn.              & 7.5                                   & 9.0                                       & 129                                          & 71                                              \\
+      Knowl.-Based Syst.           & 7.2                                   & 7.8                                       & 2                                            & 41                                              \\
       \hline
     \end{tabular}
     \caption{Journal Metrics and Topics}
   \end{table}
 
   \begin{itemize}
-    \item \textbf{Review Time}: 7.2 - 20.8 months; TPAMI has the longest.
-    \item \textbf{Acceptance Rate}: 7.2\% - 13.8\%; Expert Syst. Appl. has the highest.
-    \item \textbf{Ellipse Papers}: 2 - 129; Pattern Recogn. has the most.
-    \item \textbf{Co-cluster Papers}: Varies widely; Expert Syst. Appl. leads.
+    \item \textbf{Strengths:}
+          \begin{itemize}
+            \item Well-established journals in the field
+            \item High relevance to Ellipse and Co-cluster topics
+          \end{itemize}
+    \item \textbf{Challenges:}
+          \begin{itemize}
+            \item Long review periods (up to 20.8 months)
+            \item Low acceptance rates (as low as 7.8\%)
+          \end{itemize}
+    \item \textbf{Decision:}
+          \begin{itemize}
+            \item Not suitable for our paper given time and acceptance constraints
+          \end{itemize}
   \end{itemize}
 
 \end{frame}
 
+\section{Selected Journals}
+\begin{frame}
+  \frametitle{IEEE Transactions on Instrumentation and Measurement (TIM)}
+  \begin{itemize}
+    \item Impact factor (IF): 5.6
+    \item Review time: 3-6 months (relatively fast)
+    \item Non CCF-listed
+    \item 40 papers related to ellipse topics
+  \end{itemize}
 
+  \textbf{Advantages}:
+  \begin{itemize}
+    \item High impact factor
+    \item Short and predictable review time (3-6 months)
+    \item Fast decision phase (1-2 weeks for decisions)
+  \end{itemize}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
+  \textbf{Disadvantages}:
+  \begin{itemize}
+    \item Recent trends suggest some slowing down in review times
+  \end{itemize}
+
+  \textbf{Example Papers}:
+  \begin{itemize}
+    \item Shape-biased ellipse detection network with auxiliary task.
+    \item Morphometric measurement of fish blood cell: an image processing and ellipse fitting technique.
+  \end{itemize}
 \end{frame}
 
+
+\subsection{Computer Vision and Image Understanding}
+\begin{frame}
+  \frametitle{Computer Vision and Image Understanding (CVIU)}
+  \begin{itemize}
+    \item Impact factor (IF): 4.3
+    \item Review time: 6-12 months (some cases even 1-2 years)
+    \item CCF-B listed (high recognition in computer vision)
+    \item 22 papers related to ellipse topics
+  \end{itemize}
+
+  \textbf{Advantages}:
+  \begin{itemize}
+    \item Prestigious in the field of computer vision and image processing
+    \item High-quality and constructive review feedback
+  \end{itemize}
+
+  \textbf{Disadvantages}:
+  \begin{itemize}
+    \item Long and unpredictable review time (can take 1-2 years)
+    \item Communication issues with editors reported in some cases
+  \end{itemize}
+
+  \textbf{Example Papers}:
+  \begin{itemize}
+    \item Effective elliptic fitting for iris normalization.
+    \item Robust ellipse fitting using geometric constraints for biomedical imaging.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Image and Vision Computing}
+\begin{frame}
+  \frametitle{Image and Vision Computing}
+  \begin{itemize}
+    \item Impact factor (IF): 4.2
+    \item Review time of 10.5 months
+    \item CCF-C listed
+    \item 26 papers related to ellipse topics
+  \end{itemize}
+
+  \textbf{Advantages}:
+  \begin{itemize}
+    \item Good impact factor
+    \item Relevance to low-SNR image ellipse detection
+  \end{itemize}
+
+  \textbf{Disadvantages}:
+  \begin{itemize}
+    \item Moderate acceptance rate (20\%)
+  \end{itemize}
+
+  \textbf{Example Papers}:
+  \begin{itemize}
+    \item Nonlinear circumference-based robust ellipse detection in low-SNR images.
+    \item Region-based fitting of overlapping ellipses and its application to cell segmentation.
+  \end{itemize}
+\end{frame}
+
+\subsection{Pattern Recognition Letters}
+\begin{frame}
+  \frametitle{Pattern Recognition Letters}
+  \begin{itemize}
+    \item Impact factor (IF): 3.9
+    \item Review time of 7.2 months
+    \item CCF-C listed
+    \item 47 papers related to ellipse topics
+    \item 23 papers related to co-cluster topics
+  \end{itemize}
+
+  \textbf{Advantages}:
+  \begin{itemize}
+    \item High number of papers on ellipse topics
+    \item Short review time
+  \end{itemize}
+
+  \textbf{Disadvantages}:
+  \begin{itemize}
+    \item Moderate acceptance rate (25\%)
+  \end{itemize}
+
+  \textbf{Example Papers}:
+  \begin{itemize}
+    \item A versatile major axis voted method for efficient ellipse detection.
+    \item An efficiency improved recognition algorithm for highly overlapping ellipses: Application to dense bubbly flows.
+  \end{itemize}
+\end{frame}
+
+\subsection{Pattern Analysis and Applications}
+\begin{frame}
+  \frametitle{Pattern Analysis and Applications}
+  \begin{itemize}
+    \item Impact factor (IF): 3.7
+    \item Review time of 7.5 months
+    \item CCF-C listed
+    \item Limited number of papers related to ellipse topics
+  \end{itemize}
+
+  \textbf{Advantages}:
+  \begin{itemize}
+    \item Relevance to robotic applications like reference hole detection
+    \item High acceptance rate (50\%)
+  \end{itemize}
+
+  \textbf{Disadvantages}:
+  \begin{itemize}
+    \item Moderate impact factor
+  \end{itemize}
+
+  \textbf{Example Papers}:
+  \begin{itemize}
+    \item Recognition of overlapping elliptical objects in a binary image.
+    \item A new elliptic contour extraction method for reference hole detection in robotic drilling.
+  \end{itemize}
+\end{frame}
+
+\subsection{Machine Vision and Applications}
+\begin{frame}
+  \frametitle{Machine Vision and Applications}
+  \begin{itemize}
+    \item Impact factor (IF): 2.4
+    \item Review time of 6.5 months
+    \item CCF-C listed
+  \end{itemize}
+
+  \textbf{Advantages}:
+  \begin{itemize}
+    \item Short review time
+  \end{itemize}
+
+  \textbf{Disadvantages}:
+  \begin{itemize}
+    \item Relatively low impact factor
+  \end{itemize}
+
+  \textbf{Example Papers}:
+  \begin{itemize}
+    \item Ellipse detection using the edges extracted by deep learning.
+    \item A deep neural network-based method for robust ellipse fitting.
+  \end{itemize}
+\end{frame}
 
 \end{document}
