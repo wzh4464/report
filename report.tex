@@ -10,6 +10,7 @@
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
+\usepackage{xcolor}
 
 % 自定义参考文献样式
 \DeclareNameAlias{author}{first-last}
@@ -24,7 +25,7 @@
 }
 
 % \usetheme{Berlin}
-\title{Weekly Report}
+\title{Journal Selection for our Ellipse Paper}
 \author{WU Zihan}
 \begin{document}
 \maketitle
@@ -40,15 +41,15 @@
   \begin{table}[ht]
     \centering
     % \small  % 设置表格内容为 small
-    \begin{tabular}{|l|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+    \begin{tabular}{|l|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
       \hline
-      \scriptsize \textbf{Journal} & \scriptsize \textbf{Review Time (mo)} & \scriptsize \textbf{Acceptance Rate (\%)} & \scriptsize \textbf{Ellipse \newline Papers} & \scriptsize \textbf{Co-cluster \newline Papers} \\
+      \scriptsize \textbf{Journal} & \scriptsize \textbf{IF} & \scriptsize \textbf{Review Time (mo)} & \scriptsize \textbf{Acceptance Rate (\%)} & \scriptsize \textbf{Ellipse \newline Papers} & \scriptsize \textbf{Co-cluster \newline Papers} \\
       \hline
-      IEEE TPAMI                   & 20.8                                  & 7.9                                       & 30                                           & 3                                               \\
-      IEEE TIP                     & 10.8                                  & 8.1                                       & 32                                           & 4                                               \\
-      Expert Syst. Appl.           & 7.5                                   & 13.8                                      & 24                                           & 65                                              \\
-      Pattern Recogn.              & 7.5                                   & 9.0                                       & 129                                          & 71                                              \\
-      Knowl.-Based Syst.           & 7.2                                   & 7.8                                       & 2                                            & 41                                              \\
+      IEEE TPAMI                   & 20.8                    & 7.9                                   & hard                                      & 30                                           & 3                                               \\
+      IEEE TIP                     & 10.8                    & 8.1                                   & hard                                      & 32                                           & 4                                               \\
+      Expert Syst. Appl.           & 7.5                     & 13.8                                  & 16                                        & 24                                           & 65                                              \\
+      Pattern Recogn.              & 7.5                     & 9.0                                   & hard                                      & 129                                          & 71                                              \\
+      Knowl.-Based Syst.           & 7.2                     & 7.8                                   & 20                                        & 2                                            & 41                                              \\
       \hline
     \end{tabular}
     \caption{Journal Metrics and Topics}
@@ -65,10 +66,7 @@
             \item Long review periods (up to 20.8 months)
             \item Low acceptance rates (as low as 7.8\%)
           \end{itemize}
-    \item \textbf{Decision:}
-          \begin{itemize}
-            \item Not suitable for our paper given time and acceptance constraints
-          \end{itemize}
+    \item May not be so suitable for our paper given time and acceptance constraints
   \end{itemize}
 
 \end{frame}
@@ -82,6 +80,7 @@
     \item Review time: 3-6 months (relatively fast)
     \item Non CCF-listed
     \item 40 papers related to ellipse topics
+    \item Estimated acceptance rate of 50\%
   \end{itemize}
 
   \textbf{Advantages}:
@@ -244,5 +243,35 @@
     \item A deep neural network-based method for robust ellipse fitting.
   \end{itemize}
 \end{frame}
+
+\section{Summary}
+\begin{frame}
+
+  \frametitle{Comparison of All Journals}
+  \begin{table}[ht]
+    \centering
+    \scriptsize
+    \begin{tabular}{|l|p{0.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+      \hline
+      \textbf{Journal}                  & \textbf{IF}           & \textbf{Review Time (mo)} & \textbf{Accept. Rate (\%)}      & \textbf{Ellipse Papers} & \textbf{Co-cluster Papers} \\
+      \hline
+      IEEE TPAMI                        & \textcolor{red}{20.8} & 7.9                       & hard                            & 30                      & 3                          \\
+      IEEE TIP                          & 10.8                  & 8.1                       & hard                            & 32                      & 4                          \\
+      Expert Syst. Appl.                & 7.5                   & 13.8                      & 16                              & 24                      & 65                         \\
+      Pattern Recogn.                   & 7.5                   & 9.0                       & hard                            & \textcolor{red}{129}    & \textcolor{red}{71}        \\
+      Knowl.-Based Syst.                & 7.2                   & 7.8                       & 20                              & 2                       & 41                         \\
+      \hline
+      IEEE TIM                          & 5.6                   & \textcolor{red}{3-6}      & 50                              & 40                      & -                          \\
+      CVIU                              & 4.3                   & 6-24                      & \textcolor{red}{reltively high} & 22                      & -                          \\
+      Image and Vision Computing        & 4.2                   & 10.5                      & 20                              & 26                      & -                          \\
+      Pattern Recognition Letters       & 3.9                   & 7.2                       & 25                              & 47                      & 23                         \\
+      Pattern Analysis and Applications & 3.7                   & 7.5                       & 50                              & -                       & -                          \\
+      Machine Vision and Applications   & 2.4                   & 6.5                       & -                               & -                       & -                          \\
+      \hline
+    \end{tabular}
+    \caption{Comparison of All Journals}
+  \end{table}
+\end{frame}
+
 
 \end{document}
