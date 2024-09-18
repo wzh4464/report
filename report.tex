@@ -33,14 +33,48 @@
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{Shape-Biased Ellipse Detection Network}
 \begin{frame}
-  \frametitle{Introduction}
-  \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
-  \end{itemize}
+  \frametitle{Shape-Biased Ellipse Detection Network \cite{li2022ShapebiasedEllipseDetection}}
+  \begin{columns}
+    \column{0.6\textwidth}
+    \begin{itemize}
+      \item \textbf{Aims}: Improve ellipse detection in noisy, occluded, real-world images.
+      \item \textbf{Method}: EllipseNet uses multitask learning for localization, contour detection, and parameter estimation, using 2D Gaussian models and Wasserstein loss.
+      \item \textbf{Key Learnings}: Multitask learning improves accuracy and focus, especially through the auxiliary edge task, outperforming traditional methods.
+    \end{itemize}
+    \column{0.6\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{architecture.png}
+  \end{columns}
+\end{frame}
+
+\section{Multitask Learning and Why Not End-to-End?}
+\begin{frame}
+  \frametitle{Multitask Learning and Why Not End-to-End?}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \textbf{Multitask Learning (MTL)}:
+    \begin{itemize}
+      \item Shares features across tasks.
+      \item \textbf{Tasks in EllipseNet}:
+            \begin{itemize}
+              \item Localization: Detects bounding boxes.
+              \item Contour Detection: Focuses on ellipse edges.
+              \item Parameter Prediction: Estimates ellipse parameters.
+            \end{itemize}
+      \item \textbf{Benefits}: Higher accuracy, better generalization, efficiency.
+    \end{itemize}
+
+    \column{0.5\textwidth}
+    \textbf{Why Not End-to-End?}:
+    \begin{itemize}
+      \item \textbf{Specialization}: Tasks need different focuses.
+      \item \textbf{Complexity}: Handles varying scales and occlusions better.
+      \item \textbf{Feature Extraction}: MTL improves edge and shape focus.
+      \item \textbf{Auxiliary Tasks}: Improves performance with shape-focused regularization.
+    \end{itemize}
+  \end{columns}
 \end{frame}
 
 % biblatex bibliography
