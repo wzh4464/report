@@ -33,7 +33,33 @@
   \tableofcontents
 \end{frame}
 
-\section{Shape-Biased Ellipse Detection Network}
+\section{Reconsideration the Extension of The Co-Clustering Paper}
+\begin{frame}
+  \frametitle{Contributions for Journal Extension}
+
+  \textbf{1. Enhanced Evaluation and Analysis}
+  \begin{itemize}
+    \item Extensive evaluation: large, real-world datasets.
+    \item Robustness: handling noise, outliers, and missing data.
+  \end{itemize}
+
+  \textbf{2. Scalability and Adaptability}
+  \begin{itemize}
+    \item Distributed implementation: scalability for large datasets.
+    \item Incremental updates: handling streaming and frequently updated data.
+    \item Adaptive partitioning: scale-specific adjustments in sub co-clusterers.
+  \end{itemize}
+
+  \textbf{3. Advanced Algorithmic Design}
+  \begin{itemize}
+    \item Multi-view co-clustering: multiple feature sets and relationships.
+    \item Hybrid methods: integration with dimensionality reduction and feature selection techniques.
+  \end{itemize}
+\end{frame}
+
+
+\section{Citation Appended to the Ellipse Paper}
+\subsection{Shape-Biased Ellipse Detection Network}
 \begin{frame}
   \frametitle{Shape-Biased Ellipse Detection Network \cite{li2022ShapebiasedEllipseDetection}}
   \begin{columns}
@@ -49,7 +75,6 @@
   \end{columns}
 \end{frame}
 
-\section{Multitask Learning and Why Not End-to-End?}
 \begin{frame}
   \frametitle{Multitask Learning and Why Not End-to-End?}
   \begin{columns}
@@ -75,6 +100,42 @@
       \item \textbf{Auxiliary Tasks}: Improves performance with shape-focused regularization.
     \end{itemize}
   \end{columns}
+\end{frame}
+
+\subsection{Advanced Ellipse Fitting Algorithm}
+\begin{frame}
+  \frametitle{Advanced Ellipse Fitting Algorithm \cite{zhang2021AdvancedEllipseFitting}}
+
+  \begin{itemize}
+    \item \textbf{Aims}: Improve accuracy and speed of ellipse fitting, particularly in computer vision and automatic manufacturing, using real-world noisy data.
+    \item \textbf{Method}: A hybrid approach combining the BFGS algorithm and ADMM method to solve ellipse fitting as an optimization problem, reducing iterations and improving convergence.
+    \item \textbf{Key Learnings}: This hybrid algorithm shows faster convergence and higher accuracy compared to traditional methods like Hough Transform and other regression-based techniques.
+  \end{itemize}
+
+\end{frame}
+
+\subsection{A Method for Measuring the Inclination of Forgings}
+\begin{frame}
+  \frametitle{A Method for Measuring the Inclination of Forgings \cite{lu2023MethodMeasuringInclination}}
+
+  \begin{itemize}
+    \item \textbf{Aims}: Propose a method for measuring the inclination of forgings using an improved ellipse fitting algorithm.
+    \item \textbf{Method}: The method uses a laser rangefinder to measure forging surfaces, random data point sampling to eliminate outliers, and an improved Particle Swarm Optimization (PSO) algorithm for fitting ellipses to calculate inclination angles.
+    \item \textbf{Key Learnings}: The approach provides accurate and efficient ellipse fitting, with errors less than 0.05° compared to traditional methods, making it highly suitable for industrial applications.
+  \end{itemize}
+
+\end{frame}
+
+\subsection{Morphometric Measurement of Fish Blood Cell}
+\begin{frame}
+  \frametitle{Morphometric Measurement of Fish Blood Cell \cite{ahmed2024MorphometricMeasurementFish}}
+
+  \begin{itemize}
+    \item \textbf{Aims}: Develop an automated method to measure morphometric parameters of fish blood cells using image processing and ellipse fitting techniques.
+    \item \textbf{Method}: The method combines image segmentation and ellipse fitting to measure cell and nucleus areas in fish blood cells. The algorithm is evaluated against manual measurements and compared with existing methods.
+    \item \textbf{Key Learnings}: The proposed method significantly reduces error compared to manual and traditional methods, providing more accurate and efficient cell area measurements, especially in complex scenarios with overlapping or broken cell borders.
+  \end{itemize}
+
 \end{frame}
 
 % biblatex bibliography
