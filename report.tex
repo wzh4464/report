@@ -10,8 +10,10 @@
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
 
-% 自定义参考文献样式
+% Custom reference style
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
@@ -24,7 +26,7 @@
 }
 
 % \usetheme{Berlin}
-\title{Weekly Report}
+\title{Adaptive Co-clustering for Incomplete Spatio-Temporal Data}
 \author{WU Zihan}
 \begin{document}
 \maketitle
@@ -35,19 +37,247 @@
 
 \section{Introduction}
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{Introduction to the Data}
+  \begin{columns}
+    \column{0.6\textwidth}
+    \begin{itemize}
+      \item Dataset: A spatio-temporal matrix $M_{ij}$
+            \begin{itemize}
+              \item $i$: time points $t_1, t_2, ..., t_n$
+              \item $j$: individual cells $c_1, c_2, ..., c_m$
+            \end{itemize}
+      \item Each entry $M_{ij} = (x, y)$: \\ 2D spatial coordinates
+      \item Cell naming convention: e.g., \textbf{ABalaa}
+            \begin{itemize}
+              \item Encodes full lineage information
+              \item A, B: founder cells
+              \item a, p: anterior/posterior divisions
+              \item l, r: left/right divisions
+            \end{itemize}
+    \end{itemize}
+
+    \column{0.4\textwidth}
+    \begin{tikzpicture}[level distance=0.8cm, sibling distance=1.5cm]
+      \node {AB}
+      child {node {ABa}
+          child {node {ABal}
+              child {node {ABala}
+                  child {node {ABalaa}}
+                  child {node {ABalap}}
+                }
+              child {node {ABalp}}
+            }
+          child {node {ABar}}
+        }
+      child {node {ABp}};
+    \end{tikzpicture}
+  \end{columns}
+\end{frame}
+
+
+
+\section{Preprocessing the Data}
+\begin{frame}
+  \frametitle{Preprocessing the Data}
+  \begin{enumerate}
+    \item Estimate velocity and acceleration:
+          \begin{itemize}
+            \item Position: $\vec{r}(t) = (x(t), y(t), z(t))$
+            \item Velocity: $\vec{v}(t) \approx \frac{\vec{r}(t+\Delta t) - \vec{r}(t)}{\Delta t}$
+            \item Acceleration: $\vec{a}(t) \approx \frac{\vec{v}(t+\Delta t) - \vec{v}(t)}{\Delta t}$
+          \end{itemize}
+    \item Split data into time windows: $[t_i, t_i + \Delta T]$
+    \item For each window, model cell trajectory as a random walk:
+          \begin{equation*}
+            \vec{r}(t+\Delta t) = \vec{r}(t) + \vec{\xi}(t)
+          \end{equation*}
+          where $\vec{\xi}(t)$ is a random displacement
+    \item Generate features from trajectories:
+          \begin{itemize}
+            \item Mean squared displacement: $\text{MSD}(\tau) = \langle |\vec{r}(t+\tau) - \vec{r}(t)|^2 \rangle$
+            \item Diffusion coefficient: $D = \frac{\text{MSD}(\tau)}{2d\tau}$, where $d$ is dimensionality
+            \item Directional persistence: $P(\tau) = \langle \cos\theta(\tau) \rangle$
+          \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\section{Feature Matrix Creation and Challenge}
+\begin{frame}
+  \frametitle{Feature Matrix Creation and Challenge}
+  \begin{columns}
+    \column{0.6\textwidth}
+    \begin{itemize}
+      \item Feature matrix $F_{ij}$:
+            \begin{itemize}
+              \item Rows $i$: individual cells
+              \item Columns $j$: trajectory features
+            \end{itemize}
+      \item Features may include:
+            \begin{itemize}
+              \item Mean velocity: $\bar{v} = \frac{1}{T}\sum_{t=1}^T v(t)$
+              \item Acceleration variance: $\sigma_a^2 = \frac{1}{T}\sum_{t=1}^T (a(t) - \bar{a})^2$
+              \item Trajectory curvature: $\kappa = \frac{|\dot{r} \times \ddot{r}|}{|\dot{r}|^3}$
+            \end{itemize}
+      \item Challenge: NaN values due to cell lifecycle
+            \begin{itemize}
+              \item Cell birth: NaN in earlier time windows
+              \item Cell death: NaN in later time windows
+            \end{itemize}
+      \item Traditional co-clustering methods assume complete data
+    \end{itemize}
+
+    \column{0.4\textwidth}
+    \begin{tikzpicture}
+      \draw (0,-1) rectangle (4,4);
+      \draw (0,0) -- (4,0);
+      \draw (0,1) -- (4,1);
+      \draw (0,2) -- (4,2);
+      \draw (0,3) -- (4,3);
+      \draw (0,4) -- (4,4);
+      \draw (0,0) -- (0,4);
+      \draw (1,-1) -- (1,4);
+      \draw (2,-1) -- (2,4);
+      \draw (3,-1) -- (3,4);
+
+
+      \node at (0.5,3.5) {$f_{11}$};
+      \node at (1.5,3.5) {$f_{12}$};
+      \node at (3.5,3.5) {$f_{1n}$};
+
+      \node at (0.5,2.5) {$f_{21}$};
+      \node at (1.5,2.5) {$f_{22}$};
+      \node at (3.5,2.5) {$f_{2n}$};
+
+      \node at (0.5,1.5) {NaN};
+      \node at (1.5,1.5) {$f_{32}$};
+      \node at (3.5,1.5) {$f_{3n}$};
+
+      \node at (0.5,-0.5) {$f_{m1}$};
+      \node at (1.5,-0.5) {$f_{m2}$};
+      \node at (3.5,-0.5) {NaN};
+
+      \node at (2.5,2.5) {$\cdots$};
+      \node at (2.5,1.5) {$\cdots$};
+      \node at (2.5,0.5) {$\vdots$};
+      \node at (1.5,0.5) {$\vdots$};
+
+      \node[rotate=90] at (-0.5,2) {Cells};
+      \node at (2,-1.5) {Features};
+    \end{tikzpicture}
+  \end{columns}
+\end{frame}
+
+% ... (previous content remains the same)
+
+\section{Proposed Solution}
+\begin{frame}
+  \frametitle{Proposed Solution: Adaptive Co-clustering}
+  % \begin{columns}
+  % \column{0.55\textwidth}
+  \begin{enumerate}
+    \item Matrix Decomposition:
+          \begin{itemize}
+            \item Split full matrix $F$ into submatrices $S_i$ without NaN
+            \item $F = \{S_1, S_2, ..., S_k\}$
+          \end{itemize}
+    \item Submatrix Co-clustering:
+          \begin{itemize}
+            \item Apply traditional method to each $S_i$
+            \item Result: $C_i = \text{CoClustering}(S_i)$
+          \end{itemize}
+    \item Merge Co-clusters:
+          \begin{itemize}
+            % \item Use similarity measure $\sigma(C_i, C_j)$
+            % \item Merge if $\sigma(C_i, C_j) > \text{threshold}$
+            \item Merge co-clusters using methods proposed in previous work
+          \end{itemize}
+  \end{enumerate}
+  \vspace{0.5cm}
+  Advantages:
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item Handles incomplete data
+    \item Preserves temporal structure
+    \item Scalable to large datasets
+  \end{itemize}
+
+  %   \column{0.45\textwidth}
+  %   \begin{tikzpicture}[scale=0.7]
+  %     % Original matrix
+  %     \draw (0,0) rectangle (4,4) node[midway] {$F$};
+  %     \draw[dashed] (0,2) -- (4,2);
+  %     \draw[dashed] (2,0) -- (2,4);
+
+  %     % Arrows
+  %     \draw[->, thick] (4.5,2) -- (5.5,2);
+
+  %     % Submatrices
+  %     \draw (6,3) rectangle (7,4) node[midway] {$S_1$};
+  %     \draw (7.5,3) rectangle (8.5,4) node[midway] {$S_2$};
+  %     \draw (6,1.5) rectangle (7,2.5) node[midway] {$S_3$};
+  %     \draw (7.5,1.5) rectangle (8.5,2.5) node[midway] {$S_4$};
+  %     \node at (7.25,1) {$\vdots$};
+
+  %     % Co-clustering
+  %     \draw[->, thick] (9,2) -- (10,2);
+  %     % \draw (10.5,0.5) rectangle (12.5,3.5) node[midway] {Merged\\Co-clusters};
+  %   \end{tikzpicture}
+  % \end{columns}
+\end{frame}
+
+\section{Feature Selection}
+\begin{frame}
+  \frametitle{Feature Selection from Co-Clusters}
+  \begin{enumerate}
+    \item Co-cluster Analysis:
+          \begin{itemize}
+            \item Compute probability of each expression class in co-clusters
+          \end{itemize}
+    \item Feature Importance Scoring:
+          \begin{itemize}
+            \item Retain co-clusters with sufficient representation from all classes
+          \end{itemize}
+    \item Selection Criteria:
+          \begin{itemize}
+            \item Select features unique to retained co-clusters
+            \item Discard features shared across many co-clusters
+          \end{itemize}
+  \end{enumerate}
+
+  \vspace{0.5cm}
+  \textbf{Result:} Selected features correspond to discriminative cell behaviors
+
+  \vspace{0.5cm}
+  \textbf{Key Benefits:}
+  \begin{itemize}
+    \item Identifies discriminative features
+    \item Reduces dimensionality
+    \item Enhances interpretability
   \end{itemize}
 \end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
+\section{Conclusion}
+\begin{frame}
+  \frametitle{Conclusion}
+  \textbf{Key Achievements:}
+  \begin{itemize}
+    \item Developed adaptive co-clustering for incomplete spatio-temporal data
+    \item Identified discriminative features for cell clusters
+    \item Gained insights into cell lineage inheritance structure
+    \item Enhanced interpretability of complex biological processes
+  \end{itemize}
+
+  % \vspace{0.5cm}
+  % \begin{center}
+  %   \textbf{Impact:} This work provides a robust framework for analyzing complex biological data with missing values, contributing to a deeper understanding of cellular dynamics.
+  % \end{center}
 \end{frame}
 
+% ... (rest of the content remains the same)
+
+% biblatex bibliography
+% \begin{frame}[allowframebreaks]
+%   \frametitle{References}
+%   \printbibliography
+% \end{frame}
 
 \end{document}
