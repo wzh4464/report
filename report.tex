@@ -12,6 +12,7 @@
 \usepackage{hyperref}
 \usepackage{tikz}
 \usetikzlibrary{matrix}
+\usepackage{xcolor}
 
 % Custom reference style
 \DeclareNameAlias{author}{first-last}
@@ -26,7 +27,7 @@
 }
 
 % \usetheme{Berlin}
-\title{Adaptive Co-clustering for Incomplete Spatio-Temporal Data}
+\title{Block-based Co-clustering for Incomplete Spatio-Temporal Matrices}
 \author{WU Zihan}
 \begin{document}
 \maketitle
@@ -123,7 +124,7 @@
               \item Cell birth: NaN in earlier time windows
               \item Cell death: NaN in later time windows
             \end{itemize}
-      \item Traditional co-clustering methods assume complete data
+      \item \textcolor{red}{Traditional co-clustering methods assume complete data}
     \end{itemize}
 
     \column{0.4\textwidth}
@@ -171,7 +172,7 @@
 
 \section{Proposed Solution}
 \begin{frame}
-  \frametitle{Proposed Solution: Adaptive Co-clustering}
+  \frametitle{Proposed Solution: Block-based Co-clustering}
   % \begin{columns}
   % \column{0.55\textwidth}
   \begin{enumerate}
@@ -260,7 +261,7 @@
   \frametitle{Conclusion}
   \textbf{Key Achievements:}
   \begin{itemize}
-    \item Developed adaptive co-clustering for incomplete spatio-temporal data
+    \item Developed block-based co-clustering for incomplete spatio-temporal data
     \item Identified discriminative features for cell clusters
     \item Gained insights into cell lineage inheritance structure
     \item Enhanced interpretability of complex biological processes
