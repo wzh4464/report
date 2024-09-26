@@ -82,14 +82,14 @@
   \begin{enumerate}
     \item Estimate velocity and acceleration:
           \begin{itemize}
-            \item Position: $\vec{r}(t) = (x(t), y(t), z(t))$
-            \item Velocity: $\vec{v}(t) \approx \frac{\vec{r}(t+\Delta t) - \vec{r}(t)}{\Delta t}$
-            \item Acceleration: $\vec{a}(t) \approx \frac{\vec{v}(t+\Delta t) - \vec{v}(t)}{\Delta t}$
+            \item Position: $\vec{r}(t) = (x(t), y(t))$
+            \item Velocity: $\vec{v}(t) \approx \frac{-\vec{r}(t+2\Delta t) + 4\vec{r}(t+\Delta t) - 3\vec{r}(t)}{2\Delta t}$
+            \item Acceleration: $\vec{a}(t) \approx \frac{\vec{r}(t+\Delta t) - 2\vec{r}(t) + \vec{r}(t-\Delta t)}{\Delta t^2}$
           \end{itemize}
-    \item Split data into time windows: $[t_i, t_i + \Delta T]$
+    \item Split data into $n'$ time windows: $[t_i, t_i + \Delta T]$
     \item For each window, model cell trajectory as a random walk:
           \begin{equation*}
-            \vec{r}(t+\Delta t) = \vec{r}(t) + \vec{\xi}(t)
+            \vec{r}(t) = \vec{\tilde{r}}(t) + \vec{\xi}(t)
           \end{equation*}
           where $\vec{\xi}(t)$ is a random displacement
     \item Generate features from trajectories:
@@ -110,7 +110,7 @@
       \item Feature matrix $F_{ij}$:
             \begin{itemize}
               \item Rows $i$: individual cells
-              \item Columns $j$: trajectory features
+              \item Columns $j$: trajectory features, \\ $p$ features per time window
             \end{itemize}
       \item Features may include:
             \begin{itemize}
@@ -142,15 +142,15 @@
 
       \node at (0.5,3.5) {$f_{11}$};
       \node at (1.5,3.5) {$f_{12}$};
-      \node at (3.5,3.5) {$f_{1n}$};
+      \node at (3.5,3.5) {$f_{1(n'p)}$};
 
       \node at (0.5,2.5) {$f_{21}$};
       \node at (1.5,2.5) {$f_{22}$};
-      \node at (3.5,2.5) {$f_{2n}$};
+      \node at (3.5,2.5) {$f_{2(n'p)}$};
 
       \node at (0.5,1.5) {NaN};
       \node at (1.5,1.5) {$f_{32}$};
-      \node at (3.5,1.5) {$f_{3n}$};
+      \node at (3.5,1.5) {$f_{3(n'p)}$};
 
       \node at (0.5,-0.5) {$f_{m1}$};
       \node at (1.5,-0.5) {$f_{m2}$};
