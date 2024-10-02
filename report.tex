@@ -3,51 +3,327 @@
 % arara: pdflatex: { synctex: yes } until !found('log', 'undefined references')
 
 \documentclass{beamer}
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+\usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{amssymb,amsfonts,amsmath}
-\usefonttheme[onlymath]{serif}
-% biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
-\addbibresource{ref.bib}
-\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc}
 
-% 自定义参考文献样式
-\DeclareNameAlias{author}{first-last}
-\DeclareBibliographyDriver{article}{%
-  \printnames{author}%
-  \setunit{\addspace}%
-  \printfield{title}%
-  \newunit
-  \printfield{journaltitle}%
-  \setunit{\addspace}%
-  \printfield{year}%
-}
+\title{Scalable Co-Clustering for Large-Scale Data}
+\subtitle{through Dynamic Partitioning and Hierarchical Merging}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
 
-% \usetheme{Berlin}
-\title{Weekly Report}
-\author{WU Zihan}
 \begin{document}
-\maketitle
+
+\frame{\titlepage}
+
 \begin{frame}
   \frametitle{Outline}
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{Clustering vs Co-Clustering}
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{Clustering}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item \textbf{Clustering} groups similar data points into clusters.
+    \item Focuses on grouping based on features (e.g., k-means).
+    \item Used for organizing data, pattern recognition, and understanding hidden structures.
+  \end{itemize}
+  \begin{block}{Key Use}
+    Identifies groups of similar objects in datasets.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Co-Clustering}
+  \begin{itemize}
+    \item \textbf{Co-Clustering} groups both data points and features simultaneously.
+    \item Captures hidden patterns across two dimensions (rows and columns).
+    \item Suitable for complex, high-dimensional datasets.
+  \end{itemize}
+  \begin{block}{Special Advantage}
+    Reveals deeper insights by analyzing data and feature interactions.
+  \end{block}
+  \begin{block}{Applications}
+    \begin{itemize}
+      \item Text mining: Clustering documents and words.
+      \item Collaborative filtering: User and item clustering for recommendations.
+      \item Bioinformatics: Grouping genes and conditions in gene expression data.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{Problem Statement}
+
+\begin{frame}
+  \frametitle{Challenges in Large-Scale Co-Clustering}
+  \begin{enumerate}
+    \item High Computational Complexity
+          \begin{itemize}
+            \item Exponential growth with data size
+          \end{itemize}
+    \item Significant Communication Overhead
+          \begin{itemize}
+            \item Frequent exchange of intermediate results
+          \end{itemize}
+    \item Dependency on Sparse Matrices
+          \begin{itemize}
+            \item Many real-world datasets are dense
+          \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\section{Our Solution: AHPM}
+
+\begin{frame}
+  \frametitle{Adaptive Hierarchical Partitioning and Merging (AHPM)}
+  \begin{minipage}[t]{\textwidth}
+    \begin{columns}
+      \column{0.5\textwidth}
+      \textbf{Challenges}
+      \begin{enumerate}
+        \item High Computational Complexity
+        \item Significant Communication Overhead
+        \item Dependency on Sparse Matrices
+      \end{enumerate}
+
+      \column{0.5\textwidth}
+      \textbf{AHPM Components}
+      \begin{enumerate}
+        \item Large Matrix Partitioning
+        \item Hierarchical Co-cluster Merging
+        \item Flexible Atom-co-clustering
+      \end{enumerate}
+    \end{columns}
+  \end{minipage}
+
+  \vfill
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{workflow.png}
+    \caption{AHPM Workflow}
+  \end{figure}
+\end{frame}
+\section{Methodology}
+
+\begin{frame}
+  \frametitle{Large Matrix Partitioning}
+  \textbf{Addresses:} High Computational Complexity
+  \begin{itemize}
+    \item Probabilistic model for optimal partitioning
+    \item Theorem: Lower bound on detection probability
+          \[ P \ge 1 - \exp \left\{ -2 T_p [\phi m (s^{(k)})^2 + \psi n (t^{(k)})^2] \right\} \]
+    \item Balances computational efficiency and co-cluster integrity
+    \item Enables parallel processing of smaller submatrices
   \end{itemize}
 \end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
+\begin{frame}
+  \frametitle{Hierarchical Co-cluster Merging}
+  \textbf{Addresses:} Significant Communication Overhead
+  \begin{columns}
+    \column{0.5\textwidth}
+    \begin{itemize}
+      \item Iterative merging process
+      \item Starts with most similar clusters
+      \item Adaptive threshold adjustment
+      \item Reduces need for frequent intermediate result exchanges
+      \item Ensures consistency and reduces redundancy
+    \end{itemize}
+
+    \column{0.5\textwidth}
+    \begin{tikzpicture}[
+        cluster/.style={circle, draw, minimum size=0.8cm},
+        arrow/.style={->,>=stealth,thick},
+        node distance=1.2cm
+      ]
+      % Initial clusters
+      \node[cluster] (C1) at (0,0) {C1};
+      \node[cluster] (C2) at (1,0) {C2};
+      \node[cluster] (C3) at (2,0) {C3};
+      \node[cluster] (C4) at (3,0) {C4};
+
+      % First merge
+      \node[cluster] (C12) at (0.5,-1.5) {C1,2};
+      \node[cluster] (C34) at (2.5,-1.5) {C3,4};
+
+      % Final merge
+      \node[cluster] (C1234) at (1.5,-3) {C1,2,3,4};
+
+      % Arrows
+      \draw[arrow] (C1) -- (C12);
+      \draw[arrow] (C2) -- (C12);
+      \draw[arrow] (C3) -- (C34);
+      \draw[arrow] (C4) -- (C34);
+      \draw[arrow] (C12) -- (C1234);
+      \draw[arrow] (C34) -- (C1234);
+
+      % Threshold labels
+      \node[font=\small] at (1.5,-0.75) {Threshold 1};
+      \node[font=\small] at (1.5,-2.25) {Threshold 2};
+
+      % Iteration labels
+      \node[font=\small, rotate=90] at (-0.5,-1.5) {Iteration 1};
+      \node[font=\small, rotate=90] at (-0.5,-3) {Iteration 2};
+    \end{tikzpicture}
+  \end{columns}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Flexible Atom-co-clustering Framework}
+  \textbf{Addresses:} Dependency on Sparse Matrices
+  \begin{itemize}
+    \item Compatible with various atom-co-clustering methods
+    \item Example: Graph-based Spectral Co-clustering Algorithm (SCC)
+          \begin{itemize}
+            \item Constructs bipartite graph
+            \item Uses graph Laplacian eigenvectors
+            \item Applies k-means to singular vectors
+          \end{itemize}
+    \item Can be adapted for both sparse and dense matrices
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{AHPM: Comprehensive Solution}
+  \begin{itemize}
+    \item Significantly improves computational efficiency
+    \item Leverages parallel processing
+    \item Reduces communication overhead
+    \item Adaptable to various data types (sparse and dense)
+    \item Maintains high co-clustering quality
+  \end{itemize}
+\end{frame}
+
+\section{Methodology}
+
+\begin{frame}
+  \frametitle{Large Matrix Partitioning}
+  \begin{itemize}
+    \item Probabilistic model for optimal partitioning
+    \item Theorem: Lower bound on detection probability
+          \[ P \ge 1 - \exp \left\{ -2 T_p [\phi m (s^{(k)})^2 + \psi n (t^{(k)})^2] \right\} \]
+    \item Balances computational efficiency and co-cluster integrity
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Co-clustering on Small Submatrices}
+  \begin{itemize}
+    \item Flexible framework compatible with various atom-co-clustering methods
+    \item Example: Graph-based Spectral Co-clustering Algorithm (SCC)
+          \begin{itemize}
+            \item Constructs bipartite graph
+            \item Uses graph Laplacian eigenvectors
+            \item Applies k-means to singular vectors
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hierarchical Co-cluster Merging}
+  \begin{itemize}
+    \item Iterative merging process
+    \item Starts with most similar clusters
+    \item Adaptive threshold adjustment
+    \item Ensures consistency and reduces redundancy
+  \end{itemize}
+\end{frame}
+
+\section{Experimental Evaluation}
+
+\begin{frame}
+  \frametitle{Datasets and Methods}
+  \begin{itemize}
+    \item Datasets:
+          \begin{itemize}
+            \item Amazon 1000: 1000 reviews, 1000-dim vectors
+            \item CLASSIC4: 18000 documents, 1000-dim vectors
+            \item RCV1-Large: Large-scale dataset
+          \end{itemize}
+    \item Compared Methods:
+          \begin{itemize}
+            \item SCC, PNMTF, DeepCC
+          \end{itemize}
+    \item Our Methods:
+          \begin{itemize}
+            \item AHPM-SCC, AHPM-PNMTF
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results: Computation Time}
+  \begin{table}
+    \centering
+    \begin{tabular}{lcc}
+      \hline
+      Method   & Amazon 1000 & Improvement \\
+      \hline
+      SCC      & 64545.2s    & -           \\
+      AHPM-SCC & 112.5s      & 99.8\%      \\
+      \hline
+    \end{tabular}
+  \end{table}
+  \begin{itemize}
+    \item Significant reduction in computation time
+    \item Enables processing of large-scale datasets
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results: Clustering Quality}
+  \begin{table}
+    \centering
+    \begin{tabular}{lcc}
+      \hline
+      Method   & NMI    & ARI    \\
+      \hline
+      PNMTF    & 0.5944 & 0.4523 \\
+      AHPM-SCC & 0.7676 & 0.5845 \\
+      \hline
+    \end{tabular}
+  \end{table}
+  \begin{itemize}
+    \item Maintains or improves clustering quality
+    \item Effective for various types of datasets
+  \end{itemize}
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+  \frametitle{Conclusion and Future Work}
+  \begin{itemize}
+    \item AHPM successfully addresses large-scale co-clustering challenges
+    \item Significant improvement in computational efficiency
+    \item Maintains high clustering quality
+    \item Potential applications:
+          \begin{itemize}
+            \item Bioinformatics
+            \item Recommendation systems
+            \item Financial pattern recognition
+          \end{itemize}
+    \item Future work:
+          \begin{itemize}
+            \item Further algorithm optimization
+            \item Exploration of more application domains
+            \item Extension to other data analysis tasks
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Thank You}
+  \begin{center}
+    \Large{Questions?}
+  \end{center}
+\end{frame}
 
 \end{document}
