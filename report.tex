@@ -2,14 +2,33 @@
 % arara: biber if found('log', 'LaTeX Warning: There were undefined references.') || changed('ref.bib')
 % arara: pdflatex: { synctex: yes } until !found('log', 'undefined references')
 
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
+\usefonttheme[onlymath]{serif}
 \usetheme{Madrid}
 \usecolortheme{dolphin}
-
+\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
+\addbibresource{ref.bib}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{tikz}
+\usepackage{subcaption}
+\usepackage{multirow}       % multirow in table
+\usepackage{doi}
+\usepackage{threeparttable}
+\usepackage{xcolor}
 \usetikzlibrary{shapes,arrows,positioning,calc}
+
+% 自定义参考文献样式
+\DeclareNameAlias{author}{first-last}
+\DeclareBibliographyDriver{article}{%
+  \printnames{author}%
+  \setunit{\addspace}%
+  \printfield{title}%
+  \newunit
+  \printfield{journaltitle}%
+  \setunit{\addspace}%
+  \printfield{year}%
+}
 
 \title{Scalable Co-Clustering for Large-Scale Data}
 \subtitle{through Dynamic Partitioning and Hierarchical Merging}
@@ -27,16 +46,56 @@
 \end{frame}
 
 \section{Clustering vs Co-Clustering}
+
 \begin{frame}
-  \frametitle{Clustering}
-  \begin{itemize}
-    \item \textbf{Clustering} groups similar data points into clusters.
-    \item Focuses on grouping based on features (e.g., k-means).
-    \item Used for organizing data, pattern recognition, and understanding hidden structures.
-  \end{itemize}
-  \begin{block}{Key Use}
-    Identifies groups of similar objects in datasets.
-  \end{block}
+  \frametitle{Clustering: Overview and Limitations}
+  \begin{columns}[T]
+    \column{0.58\textwidth}
+    \begin{block}{\footnotesize Overview}
+      \footnotesize
+      \begin{itemize}\itemsep0em
+        \item Unsupervised learning technique for pattern recognition
+        \item Objective: Maximize intra-cluster similarity and inter-cluster dissimilarity
+        \item Key algorithms: K-means, Hierarchical, DBSCAN, Gaussian Mixture Models
+      \end{itemize}
+      % \footnotesize
+      % Given $X = \{x_1, ..., x_n\}$, find $K$ clusters $C = \{C_1, ..., C_K\}$ such that:
+      % \begin{enumerate}\itemsep0em
+      %   \item $C_i \neq \emptyset$ for all $i = 1, ..., K$
+      %   \item $\bigcup_{i=1}^K C_i = X$
+      %   \item $C_i \cap C_j = \emptyset$ for $i \neq j$
+      % \end{enumerate}
+      % Objective: Minimize $\sum_{i=1}^K \sum_{x \in C_i} \text{distance}(x, \mu_i)$\\
+      % Where $\mu_i$ is the centroid of cluster $C_i$
+    \end{block}
+
+    \begin{block}{\footnotesize Limitations}
+      \footnotesize
+      \begin{enumerate}\itemsep0em
+        \footnotesize
+        \item Global feature relevance assumption
+              \begin{itemize}\itemsep0em
+                \footnotesize
+                % \item Problem: Assumes equal importance of all features
+                \item Impact: Misses subspace clusters
+                \item Example: Different word subsets in document clustering
+              \end{itemize}
+        \item Inability to capture local patterns
+              \begin{itemize}\itemsep0em
+                \footnotesize
+                % \item Problem: Focus on global similarity measures
+                \item Impact: Overlooks locally coherent patterns
+                \item Example: Gene expression patterns in specific conditions
+              \end{itemize}
+      \end{enumerate}
+    \end{block}
+
+    \column{0.4\textwidth}
+    \begin{figure}
+      \includegraphics[width=\textwidth]{cluster.png}
+      \captionof{figure}{\footnotesize Clustering illustration}
+    \end{figure}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
@@ -58,24 +117,76 @@
   \end{block}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Co-Clustering Overview}
+  \begin{columns}
+    \column{0.55\textwidth}
+    \begin{block}{\footnotesize Overview}
+      \footnotesize
+      \begin{itemize}
+        \item Simultaneously clusters rows and columns of a matrix
+        \item Captures relationships between data points and features
+        \item Key algorithms: Spectral Co-clustering, NMF-based methods, Probabilistic models
+      \end{itemize}
+    \end{block}
+    \begin{block}{\footnotesize Formal Definition}
+      \footnotesize
+      Given a matrix $X$ of size $m \times n$, find $K$ row clusters $R = \{R_1, ..., R_K\}$ and $L$ column clusters $C = \{C_1, ..., C_L\}$ such that:
+      \begin{enumerate}
+        \item $R_i \neq \emptyset$ for all $i = 1, ..., K$
+        \item $C_j \neq \emptyset$ for all $j = 1, ..., L$
+        \item $X_{ij} \in R_i \times C_j$
+      \end{enumerate}
+      Objective: Minimize $\sum_{i=1}^K \sum_{j=1}^L \text{similarity}(R_i, C_j)$
+    \end{block}
+    \column{0.43\textwidth}
+    \begin{figure}[htbp]
+      \centering
+      \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\linewidth]{cluster_co.png}
+        \caption{\footnotesize Clustering}
+        \label{fig:cluster}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\linewidth]{coc.png}
+        \caption{\footnotesize Co-clustering}
+        \label{fig:cocluster}
+      \end{subfigure}
+      \caption{\footnotesize Illustration of the differences between (a) Clustering and (b) Co-clustering \cite{yan2017CoclusteringMultidimensionalBig}.}
+      \label{fig:cocomparison}
+    \end{figure}
+  \end{columns}
+\end{frame}
 \section{Problem Statement}
 
 \begin{frame}
-  \frametitle{Challenges in Large-Scale Co-Clustering}
+  \frametitle{Challenges in Co-clustering Large-Scale Data}
+  % \begin{block}{Key Challenges}
+  \textbf{Key Challenges:}
   \begin{enumerate}
-    \item High Computational Complexity
-          \begin{itemize}
+    \item \textbf{High Computational Complexity}
+          \begin{itemize}\itemsep0em
+            \item Simultaneous analysis of row and column relationships
             \item Exponential growth with data size
+            \item Evaluates all possible row-column combinations
           \end{itemize}
-    \item Significant Communication Overhead
-          \begin{itemize}
-            \item Frequent exchange of intermediate results
+
+    \item \textbf{Significant Communication Overhead}
+          \begin{itemize}\itemsep0em
+            \item Frequent exchange of intermediate results in partitioned data
+            \item Iterative optimization requires continuous updates
+            \item Communication becomes a major bottleneck
           \end{itemize}
-    \item Dependency on Sparse Matrices
-          \begin{itemize}
-            \item Many real-world datasets are dense
+
+    \item \textbf{Dependency on Sparse Matrices}
+          \begin{itemize}\itemsep0em
+            \item Traditional algorithms optimized for sparse matrices
+            \item Real-world data often dense (most elements non-zero)
+            \item Dense matrices lack computational shortcuts
           \end{itemize}
   \end{enumerate}
+  % \end{block}
 \end{frame}
 
 \section{Our Solution: AHPM}
@@ -190,51 +301,51 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{AHPM: Comprehensive Solution}
-  \begin{itemize}
-    \item Significantly improves computational efficiency
-    \item Leverages parallel processing
-    \item Reduces communication overhead
-    \item Adaptable to various data types (sparse and dense)
-    \item Maintains high co-clustering quality
-  \end{itemize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{AHPM: Comprehensive Solution}
+%   \begin{itemize}
+%     \item Significantly improves computational efficiency
+%     \item Leverages parallel processing
+%     \item Reduces communication overhead
+%     \item Adaptable to various data types (sparse and dense)
+%     \item Maintains high co-clustering quality
+%   \end{itemize}
+% \end{frame}
 
-\section{Methodology}
+% \section{Methodology}
 
-\begin{frame}
-  \frametitle{Large Matrix Partitioning}
-  \begin{itemize}
-    \item Probabilistic model for optimal partitioning
-    \item Theorem: Lower bound on detection probability
-          \[ P \ge 1 - \exp \left\{ -2 T_p [\phi m (s^{(k)})^2 + \psi n (t^{(k)})^2] \right\} \]
-    \item Balances computational efficiency and co-cluster integrity
-  \end{itemize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Large Matrix Partitioning}
+%   \begin{itemize}
+%     \item Probabilistic model for optimal partitioning
+%     \item Theorem: Lower bound on detection probability
+%           \[ P \ge 1 - \exp \left\{ -2 T_p [\phi m (s^{(k)})^2 + \psi n (t^{(k)})^2] \right\} \]
+%     \item Balances computational efficiency and co-cluster integrity
+%   \end{itemize}
+% \end{frame}
 
-\begin{frame}
-  \frametitle{Co-clustering on Small Submatrices}
-  \begin{itemize}
-    \item Flexible framework compatible with various atom-co-clustering methods
-    \item Example: Graph-based Spectral Co-clustering Algorithm (SCC)
-          \begin{itemize}
-            \item Constructs bipartite graph
-            \item Uses graph Laplacian eigenvectors
-            \item Applies k-means to singular vectors
-          \end{itemize}
-  \end{itemize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Co-clustering on Small Submatrices}
+%   \begin{itemize}
+%     \item Flexible framework compatible with various atom-co-clustering methods
+%     \item Example: Graph-based Spectral Co-clustering Algorithm (SCC)
+%           \begin{itemize}
+%             \item Constructs bipartite graph
+%             \item Uses graph Laplacian eigenvectors
+%             \item Applies k-means to singular vectors
+%           \end{itemize}
+%   \end{itemize}
+% \end{frame}
 
-\begin{frame}
-  \frametitle{Hierarchical Co-cluster Merging}
-  \begin{itemize}
-    \item Iterative merging process
-    \item Starts with most similar clusters
-    \item Adaptive threshold adjustment
-    \item Ensures consistency and reduces redundancy
-  \end{itemize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Hierarchical Co-cluster Merging}
+%   \begin{itemize}
+%     \item Iterative merging process
+%     \item Starts with most similar clusters
+%     \item Adaptive threshold adjustment
+%     \item Ensures consistency and reduces redundancy
+%   \end{itemize}
+% \end{frame}
 
 \section{Experimental Evaluation}
 
@@ -260,17 +371,25 @@
 
 \begin{frame}
   \frametitle{Results: Computation Time}
-  \begin{table}
+  \begin{table*}[!htbp]
     \centering
-    \begin{tabular}{lcc}
-      \hline
-      Method   & Amazon 1000 & Improvement \\
-      \hline
-      SCC      & 64545.2s    & -           \\
-      AHPM-SCC & 112.5s      & 99.8\%      \\
-      \hline
+    \caption{Comparison of Running Times (in seconds) for Various Co-clustering Methods on Selected Datasets.}
+    \label{tab:running-time}
+    \begin{tabular}{@{} l cccc @{}}
+      \toprule
+      Dataset     & SCC \cite{dhillon2001CoclusteringDocumentsWords} & PNMTF \cite{chen2023ParallelNonNegativeMatrix} & \textbf{AHPM-SCC} & \textbf{AHPM-PNMTF} \\
+      \midrule
+      Amazon 1000 & 64545.2                                          & 303.7                                          & 112.5             & 242.8               \\
+      CLASSIC4    & *                                                & 17,810                                         & 22,894            & 3,028               \\
+      RCV1-Large  & *                                                & 277,092                                        & *                 & 208,048             \\
+      % ... more rows here
+      \bottomrule
     \end{tabular}
-  \end{table}
+    \begin{tablenotes}
+      \small
+      \item Notes: * indicates that the method cannot process the dataset because the dataset size exceeds the processing limit.
+    \end{tablenotes}
+  \end{table*}
   \begin{itemize}
     \item Significant reduction in computation time
     \item Enables processing of large-scale datasets
@@ -317,6 +436,12 @@
             \item Extension to other data analysis tasks
           \end{itemize}
   \end{itemize}
+\end{frame}
+
+% biblatex bibliography
+\begin{frame}[allowframebreaks]
+  \frametitle{References}
+  \printbibliography
 \end{frame}
 
 \begin{frame}

@@ -5,7 +5,7 @@
     // save when focus is lost
     "files.autoSave": "onWindowChange",
     "latex-workshop.latex.build.forceRecipeUsage": true,
-    "latex-workshop.latex.autoBuild.run": "onFileChange",
+    "latex-workshop.latex.autoBuild.run": "onSave",
     "makefile.configureOnOpen": false,
     // pick first recipe
     "latex-workshop.latex.recipe.default": "first",
