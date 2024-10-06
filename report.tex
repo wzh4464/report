@@ -1,4 +1,4 @@
-% arara: pdflatex: { options: ["--synctex=1"] }
+% arara: pdflatex: { options: ["--synctex=1", "--shell-escape"] }
 % arara: biber if found('log', 'LaTeX Warning: There were undefined references.') || changed('ref.bib')
 % arara: pdflatex: { synctex: yes } until !found('log', 'undefined references')
 
@@ -18,6 +18,7 @@
 \usepackage{threeparttable}
 \usepackage{xcolor}
 \usepackage{booktabs}
+\usepackage{svg}  % For inserting SVG files
 
 \usetikzlibrary{shapes,arrows,positioning,calc}
 
@@ -33,15 +34,53 @@
   \printfield{year}%
 }
 
+% Insert images into the title page
+\titlegraphic{%
+  % \includegraphics[height=1.3cm]{smc.png}\hspace{1cm}  % Adjusted size for balance
+  \includesvg[height=1.3cm]{cityu.svg}\hspace{1cm}      % Adjust the width for SVG
+  \includegraphics[height=1.3cm]{cimda.png} % Adjust the width as needed
+  % ieee.svg
+  \hspace{1cm}
+  \includesvg[height=1cm]{ieee.svg}
+  \hspace{1cm}
+  % smc2.jpeg
+  \includegraphics[height=1cm]{smc2.jpeg}
+}
+
 \title{Scalable Co-Clustering for Large-Scale Data}
 \subtitle{through Dynamic Partitioning and Hierarchical Merging}
 \author{Zihan Wu, Zhaoke Huang, and Hong Yan}
 \institute{City University of Hong Kong}
 \date{\today}
 
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    % Left part: Insert the institute (organization)
+    \begin{beamercolorbox}[wd=0.33\paperwidth,ht=2.25ex,dp=1ex,left]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\hspace*{2mm}\insertshortinstitute
+    \end{beamercolorbox}%
+    % Center part: Insert the title of the presentation
+    \begin{beamercolorbox}[wd=0.33\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}\insertshorttitle
+    \end{beamercolorbox}%
+    % Right part: Insert the current slide number and total number of slides
+    \begin{beamercolorbox}[wd=0.33\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}
+      \insertauthor\hspace*{2mm}
+      \insertframenumber/\inserttotalframenumber\hspace*{2mm}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
 \begin{document}
 
-\frame{\titlepage}
+\begin{frame}
+  \centering
+  \includegraphics[height=1.3cm]{smc.png} % Image above the title
+  \vspace{0.5cm} % Adjust spacing between image and title
+  \titlepage
+\end{frame}
 
 \begin{frame}
   \frametitle{Outline}
