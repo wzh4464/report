@@ -5,27 +5,171 @@
 \documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
+\usepackage{subcaption}
 \usefonttheme[onlymath]{serif}
 % biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=none,
+  firstinits=true,
+  maxnames=999,         % 显示所有作者
+  minnames=999,         % 不使用"et al."缩写
+  maxbibnames=999,      % 在参考文献列表中显示所有作者
+  minbibnames=999       % 在参考文献列表中不使用"et al."缩写
+]{biblatex}
+
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
-% 自定义参考文献样式
-\DeclareNameAlias{author}{first-last}
-\DeclareBibliographyDriver{article}{%
-  \printnames{author}%
-  \setunit{\addspace}%
-  \printfield{title}%
-  \newunit
-  \printfield{journaltitle}%
-  \setunit{\addspace}%
-  \printfield{year}%
+% 颜色定义
+\usepackage{xcolor}
+\definecolor{authorcolor}{RGB}{0,0,255}        % 蓝色 - 作者
+\definecolor{titlecolor}{RGB}{0,0,0}           % 黑色 - 标题
+\definecolor{venuecolor}{RGB}{100,149,237}     % 浅蓝色 - 期刊/会议/地点/年份
+
+% BibLaTeX配置
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=none,
+  firstinits=true,
+  maxnames=999,
+  minnames=999,
+  maxbibnames=999,
+  minbibnames=999
+]{biblatex}
+
+\addbibresource{ref.bib}
+
+% 简化所有条目类型
+\AtEveryBibitem{
+  \clearfield{month}
+  \clearfield{day}
+  \clearfield{isbn}
+  \clearfield{issn}
+  \clearfield{doi}
+  \clearfield{url}
+  \clearfield{urldate}
+  \clearfield{eprint}
+  \clearfield{eprinttype}
+  \clearfield{pages}
+  \clearfield{number}
+  \clearfield{volume}
+  \clearfield{publisher}
+  \clearfield{address}
+  \clearfield{note}
+  \clearfield{series}
+  \clearfield{language}
+  \clearfield{edition}
 }
 
+% 作者名格式
+\DeclareNameAlias{author}{first-last}
+
+% 设置作者颜色
+\DeclareNameWrapperFormat{author}{\textcolor{authorcolor}{#1}}
+
+% 标题颜色
+\DeclareFieldFormat{title}{\textcolor{titlecolor}{#1}}
+
+% 期刊/会议/年份/地点颜色
+\DeclareFieldFormat{journaltitle}{\textcolor{venuecolor}{#1}}
+\DeclareFieldFormat{booktitle}{\textcolor{venuecolor}{#1}}
+\DeclareFieldFormat{year}{\textcolor{venuecolor}{#1}}
+\DeclareFieldFormat{location}{\textcolor{venuecolor}{#1}}
+
+% 自定义文章格式
+\DeclareBibliographyDriver{article}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames[author]{author}%
+  \setunit{, }%
+  \printfield{title}%
+  \setunit{, }%
+  \printfield{journaltitle}%
+  \setunit{, }%
+  \printfield{year}%
+  \usebibmacro{finentry}%
+}
+
+% 自定义会议论文格式
+\DeclareBibliographyDriver{inproceedings}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames[author]{author}%
+  \setunit{, }%
+  \printfield{title}%
+  \setunit{, }%
+  \printfield{booktitle}%
+  \setunit{, }%
+  \printlist{location}%
+  \setunit{, }%
+  \printfield{year}%
+  \usebibmacro{finentry}%
+}
+
+% 添加对arXiv条目的支持
+\DeclareBibliographyDriver{online}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \printnames[author]{author}%
+  \setunit{, }%
+  \printfield{title}%
+  \setunit{, }%
+  \printfield{eprinttype}%
+  \setunit{, }%
+  \printfield{year}%
+  \usebibmacro{finentry}%
+}
+
+% % 确保@misc类型中的arXiv预印本也能被正确处理
+% \DeclareBibliographyDriver{misc}{%
+%   \usebibmacro{bibindex}%
+%   \usebibmacro{begentry}%
+%   \printnames[author]{author}%
+%   \setunit{, }%
+%   \printfield{title}%
+%   \setunit{, }%
+%   \iftoggle{bbx:arxiv}{
+%     \textcolor{venuecolor}{arXiv}%
+%   }{
+%     \textcolor{venuecolor}{Preprint}%
+%   }
+%   \setunit{, }%
+%   \printfield{year}%
+%   \usebibmacro{finentry}%
+% }
+
+% % 检测是否为arXiv条目
+% \newtoggle{bbx:arxiv}
+% \AtEveryCitekey{
+%   \iftoggle{bbx:arxiv}
+%     {}
+%     {\global\togglefalse{bbx:arxiv}}
+%   \iffieldundef{eprinttype}
+%     {}
+%     {\iffieldequalstr{eprinttype}{arxiv}
+%        {\global\toggletrue{bbx:arxiv}}
+%        {}}
+% }
+% \AtEveryBibitem{
+%   \iftoggle{bbx:arxiv}
+%     {}
+%     {\global\togglefalse{bbx:arxiv}}
+%   \iffieldundef{eprinttype}
+%     {}
+%     {\iffieldequalstr{eprinttype}{arxiv}
+%        {\global\toggletrue{bbx:arxiv}}
+%        {}}
+% }
+
 % \usetheme{Berlin}
-\title{Weekly Report}
+\title{Self-Introduction \& Research Overview}
+\subtitle{Machine Learning, Computer Vision, and Data Mining}
 \author{WU Zihan}
+\institute{PhD Candidate\\Electrical Engineering\\City University of Hong Kong}
+\date{\today}
 \begin{document}
 \maketitle
 \begin{frame}
@@ -33,14 +177,186 @@
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{Self Introduction}
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{Wu Zihan}
+
+  % Two-column layout
+  % \begin{columns}[T]
+  %     % Left column for Education and Contact
+  %     \begin{column}{0.48\textwidth}
+  \textbf{\large Education}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item \textbf{Ph.D. Candidate}, Electrical Engineering\\
+          City University of Hong Kong, expected 2025
+    \item \textbf{B.Sc.}, Double Major:\\
+          Physics; Mathematics and Applied Mathematics\\
+          University of Science and Technology of China
   \end{itemize}
+  % \end{column}
+
+  % Right column for Research Interests
+  % \begin{column}{0.48\textwidth}
+  \textbf{\large Research Interests}
+
+  Machine learning, computer vision, and data mining with focus on:
+
+  \begin{itemize}
+    \item \textbf{Machine Unlearning \& Privacy}
+          \begin{itemize}
+            \item LMEraser system for language model unlearning
+            \item Prompt tuning for ViT (86M params) \& Swin (88M)
+            \item 100-fold speedup in unlearning process
+          \end{itemize}
+
+    \item \textbf{Co-Clustering Algorithms}
+          \begin{itemize}
+            \item Scalable algorithms for large datasets (800K+ docs)
+            \item Novel approaches for ellipse detection
+            \item Cell protrusion analysis via convex-hull methods
+          \end{itemize}
+  \end{itemize}
+  %     \end{column}
+  % \end{columns}
+\end{frame}
+
+\section{Selected Publications}
+\begin{frame}
+  \frametitle{Selected Publications}
+  \footnotesize
+  \begin{itemize}
+    \item \fullcite{xu2025LMEraserLargeModel}
+    \item \fullcite{wu2024ScalableCoClusteringLargeScale}
+    \item \fullcite{wu2025EllipseDetectionGlobal}
+    \item \fullcite{huang2024ConvexhullBasedMethod}
+    \item \fullcite{xu2025DynamicInfluenceTracker}
+    \item \fullcite{xu2025LiveValTimeawareData}
+  \end{itemize}
+\end{frame}
+
+%LMEraser: Large Model Unlearning via Adaptive Prompt Tuning 
+\subsection{LMEraser: Large Model Unlearning via Adaptive Prompt Tuning}
+\begin{frame}
+  \frametitle{LMEraser: Large Model Unlearning via Adaptive Prompt Tuning}
+  % insert lmeraser.png
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{lmeraser.png}
+    \caption{LMEraser: Large Model Unlearning via Adaptive Prompt Tuning}
+  \end{figure}
+\end{frame}
+
+%Scalable co-clustering for large-scale data through dynamic partitioning and hierarchical merging
+\subsection{Scalable Co-Clustering for Large-Scale Data through Dynamic Partitioning and Hierarchical Merging}
+\begin{frame}
+  \frametitle{Scalable Co-Clustering for Large-Scale Data through Dynamic Partitioning and Hierarchical Merging}
+  % insert cocluster.png and scalable.png
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.4\textwidth]{cocluster.png}
+    \vspace{-0.3cm}
+    \caption{Co-Cluster}
+  \end{figure}
+  % \vspace{-1cm}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{scalable.png}
+    \vspace{-0.3cm}
+    \caption{Scalable Co-Clustering}
+  \end{figure}
+
+\end{frame}
+
+%Ellipse Detection via Global Arc Compatibilities and Adaptive  Co-Clustering for Real-World Measurement Systems
+\subsection{Ellipse Detection via Global Arc Compatibilities and Adaptive Co-Clustering for Real-World Measurement Systems}
+\begin{frame}
+
+  \frametitle{Ellipse Detection via Global Arc Compatibilities and Adaptive Co-Clustering for Real-World Measurement Systems}
+  % insert ellipse1.png, ellipse2.png and // and insert ellipse3.png
+  \begin{figure}
+    \centering
+    % 上方两个子图并排
+    \begin{subfigure}[b]{0.48\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{ellipse1.png}
+      \caption{}
+      \label{fig:ellipse1}
+    \end{subfigure}
+    \hfill % 添加水平间距
+    \begin{subfigure}[b]{0.48\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{ellipse2.png}
+      \caption{}
+      \label{fig:ellipse2}
+    \end{subfigure}
+
+    \caption{Algorithm for Ellipse Detection}
+    \label{fig:ellipses}
+  \end{figure}
+\end{frame}
+
+% Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training
+\subsection{Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training}
+% \begin{equation}
+%   \Delta \theta_{-j}^{[t_1,t_2]} = (\theta_{-j}^{[t_2]} - \theta_{-j}^{[t_1]}) - (\theta^{[t_2]} - \theta^{[t_1]}),
+% \end{equation}
+% \begin{align}
+%   \Delta \theta_{-j}^{[t_1,t_2]} \approx  \left(\prod_{k=t_1}^{t_2-1} Z_k - I\right)\left(\sum_{t=0}^{t_1-1} \left(\prod_{k=t+1}^{t_1-1} Z_k\right) \mathbf{\tilde{1}}_j^{[t]}\right) \nonumber + \sum_{t=t_1}^{t_2-1} \left(\prod_{k=t+1}^{t_2-1} Z_k\right) \mathbf{\tilde{1}}_j^{[t]}
+% \end{align}
+\begin{frame}
+  \frametitle{Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training}
+  % equations
+  \small
+  \begin{equation}
+    \Delta \theta_{-j}^{[t_1,t_2]} = (\theta_{-j}^{[t_2]} - \theta_{-j}^{[t_1]}) - (\theta^{[t_2]} - \theta^{[t_1]}),
+  \end{equation}
+  \begin{align}
+    \Delta \theta_{-j}^{[t_1,t_2]} & \approx  \left(\prod_{k=t_1}^{t_2-1} Z_k - I\right)\left(\sum_{t=0}^{t_1-1} \left(\prod_{k=t+1}^{t_1-1} Z_k\right) \mathbf{\tilde{1}}_j^{[t]}\right) \nonumber \\ &+ \sum_{t=t_1}^{t_2-1} \left(\prod_{k=t+1}^{t_2-1} Z_k\right) \mathbf{\tilde{1}}_j^{[t]}
+  \end{align}
+  % Z_t = I - \eta_{t} H^{[t]}
+  where
+  \begin{equation}
+    Z_t = I - \eta_{t} H^{[t]}
+  \end{equation}
+  % \mathbf{\tilde{1}}_j^{[t]} = \mathbf{1}_{j \in S_{t}}\frac{\eta_{t}}{|S_{t}|} g(z_j; \theta^{[t]})$ and recursively apply this relation over the interval $[t_1, t_2]
+  \begin{equation}
+    \mathbf{\tilde{1}}_j^{[t]} = \mathbf{1}_{j \in S_{t}}\frac{\eta_{t}}{|S_{t}|} g(z_j; \theta^{[t]})
+  \end{equation}
+\end{frame}
+
+% LiveVal: Time-aware Data Valuation via Adaptive Reference Points
+\subsection{LiveVal: Time-aware Data Valuation via Adaptive Reference Points}
+\begin{frame}[allowframebreaks]
+  \frametitle{LiveVal: Time-aware Data Valuation via Adaptive Reference Points}
+  % insert liveval1.png, liveval2.png and liveval3.png
+
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{liveval1.png}
+    \caption{Concept of LiveVal}
+  \end{figure}
+
+  \begin{figure}
+    \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{liveval2.png}
+    \caption{}
+    \label{fig:liveval2}
+  \end{subfigure}
+  \hfill % 添加水平间距
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{liveval3.png}
+    \caption{}
+    \label{fig:liveval3}
+  \end{subfigure}
+  % \footnotesize
+  \caption{Algorithm for LiveVal}
+  \end{figure}
+
 \end{frame}
 
 % biblatex bibliography
