@@ -6,12 +6,18 @@
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{multirow}
+
 % biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
-% 自定义参考文献样式
+% Custom bibliography style
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
@@ -23,31 +29,349 @@
   \printfield{year}%
 }
 
-% \usetheme{Berlin}
-\title{Weekly Report}
+\usetheme{Singapore}
+% \usecolortheme{crane}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\title{Extending Scalable Co-Clustering from Matrices to Tensors}
+\subtitle{Theoretical Foundations and Potential Applications}
 \author{WU Zihan}
+\institute{City University of Hong Kong}
+\date{\today}
+
 \begin{document}
-\maketitle
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
 \begin{frame}
   \frametitle{Outline}
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{Background}
+
+% \begin{frame}
+%   \frametitle{Co-Clustering: A Brief Introduction}
+%   \begin{itemize}
+%     \item \textbf{Traditional Clustering}: Groups either rows or columns
+%     \item \textbf{Co-Clustering}: Simultaneously clusters rows and columns
+%     \begin{itemize}
+%       \item Reveals more fine-grained groups
+%       \item Identifies complex correlations between different data types
+%       \item Applications: bioinformatics, text mining, recommendation systems
+%     \end{itemize}
+%     \item \textbf{Challenge}: Poor scalability for large-scale data
+%   \end{itemize}
+
+%   \begin{figure}
+%     \centering
+%     \begin{tikzpicture}
+%       \draw[fill=gray!20] (0,0) rectangle (4,3);
+%       \draw[thick] (0,1.5) -- (4,1.5);
+%       \draw[thick] (2,0) -- (2,3);
+%       \node at (1,2.25) {Cluster 1};
+%       \node at (3,2.25) {Cluster 2};
+%       \node at (1,0.75) {Cluster 3};
+%       \node at (3,0.75) {Cluster 4};
+%     \end{tikzpicture}
+%     \caption{Illustration of co-clustering results}
+%   \end{figure}
+% \end{frame}
+
+
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{Related Works}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item \textbf{Parameter-less co-clustering} \cite{ienco2013}
+          \begin{itemize}
+            \item Optimizes Goodman-Kruskal's $\tau$ to eliminate need for specifying cluster numbers
+            \item Targets star-structured heterogeneous data with multiple feature domains
+          \end{itemize}
+    \item \textbf{Tensor co-clustering} \cite{battaglia2023}
+          \begin{itemize}
+            \item Extends parameter-less approach to $n$-dimensional tensors
+            \item Addresses challenge of parameter specification in complex tensor settings
+          \end{itemize}
+          %   \item \textbf{Our Scalable Co-Clustering} \cite{wu2024}
+          %   \begin{itemize}
+          %     \item Matrix partitioning with probabilistic guarantees for preserving co-clusters
+          %     \item 83\% computation time reduction for dense matrices
+          % \end{itemize}
   \end{itemize}
 \end{frame}
 
-% biblatex bibliography
+\section{Our Matrix-Based Approach}
+
+% \begin{frame}
+%   \frametitle{AHPM: Key Components}
+%   \textbf{Adaptive Hierarchical Partitioning and Merging (AHPM)}
+%   \begin{enumerate}
+%     \item \textbf{Large Matrix Partitioning Algorithm}
+%     \begin{itemize}
+%       \item Divides large matrix into smaller submatrices
+%       \item Uses probabilistic model to optimize configuration
+%     \end{itemize}
+%     \item \textbf{Parallel Co-Clustering}
+%     \begin{itemize}
+%       \item Applies co-clustering on submatrices independently
+%     \end{itemize}
+%     \item \textbf{Hierarchical Co-Cluster Merging}
+%     \begin{itemize}
+%       \item Efficiently identifies and merges co-clusters
+%       \item Enhances robustness and reliability
+%     \end{itemize}
+%   \end{enumerate}
+
+%   \begin{figure}
+%     \centering
+%     \begin{tikzpicture}[scale=0.7]
+%       \draw[fill=gray!20] (0,0) rectangle (3,3);
+%       \draw[->, thick] (3.5,1.5) -- (4.5,1.5);
+%       \draw[fill=gray!20] (5,0) rectangle (6,1);
+%       \draw[fill=gray!20] (5,2) rectangle (6,3);
+%       \draw[fill=gray!20] (7,0) rectangle (8,1);
+%       \draw[fill=gray!20] (7,2) rectangle (8,3);
+%       \draw[->, thick] (8.5,1.5) -- (9.5,1.5);
+%       \draw[fill=gray!20] (10,0) rectangle (13,3);
+%     \end{tikzpicture}
+%     \caption{Partitioning, processing, and merging workflow}
+%   \end{figure}
+% \end{frame}
+
+\begin{frame}
+  \frametitle{Theoretical Foundation: Matrix Rank}
+  \begin{block}{Key Insight}
+    \textbf{Matrix rank does not increase when cutting into smaller matrices}
+  \end{block}
+
+  \begin{itemize}
+    \item For a matrix $A \in \mathbb{R}^{M \times N}$ partitioned into blocks:
+          \begin{itemize}
+            \item Each block $B_{ij}$ represents a submatrix
+            \item $\text{rank}(B_{ij}) \leq \text{rank}(A)$
+          \end{itemize}
+
+    \item Probabilistic model ensures co-cluster preservation: \cite{wu2024}
+          \begin{equation}
+            P(\omega_k) \leq \exp \{-2[\phi_m(s^{(k)})^2 + \psi_n(t^{(k)})^2]\}
+          \end{equation}
+
+    \item Success probability of identifying co-clusters:
+          \begin{equation}
+            P \geq 1 - \exp \{-2T_p[\phi_m(s^{(k)})^2 + \psi_n(t^{(k)})^2]\}
+          \end{equation}
+  \end{itemize}
+\end{frame}
+
+\section{Extension to Tensors}
+
+\begin{frame}
+  \frametitle{Tensor Concepts and Rank}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      % \textbf{Tensor Concepts:}
+      % \begin{itemize}
+      %   \item \textbf{Tensor}: Multi-dimensional arrays $\mathcal{T} \in \mathbb{R}^{I_1 \times I_2 \times \cdots \times I_N}$
+      %   \item \textbf{Fibers}: Higher-order analog of matrix rows and columns
+      %   \item \textbf{Slices}: Two-dimensional sections of a tensor
+      % \end{itemize}
+
+      \textbf{Tensor Rank Concepts:}
+      \begin{itemize}
+        \item \textbf{CP rank}: Minimum number of rank-one tensors needed for decomposition \cite{carroll1970AnalysisIndividualDifferences}
+        \item \textbf{Tucker rank}: Tuple of ranks of the matricizations \cite{tucker1966MathematicalNotesThreemode}
+        \item \textbf{Tensor train rank}: Set of ranks in tensor train decomposition \cite{oseledets2011TensorTrainDecomposition}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{figure}
+        \centering
+        \begin{tikzpicture}[scale=0.8]
+          \draw[fill=gray!20] (0,0,0) -- (0,1.5,0) -- (0,1.5,1.5) -- (0,0,1.5) -- cycle;
+          \draw[fill=gray!20] (0,0,0) -- (1.5,0,0) -- (1.5,0,1.5) -- (0,0,1.5) -- cycle;
+          \draw[fill=gray!20] (0,0,0) -- (1.5,0,0) -- (1.5,1.5,0) -- (0,1.5,0) -- cycle;
+          \draw[fill=gray!20] (1.5,1.5,0) -- (1.5,1.5,1.5) -- (0,1.5,1.5) -- (0,1.5,0) -- cycle;
+          \draw[fill=gray!20] (1.5,0,1.5) -- (1.5,1.5,1.5) -- (0,1.5,1.5) -- (0,0,1.5) -- cycle;
+          \draw[fill=gray!20] (1.5,0,0) -- (1.5,1.5,0) -- (1.5,1.5,1.5) -- (1.5,0,1.5) -- cycle;
+        \end{tikzpicture}
+        \caption{3D tensor representation}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Extending AHPM to Tensors}
+  \textbf{Key Insights for Extension:}
+  \begin{enumerate}
+    \item \textbf{Partitioning Strategy}
+          \begin{itemize}
+            \item Extend partitioning to multi-dimensional space
+            \item For tensor $\mathcal{T} \in \mathbb{R}^{I_1 \times I_2 \times \cdots \times I_N}$, partition along each dimension
+          \end{itemize}
+
+    \item \textbf{Probabilistic Model Adaptation}
+          \begin{itemize}
+            \item Extend probability formulation for tensor co-clusters
+            \item Consider multi-dimensional block configurations
+          \end{itemize}
+
+    \item \textbf{Hierarchical Merging Extension}
+          \begin{itemize}
+            \item Develop similarity measures for tensor co-clusters
+            \item Design merge strategies for multi-dimensional blocks
+          \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mathematical Formulation for Tensor Extension}
+  \begin{block}{Tensor Partitioning}
+    \footnotesize
+    For a tensor $\mathcal{T} \in \mathbb{R}^{I_1 \times I_2 \times \cdots \times I_N}$, partition into blocks:
+    \begin{equation}
+      \mathcal{B}_{i_1,i_2,\ldots,i_N}, \quad 1 \leq i_j \leq m_j
+    \end{equation}
+  \end{block}
+
+  \begin{block}{Probabilistic Model for Tensor Co-clusters}
+    \footnotesize
+    Extend matrix probability model:
+    \begin{equation}
+      P(\omega_k) \leq \exp \left\{-2\sum_{j=1}^{N} \phi_{m_j}(s_j^{(k)})^2 \right\}
+    \end{equation}
+    where $s_j^{(k)}$ is the minimum size of co-cluster $C_k$ in the $j$-th dimension.
+  \end{block}
+
+  \begin{block}{Success Probability}
+    \footnotesize
+    \begin{equation}
+      P \geq 1 - \exp \left\{-2T_p\sum_{j=1}^{N} \phi_{m_j}(s_j^{(k)})^2 \right\}
+    \end{equation}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proposed Algorithm for Tensor Co-Clustering}
+  \begin{algorithm}[H]
+    \caption{Tensor AHPM}
+    \begin{algorithmic}[1]
+      \Require Tensor $\mathcal{T} \in \mathbb{R}^{I_1 \times I_2 \times \cdots \times I_N}$, Block sizes $\{\phi_{i_j}\}$, Thresholds
+      \Ensure Co-clustered result $\mathcal{C}$
+      \State Initialize block set $\mathcal{B}$ based on dimensions
+      \State Calculate minimum sizes $s_j^{(k)}$ for each co-cluster
+      \For{each potential co-cluster $C_k$}
+      \State Calculate $P(\omega_k)$ using extended model
+      \If{$P(\omega_k) < P_{thresh}$}
+      \State Partition tensor $\mathcal{T}$ into blocks $\mathcal{B}$
+      \State Perform co-clustering on each block
+      \State Merge co-clustered results hierarchically
+      \EndIf
+      \EndFor
+      \State \Return Aggregated co-clustered result $\mathcal{C}$
+    \end{algorithmic}
+  \end{algorithm}
+\end{frame}
+
+% \section{Comparison with Existing Approaches}
+
+% \begin{frame}
+%   \frametitle{Comparison with Battaglia \& Pensa's Approach}
+%   \begin{table}
+%     \centering
+%     \footnotesize
+%     \begin{tabular}{lccc}
+%       \toprule
+%       \textbf{Feature} & \textbf{Our Approach} & \textbf{Battaglia \& Pensa} & \textbf{Our Extension} \\
+%       \midrule
+%       Dimensionality & Matrix (2D) & Tensor (n-D) & Tensor (n-D) \\
+%       Parameter tuning & Required & Parameter-less & Required \\
+%       Scalability focus & Strong & Limited & Strong \\
+%       Theoretical basis & Matrix rank & Information theory & Tensor rank \\
+%       Hierarchical merging & Yes & No & Yes \\
+%       Probabilistic model & Yes & No & Yes \\
+%       \bottomrule
+%     \end{tabular}
+%     \caption{Comparison of approaches}
+%   \end{table}
+
+%   \begin{itemize}
+%     \item \textbf{Complementary approaches}:
+%     \begin{itemize}
+%       \item Battaglia \& Pensa: Focus on eliminating parameter tuning
+%       \item Our approach: Focus on scalability and computational efficiency
+%     \end{itemize}
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Potential Challenges and Solutions}
+%   \begin{columns}
+%     \begin{column}{0.48\textwidth}
+%       \textbf{Challenges:}
+%       \begin{itemize}
+%         \item Exponential growth of blocks with dimensions
+%         \item Curse of dimensionality
+%         \item Complex tensor rank properties
+%         \item Computational complexity for merging
+%         \item Memory requirements
+%       \end{itemize}
+%     \end{column}
+%     \begin{column}{0.48\textwidth}
+%       \textbf{Solutions:}
+%       \begin{itemize}
+%         \item Dimension-wise adaptive partitioning
+%         \item Tensor decomposition preprocessing
+%         \item Parallel processing architecture
+%         \item Incremental merging strategies
+%         \item Sparse tensor representations
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+
+%   \begin{block}{Research Directions}
+%     \begin{itemize}
+%       \item Develop efficient tensor partitioning strategies
+%       \item Design new tensor co-cluster similarity measures
+%       \item Explore applications in multi-modal data analysis
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+  \frametitle{Conclusion and Future Work}
+  \begin{itemize}
+    \item \textbf{Summary}:
+          \begin{itemize}
+            \item Our matrix-based AHPM method can be extended to tensors
+            \item Theoretical foundation based on rank concepts transfers to tensors
+            \item Probabilistic model can be adapted for multi-dimensional data
+          \end{itemize}
+
+          % \item \textbf{Expected Benefits}:
+          % \begin{itemize}
+          %   \item Significant computational savings for large tensor data
+          %   \item More fine-grained co-clusters in multi-dimensional spaces
+          %   \item Enhanced scalability for real-world multi-modal applications
+          % \end{itemize}
+
+    \item \textbf{Future Work}:
+          \begin{itemize}
+            \item Implementation and empirical evaluation
+            \item Application to specific domains (e.g., multi-modal recommendations)
+            \item Integration with parameter-less approaches
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[allowframebreaks]
   \frametitle{References}
   \printbibliography
 \end{frame}
-
 
 \end{document}
