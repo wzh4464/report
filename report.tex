@@ -51,6 +51,97 @@
   \tableofcontents
 \end{frame}
 
+\section{Introduction}
+\begin{frame}
+  \frametitle{Why We Do N-Model Tensor Co-Clustering}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \textbf{Advantages of Tensor Representations:} \cite{battaglia2023}
+      \begin{itemize}
+        \item Modern data involves complex relationships naturally represented as tensors
+        \item Tensors effectively represent n-ary relations across multiple domains:
+              \begin{itemize}
+                \item Gene expression data
+                \item Social networks
+                \item Heterogeneous information networks
+                \item Time-evolving data
+                \item Multilingual text corpora
+              \end{itemize}
+        \item Capture more complex patterns than traditional matrix methods
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{figure}
+        \centering
+        \begin{tikzpicture}[scale=0.7]
+          % 3D tensor showing multiple relationships
+          \draw[fill=gray!10] (0,0,0) -- (2,0,0) -- (2,2,0) -- (0,2,0) -- cycle;
+          \draw[fill=gray!20] (0,0,1) -- (2,0,1) -- (2,2,1) -- (0,2,1) -- cycle;
+          \draw[fill=gray!30] (0,0,2) -- (2,0,2) -- (2,2,2) -- (0,2,2) -- cycle;
+
+          % Connect layers
+          % \draw[dashed] (0,0,0) -- (0,0,2);
+          \draw[dashed] (2,0,0) -- (2,0,2);
+          \draw[dashed] (0,2,0) -- (0,2,2);
+          \draw[dashed] (2,2,0) -- (2,2,2);
+
+          % Labels
+          \node[anchor=north east] at (0,1.5,2) {Features};
+          \node[anchor=north west] at (0,3,2) {Samples};
+          \node[anchor=south east] at (3.25,0,2) {Time};
+        \end{tikzpicture}
+        \caption{Multi-dimensional relationships in tensor data}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Challenges for N-Dimensional Co-Clustering}
+  \begin{block}{Key Challenges \cite{battaglia2023}}
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \begin{itemize}
+          \item \textbf{Parameter specification difficulty}
+                \begin{itemize}
+                  \item Determining optimal cluster numbers becomes exponentially more difficult
+                  \item Each additional dimension multiplies the difficulty
+                \end{itemize}
+
+                % \item \textbf{Search space complexity}
+                %       \begin{itemize}
+                %         \item Solution space grows enormously
+                %         \item Even a small 10×10×10 tensor has $1.56 \times 10^{15}$ possible partitions
+                %       \end{itemize}
+        \end{itemize}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{itemize}
+          \item \textbf{Algorithmic complexity}
+                \begin{itemize}
+                  \item Most existing approaches rely on tensor factorization
+                  \item Introduces additional parameters (number of latent factors)
+                \end{itemize}
+
+                % \item \textbf{Comparison problem}
+                %       \begin{itemize}
+                %         \item Most clustering algorithms optimize objective functions dependent on cluster counts
+                %         \item Impossible to directly compare solutions with different cluster numbers
+                %       \end{itemize}
+        \end{itemize}
+      \end{column}
+    \end{columns}
+  \end{block}
+
+  \begin{alertblock}{Our Approach Addresses}
+    \begin{itemize}
+      \item Scalability through partitioning
+      \item Preserving co-cluster integrity with probabilistic guarantees
+      \item Hierarchical merging to recover global structure
+    \end{itemize}
+  \end{alertblock}
+\end{frame}
+
 \section{Background}
 
 % \begin{frame}
@@ -340,6 +431,29 @@
 %     \end{itemize}
 %   \end{block}
 % \end{frame}
+
+\section{Applications}
+\begin{frame}
+  \frametitle{Applications and Available Datasets}
+
+  \textbf{Real-World Applications:} \cite{wu2016GeneralTensorSpectral}
+  \begin{itemize}
+    \item \textbf{Airline Flight Networks}
+          \begin{itemize}
+            \item Airports × Airlines × Time periods
+            \item Discover travel patterns and network dynamics
+            \item Identify seasonal trends and hub activities
+          \end{itemize}
+
+    \item \textbf{Multilingual N-grams}
+          \begin{itemize}
+            \item English/Chinese n-gram co-occurrences
+            \item Cross-language concept mapping
+            \item Translation pattern discovery
+          \end{itemize}
+  \end{itemize}
+
+\end{frame}
 
 \section{Conclusion}
 
