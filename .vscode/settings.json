@@ -34,6 +34,7 @@
             "name": "arara",
             "command": "arara",
             "args": [
+                "--verbose",
                 "%DOC%"
             ]
         },

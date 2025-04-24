@@ -1,53 +1,83 @@
-% arara: pdflatex: { options: ["--synctex=1"] }
-% arara: biber if found('log', 'LaTeX Warning: There were undefined references.') || changed('ref.bib')
-% arara: pdflatex: { synctex: yes } until !found('log', 'undefined references')
+% arara: pdflatex: { synctex: yes }
 
 \documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
 % biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
-\addbibresource{ref.bib}
+% \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
+% \addbibresource{ref.bib}
 \usepackage{hyperref}
 
 % 自定义参考文献样式
-\DeclareNameAlias{author}{first-last}
-\DeclareBibliographyDriver{article}{%
-  \printnames{author}%
-  \setunit{\addspace}%
-  \printfield{title}%
-  \newunit
-  \printfield{journaltitle}%
-  \setunit{\addspace}%
-  \printfield{year}%
-}
+% \DeclareNameAlias{author}{first-last}
+% \DeclareBibliographyDriver{article}{%
+%   \printnames{author}%
+%   \setunit{\addspace}%
+%   \printfield{title}%
+%   \newunit
+%   \printfield{journaltitle}%
+%   \setunit{\addspace}%
+%   \printfield{year}%
+% }
 
 % \usetheme{Berlin}
 \title{Weekly Report}
 \author{WU Zihan}
 \begin{document}
 \maketitle
+
+\section{Progress Summary}
+\section{Data and Methodology}
 \begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
+  \frametitle{Data and Methodology}
+  \begin{columns}[T] % align columns at the top
+    \begin{column}{0.48\textwidth}
+      \textbf{Data and Feature Engineering}
+      \begin{itemize}
+        \item Dataset: Single-cell developmental data with lineage and temporal information.
+        \item Features: Spherical harmonics computed to describe spatial characteristics of cells over time.
+        \item Objective: Identify temporally and functionally coherent clusters of cells through co-clustering.
+      \end{itemize}
+    \end{column}
+    \hfill
+    \begin{column}{0.48\textwidth}
+      \textbf{Methodology}
+      \begin{itemize}
+        \item Applied a co-clustering approach to the cell $\times$ time $\times$ feature tensor.
+        \item Reduced the tensor to 2D by integrating over the feature axis to analyze cell-time interactions.
+        \item Visualized clustering results as a heatmap showing presence intensity of cells over time.
+      \end{itemize}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\section{Introduction}
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{Co-clustered Cell Timeline}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{coclustered_timeline.png}
+    \caption{Projection of 3D co-cluster (cell $\times$ time $\times$ features) onto cell $\times$ time plane. Red dashed lines indicate co-cluster boundaries.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fate Distribution Across Clusters}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{fate_distribution.png}
+    \caption{Distribution of final cell fates across co-clusters. Cluster 0 is the most dominant across all fate types.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Preliminary Insights}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item Clusters capture both temporal dynamics and cell fate similarities.
+    \item Cluster 0 is broadly distributed and corresponds to common developmental trajectories.
+    \item Clusters 5 and 8 show specific associations with \textit{Unspecified} and \textit{Skin} fates, suggesting functional specialization.
+    \item Early-stage clusters (e.g., rightmost in the heatmap) may represent progenitor cells.
   \end{itemize}
 \end{frame}
-
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
-\end{frame}
-
 
 \end{document}
