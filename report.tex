@@ -6,12 +6,18 @@
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{multirow}
+
 % biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
-% 自定义参考文献样式
+% Custom bibliography style
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
@@ -23,31 +29,310 @@
   \printfield{year}%
 }
 
-% \usetheme{Berlin}
-\title{Weekly Report}
+\usetheme{Singapore}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\title{Weekly Progress Report}
+\subtitle{Extending Scalable Co-Clustering from Matrices to Tensors}
 \author{WU Zihan}
+\institute{City University of Hong Kong}
+\date{\today}
+
 \begin{document}
-\maketitle
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
 \begin{frame}
   \frametitle{Outline}
-  \tableofcontents
+  \begin{enumerate}
+    \item K-Dimension Parameter Derivation
+    \item Feature Generation Implementation
+    \item Sparse Data Challenge and Solutions
+    \item Complete Workflow Development
+  \end{enumerate}
 \end{frame}
 
-\section{Introduction}
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{K-Dimension Parameter Derivation}
+
+  % \begin{columns}
+  %   \begin{column}{0.6\textwidth}
+  \textbf{This Week's Mathematical Progress:}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item Extended parameter estimation to N-dimensional tensors
+    \item Proved bounds on co-cluster preservation probability
+    \item Optimized k-dimension selection formulas
   \end{itemize}
+
+  \vspace{0.3cm}
+  Key result for dimension j:
+  \begin{equation}
+    k_j = \left\lceil\frac{I_j}{s_j^{(min)}}\sqrt{\frac{\log(1/\delta)}{2T_p}}\right\rceil
+  \end{equation}
+  % \end{column}
+
+  %   \begin{column}{0.4\textwidth}
+  %     \begin{figure}
+  %       \centering
+  %       \begin{tikzpicture}[scale=0.7]
+  %         % Show k-parameter selection visualization
+  %         \draw[->] (0,0) -- (3,0) node[right] {$s_j^{(min)}$};
+  %         \draw[->] (0,0) -- (0,3) node[above] {$k_j$};
+
+  %         % Plot curve
+  %         \draw[scale=0.8, domain=0.5:2.5, smooth, variable=\x, blue, thick] 
+  %           plot ({\x}, {2/\x});
+
+  %         % Add point
+  %         \fill[red] (1.5,1.33) circle (0.1);
+  %         \draw[dashed] (1.5,0) -- (1.5,1.33) -- (0,1.33);
+  %       \end{tikzpicture}
+  %     \end{figure}
+  %   \end{column}
+  % \end{columns}
 \end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
+\begin{frame}
+  \frametitle{Feature Generation Implementation}
+  % \begin{columns}
+  %   \begin{column}{0.5\textwidth}
+
+  \textbf{Feature Generation:}
+  Hundreds of Features in Total
+
+  \textbf{Implemented Shape Descriptors:}
+  \begin{itemize}
+    \item Sphericity metrics
+    \item Roundness measure
+    \item Convex hull analysis
+    \item Shape factors
+  \end{itemize}
+
+  \textbf{Eigen vectors}
+
+  \textbf{Biological Features:}
+  \begin{itemize}
+    \item Cell type-specific markers
+    \item Temporal stage indicators
+  \end{itemize}
+
+  \textbf{Kinematic characteristics}
+  \begin{itemize}
+    \item Cell movement patterns
+    \item Morphogenetic changes
+    \item Cell-cell interaction dynamics
+  \end{itemize}
+
+  %     \vspace{0.3cm}
+  %     \textbf{Technical Implementation:}
+  %     \begin{itemize}
+  %       \item Efficient 3D data processing
+  %       \item PCA for dimension reduction
+  %       \item Feature normalization
+  %     \end{itemize}
+  %   \end{column}
+
+  %   \begin{column}{0.5\textwidth}
+  %     \begin{figure}
+  %       \centering
+  %       \begin{tikzpicture}[scale=0.7]
+  %         % Cell shape
+  %         \draw[thick, fill=blue!20] plot [smooth cycle] coordinates {(0,0) (1,0.5) (2,0) (2.5,-1) (1,-1.5) (0,-1)};
+
+  %         % Feature labels
+  %         \draw[->, thick] (1.5,0.5) -- (3,1);
+  %         \node[right] at (3,1) {Sphericity};
+
+  %         \draw[->, thick] (2.5,-0.5) -- (3.5,-0.5);
+  %         \node[right] at (3.5,-0.5) {Elongation};
+
+  %         \draw[->, thick] (0.5,-1) -- (-0.5,-1.5);
+  %         \node[left] at (-0.5,-1.5) {Roundness};
+  %       \end{tikzpicture}
+  %     \end{figure}
+  %   \end{column}
+  % \end{columns}
 \end{frame}
 
+\section{Complete Workflow Development}
+
+\begin{frame}
+  \frametitle{Evaluation Workflow}
+
+  % \begin{columns}
+  %   \begin{column}{0.6\textwidth}
+  \textbf{Projection-Based Evaluation:}
+  \begin{itemize}
+    \item Project co-clusters onto dimensions with known ground truth
+    \item Compare with known cell types and temporal stages
+    \item Analyze remaining dimensions where matches are good
+    \item Extract biological patterns from other features
+  \end{itemize}
+  %   \end{column}
+
+  %   \begin{column}{0.4\textwidth}
+  %     \begin{figure}
+  %       \centering
+  %       \begin{tikzpicture}[scale=0.6]
+  %         % Tensor
+  %         \draw[fill=blue!10] (0,0,0) -- (2,0,0) -- (2,2,0) -- (0,2,0) -- cycle;
+  %         \draw[fill=blue!20] (0,0,1) -- (2,0,1) -- (2,2,1) -- (0,2,1) -- cycle;
+  %         \draw (0,0,0) -- (0,0,1);
+  %         \draw (2,0,0) -- (2,0,1);
+  %         \draw (0,2,0) -- (0,2,1);
+  %         \draw (2,2,0) -- (2,2,1);
+
+  %         % Projection arrow
+  %         \draw[->, thick] (3,1) -- (4.5,1);
+
+  %         % Ground truth comparison
+  %         \draw[fill=green!10] (5,0) rectangle (6,2);
+  %         \node at (5.5,1) {Known};
+
+  %         % Match arrow
+  %         \draw[<->, thick] (6.5,1) -- (7.5,1);
+
+  %         % Biological meaning
+  %         \draw[fill=orange!20] (8,0) rectangle (9,2);
+  %         \node at (8.5,1) {Bio Insight};
+  %       \end{tikzpicture}
+  %     \end{figure}
+  %   \end{column}
+  % \end{columns}
+
+  \vspace{0.3cm}
+  \begin{block}{Current Status}
+    \begin{itemize}
+      \item Implemented feature extraction from last week's papers
+      \item Now testing tensor decomposition co-clustering methods
+      \item Will divide data by embryonic development stages for sparsity
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Next Week Plan}
+
+  % \begin{columns}
+  %   \begin{column}{0.5\textwidth}
+  \textbf{Implementation:}
+  \begin{itemize}
+    \item Complete tensor co-clustering code
+    \item Integrate all components
+    \item Optimize efficiency
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \textbf{Testing:}
+  \begin{itemize}
+    \item Synthetic test data
+    \item Small embryonic data subsets
+    \item Parameter validation
+  \end{itemize}
+  %   \end{column}
+
+  %   \begin{column}{0.5\textwidth}
+  %     \begin{center}
+  %       \begin{tikzpicture}[scale=1]
+  %         % Calendar-like box
+  %         \draw[fill=blue!10] (0,0) rectangle (3,3);
+
+  %         % Week text
+  %         \node[font=\large] at (1.5,2.5) {Next Week};
+
+  %         % Tasks
+  %         \draw[fill=green!20] (0.3,1.8) rectangle (2.7,2.1);
+  %         \node[font=\small] at (1.5,1.95) {Finish Implementation};
+
+  %         \draw[fill=orange!20] (0.3,1.3) rectangle (2.7,1.6);
+  %         \node[font=\small] at (1.5,1.45) {Initial Testing};
+
+  %         \draw[fill=red!20] (0.3,0.8) rectangle (2.7,1.1);
+  %         \node[font=\small] at (1.5,0.95) {Evaluation Framework};
+
+  %         \draw[fill=purple!20] (0.3,0.3) rectangle (2.7,0.6);
+  %         \node[font=\small] at (1.5,0.45) {Documentation};
+  %       \end{tikzpicture}
+  %     \end{center}
+  %   \end{column}
+  % \end{columns}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Sparse Data Challenges}
+
+%   \begin{columns}
+%     \begin{column}{0.55\textwidth}
+%       \textbf{Key Challenges:}
+%       \begin{itemize}
+%         \item Temporal discontinuity 
+%         \item Missing measurements
+%         \item Computational efficiency
+%       \end{itemize}
+
+%       \vspace{0.3cm}
+%       \textbf{Our Solution:}
+%       \begin{itemize}
+%         \item Segment by developmental stages
+%         \item Use sparse tensor structures
+%         \item Apply biological constraints
+%       \end{itemize}
+%     \end{column}
+
+%     \begin{column}{0.45\textwidth}
+%       \begin{figure}
+%         \centering
+%         \begin{tikzpicture}[scale=0.65]
+%           % Three developmental stages
+%           \draw[fill=blue!10] (0,0) rectangle (2,2);
+%           \node at (1,1) {Stage 1};
+
+%           \draw[fill=blue!20] (3,0) rectangle (5,2);
+%           \node at (4,1) {Stage 2};
+
+%           \draw[fill=blue!30] (6,0) rectangle (8,2);
+%           \node at (7,1) {Stage 3};
+
+%           % Arrows
+%           \draw[->] (2,1) -- (3,1);
+%           \draw[->] (5,1) -- (6,1);
+
+%           % Development timeline
+%           \draw[->] (0,-0.5) -- (8,-0.5);
+%           \node at (4,-1) {Embryonic Development};
+%         \end{tikzpicture}
+%       \end{figure}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+
+\begin{frame}
+  \frametitle{Summary}
+
+  \begin{center}
+    \textbf{This Week's Progress}
+
+    \vspace{0.5cm}
+    \begin{tikzpicture}
+      % 设置一个样式来统一所有节点的外观
+      \tikzstyle{boxstyle} = [draw, minimum width=4cm, minimum height=1.2cm, rounded corners]
+
+      % 第一行
+      \node[boxstyle, fill=blue!20] at (-2.5,1.5) {K-Dimension Parameters};
+      \node[boxstyle, fill=orange!20] at (2.5,1.5) {Sparse Data Solutions};
+
+      % 第二行
+      \node[boxstyle, fill=green!20] at (-2.5,0) {Feature Generation};
+      \node[boxstyle, fill=red!20] at (2.5,0) {Projection Workflow};
+    \end{tikzpicture}
+
+    \vspace{1cm}
+    \Large Thank you!\\
+    Questions?
+  \end{center}
+\end{frame}
 
 \end{document}
