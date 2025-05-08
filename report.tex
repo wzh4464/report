@@ -2,17 +2,22 @@
 % arara: biber if found('log', 'LaTeX Warning: There were undefined references.') || changed('ref.bib')
 % arara: pdflatex: { synctex: yes } until !found('log', 'undefined references')
 
-\documentclass{beamer}
+\documentclass[aspectratio=169,14pt]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
 % biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
+\usepackage[backend=biber,style=numeric,sorting=none,giveninits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
+\usepackage{newunicodechar}
+\newunicodechar{α}{$\alpha$}
+% For nicer tables
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
 
 % 自定义参考文献样式
-\DeclareNameAlias{author}{first-last}
+\DeclareNameAlias{author}{given-family}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
   \setunit{\addspace}%
@@ -30,17 +35,70 @@
 \maketitle
 \begin{frame}
   \frametitle{Outline}
+  We want to use co-cluster analysis to discover the typical cell movements patterns in C. elegans embryos.
   \tableofcontents
 \end{frame}
+\section{Preliminary Results}
 
-\section{Introduction}
+% Add co-cluster result frame before summary
 \begin{frame}
-  \frametitle{Introduction}
-  \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
-  \end{itemize}
+  \frametitle{Co-cluster Result for Early Stage}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{/Volumes/Mac_Ext/link_cache/codes/cell_gpt/early_phase_cells.png}
+    \caption{Co-cluster result for early stage cells}
+  \end{figure}
+\end{frame}
+
+\section{Summary of Cell Movements from Literature}
+% First summary frame: Group 1-2
+\begin{frame}[allowframebreaks]
+  \frametitle{Summary of C. elegans Embryonic Cell Movements (Groups 1-2)}
+  \scriptsize
+  % Define colors for different cell movement types
+  \definecolor{earlymove}{RGB}{230,180,180}  % Light red for early movements
+  \definecolor{internalization}{RGB}{180,230,180}  % Light green for internalization
+  \begin{tabular}{p{2.5cm} p{3.5cm} p{2.5cm} p{0.75cm} p{0.75cm} p{2.5cm}}
+    \toprule
+    \rowcolor{white}
+    \textbf{Cell Type} & \textbf{Movement Pattern} & \textbf{Developmental Stage} & \textbf{Paper} & \textbf{Year} & \textbf{Publications} \\
+    \midrule
+    % Group 1: Early morphogenesis (highlighting ABpl)
+    \rowcolor{earlymove}
+    \multicolumn{6}{l}{\textbf{Co-cluster Group 1: Early Axis Formation}} \\
+    ABpl (early AB lineage) & Active anterior-ventral migration, drives chiral morphogenesis for L-R axis & Early cleavage (4--24 cell) & \cite{Pohl2010} & 2010 & \href{https://www.nature.com/articles/nature08752}{Nature} \\
+    % Group 2: Internalization events (Ea/Ep, MS, D, and PGCs)
+    \rowcolor{internalization}
+    \multicolumn{6}{l}{\textbf{Co-cluster Group 2: Gastrulation Internalization Movements}} \\
+    Ea/Ep (endoderm precursors) & \textbf{Apical constriction} drives inward migration (internalization) & Onset of gastrulation ($\sim$26-cell) & \cite{Lee2006} & 2006 & \href{https://www.nature.com/articles/nature04702}{Nature} \\
+    MS, D (mesoderm descendants) & Sequential \textbf{internalization}, actomyosin-based migration (regulated by fate/polarity factors) & Mid-gastrulation (50--200 cell) & \cite{Harrell2011} & 2011 & \href{https://journals.biologists.com/dev/article/138/3/531/44913}{Development} \\
+    PGCs (Z2/Z3) & Passive \textbf{internalization} via E-cadherin-mediated "hitchhiking" with endoderm cells & Late gastrulation ($\sim$100--300 cell) & \cite{Chihara2012} & 2012 & \href{https://www.nature.com/articles/ncb2422}{Nat Cell Biol} \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+% Second summary frame: Group 3-4
+\begin{frame}[allowframebreaks]
+  \frametitle{Summary of C. elegans Embryonic Cell Movements (Groups 3-4)}
+  \scriptsize
+  % Define colors for different cell movement types
+  \definecolor{migration}{RGB}{180,180,230}  % Light blue for migration/closure
+  \definecolor{elongation}{RGB}{230,230,180}  % Light yellow for elongation
+  \begin{tabular}{p{2.5cm} p{3.5cm} p{2.5cm} p{0.75cm} p{0.75cm} p{2.5cm}}
+    \toprule
+    \rowcolor{white}
+    \textbf{Cell Type} & \textbf{Movement Pattern} & \textbf{Developmental Stage} & \textbf{Paper} & \textbf{Year} & \textbf{Publications} \\
+    \midrule
+    % Group 3: Ventral closure
+    \rowcolor{migration}
+    \multicolumn{6}{l}{\textbf{Co-cluster Group 3: Ventral Closure Movements}} \\
+    Ventral epidermal cells & \textbf{Collective migration}, rosette formation to close ventral cleft & End of gastrulation/ventral closure & \cite{Serre2023} & 2023 & \href{https://www.nature.com/articles/s41467-023-39313-2}{Nat Commun} \\
+    % Group 4: Elongation
+    \rowcolor{elongation}
+    \multicolumn{6}{l}{\textbf{Co-cluster Group 4: Morphogenetic Elongation}} \\
+    Embryonic epidermal cells (incl. dorsal) & \textbf{Circumferential contraction}, axial rearrangement, then muscle-driven elongation & Embryo elongation (bean to 1.5--3-fold) & \cite{Gally2009} & 2009 & \href{https://journals.biologists.com/dev/article/136/4/677/65113}{Development} \\
+    \bottomrule
+  \end{tabular}
 \end{frame}
 
 % biblatex bibliography
