@@ -7,11 +7,13 @@
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
 % biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
+\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true,url=false,doi=false]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
 
-% 自定义参考文献样式
+% Custom bibliography style
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
@@ -23,31 +25,189 @@
   \printfield{year}%
 }
 
-% \usetheme{Berlin}
-\title{Weekly Report}
+\title{Introduction to Three Prompt Engineering Frameworks}
 \author{WU Zihan}
+\date{\today}
 \begin{document}
+
 \maketitle
+
 \begin{frame}
   \frametitle{Outline}
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{EvoPrompt}
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{EvoPrompt: \cite{guo2023evoprompt}}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item Treats prompts as genetic sequences in evolutionary algorithms
+    \item Core evolutionary operations:
+          \begin{itemize}
+            \item Mutation: Random modifications to prompt components
+            \item Crossover: Combining elements from successful prompts
+            \item Selection: Choosing best-performing prompts as parents
+          \end{itemize}
+    \item Optimization process:
+          \begin{itemize}
+            \item Initialize population of prompt candidates
+            \item Evaluate performance on target tasks
+            \item Select top performers
+            \item Generate new candidates through evolution
+            \item Iterate until convergence
+          \end{itemize}
+    \item Key innovation: Automated prompt engineering through evolutionary search
+    \item \textbf{GitHub:} \href{https://github.com/beeevita/EvoPrompt}{beeevita/EvoPrompt}
   \end{itemize}
 \end{frame}
 
-% biblatex bibliography
+\section{TextGrad}
+\begin{frame}
+  \frametitle{TextGrad: \cite{yuksekgonul2024textgrad}}
+  \begin{itemize}
+    \item Core concept: Text-based gradient descent
+          \begin{itemize}
+            \item Treats text as differentiable variables
+            \item Uses LLM feedback as text gradients
+            \item Natural language replaces numerical gradients
+          \end{itemize}
+    \item Optimization process:
+          \begin{itemize}
+            \item Forward pass: LLM evaluates solution quality
+            \item Backward pass: LLM generates improvement feedback
+            \item Update: Solution refined based on feedback
+            \item Iterate until convergence
+          \end{itemize}
+    \item Key innovation: End-to-end text optimization through LLM feedback
+    \item \textbf{GitHub:} \href{https://github.com/zou-group/textgrad}{zou-group/textgrad}
+  \end{itemize}
+\end{frame}
+
+
+\section{DSPy}
+\begin{frame}[fragile]
+  \frametitle{DSPy: \cite{khattab2023dspy}}
+  \begin{itemize}
+    \item Core concept: Declarative prompt programming
+    \item Example implementation:
+          \begin{lstlisting}[language=Python, 
+      basicstyle=\scriptsize\fontfamily{SFMono-TLF}\selectfont, 
+      breaklines=true, lineskip=-1pt, aboveskip=2pt, belowskip=2pt,
+      keywordstyle=\color{blue}, commentstyle=\color{gray},
+      stringstyle=\color{red}, literate={\#}{\#}1]
+
+# Model Configuration
+configure_language_model(model='gpt-4-mini')
+# Task Definition
+class Task:
+    input: text
+    output: sentiment (positive/negative)
+# Module Selection
+classifier = ChainOfThought(Task)
+# Usage
+result = classifier(text='This movie is great!')
+output: {
+    sentiment: 'positive',
+    reasoning: 'expresses enthusiasm'
+}
+# Optimization
+optimizer = BootstrapFewShot()
+optimized_classifier = optimizer.compile(
+    classifier,
+    metric=accuracy_metric
+)
+    \end{lstlisting}
+    \item Key innovation: Compiler-based prompt optimization
+    \item \textbf{GitHub:} \href{https://github.com/stanfordnlp/dspy}{stanfordnlp/dspy}
+  \end{itemize}
+\end{frame}
+
+\section{APOHF}
+\begin{frame}[fragile]
+  \frametitle{APOHF: \cite{lin2024prompt}}
+  \begin{itemize}
+    \item One-sentence summary: "Which answer do you prefer?" - A simple yet powerful approach to optimize prompts through human preference feedback
+    \item Core concept: Human preference-based optimization
+          \begin{itemize}
+            \item No numeric scores needed
+            \item Works with black-box LLMs
+            \item Inspired by dueling bandits
+          \end{itemize}
+    \item Key features:
+          \begin{itemize}
+            \item Compare prompt pairs
+            \item Collect human preferences
+            \item Update iteratively
+            \item Efficient optimization
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{HbBoPs}
+\begin{frame}[fragile]
+  \frametitle{HbBoPs: \cite{schneider2024hyperband}}
+  \begin{itemize}
+    \item One-sentence summary: Efficiently selecting the best prompt from a predefined set using Hyperband-based Bayesian optimization
+    \item Core concept: Smart prompt selection
+          \begin{itemize}
+            \item Treats prompts as modular components
+            \item Uses structural-aware deep kernel
+            \item Combines with Hyperband scheduler
+          \end{itemize}
+    \item Key features:
+          \begin{itemize}
+            \item Sample-efficient search
+            \item Multi-fidelity evaluation
+            \item Black-box optimization
+            \item Outperforms SOTA methods
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{IO vs EO}
+\begin{frame}[fragile]
+  \frametitle{IO vs EO: \cite{wan2024teach}}
+  \begin{itemize}
+    \item One-sentence summary: Using reinforcement learning to find the best combination of instructions and exemplars
+    \item Core concept: Dual optimization
+          \begin{itemize}
+            \item Instruction Optimization (IO)
+            \item Exemplar Optimization (EO)
+            \item Synergistic combination
+          \end{itemize}
+    \item Key findings:
+          \begin{itemize}
+            \item EO can outperform IO
+            \item Simple EO $>$ Complex IO
+            \item Best results from combined approach
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{EASE}
+\begin{frame}[fragile]
+  \frametitle{EASE: \cite{wu2024ease}}
+  \begin{itemize}
+    \item One-sentence summary: Selection of Exemplars using neural bandit algorithm with ordering awareness
+    \item Core concept: Efficient exemplar selection
+          \begin{itemize}
+            \item Uses pretrained model embeddings
+            \item Considers exemplar ordering
+            \item No test-time computation
+          \end{itemize}
+    \item Key features:
+          \begin{itemize}
+            \item Task-level optimization
+            \item Joint instruction optimization
+            \item Superior to existing methods
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{References}
 \begin{frame}[allowframebreaks]
   \frametitle{References}
   \printbibliography
 \end{frame}
-
 
 \end{document}
