@@ -1,6 +1,7 @@
-% arara: pdflatex: { options: ["--synctex=1"] }
-% arara: biber if found('log', 'LaTeX Warning: There were undefined references.') || changed('ref.bib')
-% arara: pdflatex: { synctex: yes } until !found('log', 'undefined references')
+% arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
+% arara: biber
+% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
 \documentclass{beamer}
 \usepackage{graphicx}
