@@ -1,54 +1,92 @@
-% arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
+% arara: xelatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
 % arara: biber
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
 \documentclass{beamer}
+\usepackage{ctex}
+\usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-\usepackage{amssymb,amsfonts,amsmath}
-\usefonttheme[onlymath]{serif}
-% biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
-\addbibresource{ref.bib}
-\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usetheme{Madrid}
 
-% 自定义参考文献样式
-\DeclareNameAlias{author}{first-last}
-\DeclareBibliographyDriver{article}{%
-  \printnames{author}%
-  \setunit{\addspace}%
-  \printfield{title}%
-  \newunit
-  \printfield{journaltitle}%
-  \setunit{\addspace}%
-  \printfield{year}%
-}
-
-% \usetheme{Berlin}
-\title{Weekly Report}
-\author{WU Zihan}
+\title{AI使能软件工程（AI4SE）探索}
+\subtitle{PTL-评估 + RAGv3}
+\author{软件工程实验室-睿智}
+\date{2025年3月}
 \begin{document}
-\maketitle
+
+% 封面页
 \begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
+  \titlepage
+
 \end{frame}
 
-\section{Introduction}
-\begin{frame}
-  \frametitle{Introduction}
-  \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
-  \end{itemize}
+% 第2页：iCodeReviewer代码检视
+\begin{frame}{iCodeReviewer代码检视}
+\textbf{基于上下文工程的智能化代码检视总体解决方案：}
+
+\vspace{0.3cm}
+% \includegraphics[width=\textwidth]{icode_reviewer_architecture_placeholder.jpg} % 占位图
+
+\vspace{0.3cm}
+\textbf{产品验证点效果：}
+\begin{tabular}{lccc}
+\toprule
+类别 & 个数 & 比例 \\
+\midrule
+已标 & 42 & 84\% \\
+误标 & 8 & 16\% \\
+总计 & 50 & 100\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+\textbf{我们的方案与DeepSeek R1的对比：}
+
+\begin{tabular}{lcccc}
+\toprule
+模型 & Precision & Recall & F1值 & 精确度 Accuracy \\
+\midrule
+Ours - OwenZQ & 85.90\% & 66.26\% & 74.92\% & 80.77\% \\
+DeepSeek R1 Distilled Owen & 79.24\% & 65.75\% & 71.96\% & 64.10\% \\
+\bottomrule
+\end{tabular}
 \end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
-\end{frame}
+% 第3页：AI使能SE新研究范式
+\begin{frame}{AI使能SE新研究范式}
+\textbf{DeepSeek 的 MoE 架构：}
 
+\vspace{0.2cm}
+% \includegraphics[width=0.45\textwidth]{deepseek_moe_placeholder.jpg}
+\hfill
+% \includegraphics[width=0.45\textwidth]{mop_router_placeholder.jpg}
+
+\vspace{0.3cm}
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Mixture of Experts (MoE)} 混合专家模型：
+\begin{itemize}
+    \item 一种稀疏建模架构；
+    \item 模型由若干小的专家模型组成，每个专家擅长不同问题；
+    \item 每次推理只激活其中的一小部分专家模型；
+    \item 是目前性能最好的模型架构；
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Mixture of Prompts (MoP)} 混合提示词架构：
+\begin{itemize}
+    \item 一种新的提示词架构；
+    \item 聚合SE任务相关的提示词模板组成；
+    \item 每次推理仅激活部分提示词模板；
+    \item 希望能成为目前性能最优的提示词架构；
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+\textcolor{red}{不同训练，能处理更多类型的软工任务！}
+\end{frame}
 
 \end{document}

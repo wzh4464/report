@@ -1,0 +1,85 @@
+% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows.meta, positioning, fit}
+\usepackage{xeCJK}
+
+\begin{document}
+\begin{tikzpicture}[
+  font=\small,
+  node distance=8mm and 12mm,
+  process/.style={rectangle, draw, minimum height=10mm, minimum width=32mm, text centered, fill=green!5},
+  dashedlink/.style={->, thick, dashed, red},
+  solidlink/.style={->, thick},
+  dashedbox/.style={draw=black, dashed, inner sep=5mm, fit=#1}
+]
+
+% 第一层：输入
+\node[process] (inputCode) {输入代码};
+\node[process, right=of inputCode] (inputContext) {输入上下文};
+
+% 第二层：代码切片
+\node[process, below=of inputCode, xshift=15mm] (codeSlice) {代码切片};
+
+% 第三层：代码特征识别
+\node[process, below=of codeSlice] (codeFeature) {代码特征识别};
+
+% 第四层：匹配与分析
+\node[process, below left=of codeFeature, xshift=-15mm] (templateMatch) {模板匹配};
+\node[process, below right=of codeFeature, xshift=15mm] (ragResult) {RAG 结果};
+\node[process, below=of ragResult] (programAnalysis) {程序分析信息增强};
+
+% 第五层：模板处理 与 模型推理 并列
+\node[process, below=of programAnalysis, xshift=-40mm] (problemTemplate) {代码问题识别模板};
+\node[process, below=of problemTemplate] (opinionTemplate) {检测意见生成模板};
+\node[process, below=of opinionTemplate] (reflection) {检测意见生成反思};
+
+\node[process, right=6cm of opinionTemplate] (llm) {大模型 (Owen/Codellama)};
+
+% 第六层：输出
+\node[process, below left=of llm, xshift=-20mm] (codeOutput) {代码输出结果};
+\node[process, below right=of llm, xshift=20mm] (problemResult) {代码问题识别结果};
+
+% 第七层：汇总与数据集
+\node[process, below=of llm, yshift=-45mm] (resultSummary) {代码推理结果汇总};
+\node[process, below=of resultSummary] (dataset) {数据集构建与效果验证};
+
+% 原有连接
+\draw[solidlink] (inputCode) -- (codeSlice);
+\draw[solidlink] (inputContext) -- (codeSlice);
+\draw[solidlink] (codeSlice) -- (codeFeature);
+\draw[solidlink] (codeFeature) -- (templateMatch);
+\draw[solidlink] (codeFeature) -- (ragResult);
+\draw[solidlink] (templateMatch) -- (ragResult);
+\draw[solidlink] (ragResult) -- (programAnalysis);
+\draw[solidlink] (programAnalysis) -- (problemTemplate);
+\draw[solidlink] (problemTemplate) -- (opinionTemplate);
+\draw[solidlink] (opinionTemplate) -- (reflection);
+\draw[solidlink] (reflection) -- (opinionTemplate);
+\draw[solidlink] (opinionTemplate) -- (llm);
+\draw[solidlink] (llm) -- (codeOutput);
+\draw[solidlink] (llm) -- (problemResult);
+\draw[solidlink] (codeOutput) -- (resultSummary);
+\draw[solidlink] (problemResult) -- (resultSummary);
+\draw[solidlink] (resultSummary) -- (dataset);
+
+% 新增连接
+\draw[dashedlink] (programAnalysis) -- (opinionTemplate);
+\draw[dashedlink] (codeFeature) -- (problemTemplate);
+\draw[dashedlink] (ragResult) -- (llm);
+\draw[dashedlink] (resultSummary) -- (reflection);
+\draw[dashedlink] (dataset) to[out=180, in=270] (problemTemplate);
+
+% 包围框（虚线）
+\node[dashedbox={(inputCode)(inputContext)(dataset)(problemResult)}] {};
+
+% 图例
+\node[draw, rectangle, fill=white, below=10mm of dataset, align=left] (legend) {
+    \textbf{图例:} \\
+    \tikz\draw[solidlink] (0,0) -- (0.7,0); 原有连接 \\
+    \tikz\draw[dashedlink] (0,0) -- (0.7,0); 新增连接
+};
+
+\end{tikzpicture}
+\end{document}
