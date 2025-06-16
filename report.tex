@@ -3,16 +3,19 @@
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
-\documentclass{beamer}
+\documentclass[paperwidth=13.333in, paperheight=7.5in]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
+% 设置 4K 屏幕尺寸（3840x2160 像素，假定 300 DPI）
+% \usepackage[paperwidth=13.333in,paperheight=7.5in]{geometry} % 3840/300=12.8, 2160/300=7.2，略放大以防裁切
+\setbeamersize{text margin left=0.5cm, text margin right=0.5cm}
 % biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
-% 自定义参考文献样式
+% Custom bibliography style
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
@@ -35,12 +38,30 @@
 \end{frame}
 
 \section{Introduction}
+\section{Results and Next Steps}
+
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{Results and Next Steps}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item \textbf{Dorsal Intercalation:}
+    \begin{itemize}
+      \item Found dorsal epithelial cell intercalation clustering consistent with literature\cite{walck2016dorsal}
+      \item Features used: spatial position information, spherical harmonic coefficients
+      \item Observed wedge-shaped deformation and gradual increase in shape irregularity\cite{li2021shape}
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \textbf{Intestinal Primordium:}
+    \begin{itemize}
+      \item Found intestinal endoderm cell group clustering\cite{rasmussen2013intestinal}
+      \item Features used: acceleration inflection points, velocity direction vectors, spherical harmonic coefficients
+      \item Observed synchronized insertion rearrangement and axial torsional movement\cite{rasmussen2013intestinal}
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \textbf{Next Steps:}
+    \begin{itemize}
+      \item Complete visualization presentation
+      \item Perform co-clustering analysis across multiple embryos to enhance result reliability
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
