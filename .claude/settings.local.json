@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/python:*)",
+      "Bash(uv add:*)",
+      "Bash(ls:*)",
+      "Bash(latexmk:*)",
+      "Bash(arara:*)",
+      "Bash(pdflatex:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": []
+  }
+}
