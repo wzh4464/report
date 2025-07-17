@@ -3,8 +3,10 @@
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
+\geometry{paperwidth=19.2cm,paperheight=10.8cm}
 \usepackage{graphicx}
+\usepackage{multicol}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
 % biblatex with biber
@@ -25,7 +27,7 @@
 }
 
 % \usetheme{Berlin}
-\title{Weekly Report}
+\title{Cell Analysis Report: Dorsal Intercalation \& Ventral Closure}
 \author{WU Zihan}
 \begin{document}
 \maketitle
@@ -38,10 +40,79 @@
 \begin{frame}
   \frametitle{Introduction}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item This report presents the planned analysis of two key cell populations
+    \item Dorsal intercalation cells and ventral closure cells from embryonic development
+    \item Eight visualizations total: four plots for each cell type
+    \item Analysis focuses on cell dynamics, morphology, clustering, and movement patterns
   \end{itemize}
+\end{frame}
+
+\section{Cell Analysis Plots}
+\begin{frame}
+  \frametitle{Cell Analysis: Dorsal Intercalation \& Ventral Closure (8 Subfigures Total)}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Figure 1: Dorsal Intercalation (4 Subfigures)}
+      \begin{enumerate}
+        \item \textbf{A - Co-clustering Heatmap}
+              \begin{itemize}
+                \item Time points (220-250) vs Cell IDs
+                \item Color: Co-clustering probability (0-1)
+              \end{itemize}
+
+        \item \textbf{B - Cell Trajectory Plot}
+              \begin{itemize}
+                \item 2D movement paths (AP vs LR position)
+                \item Green start, red end points
+              \end{itemize}
+
+        \item \textbf{C - Morphological Irregularity}
+              \begin{itemize}
+                \item Time vs Irregularity index
+                \item Individual curves + mean trend
+              \end{itemize}
+
+        \item \textbf{D - Velocity Field Analysis}
+              \begin{itemize}
+                \item Time bins vs X-velocity box plots
+                \item Movement pattern distributions
+              \end{itemize}
+      \end{enumerate}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \textbf{Figure 2: Ventral Closure (4 Subfigures)}
+      \begin{enumerate}
+        \item \textbf{A - Co-clustering Heatmap}
+              \begin{itemize}
+                \item Time points vs Ventral closure cell IDs
+                \item Same structure as dorsal intercalation
+              \end{itemize}
+
+        \item \textbf{B - Cell Trajectory Plot}
+              \begin{itemize}
+                \item Ventral closure movement paths
+                \item Same visualization as dorsal intercalation
+              \end{itemize}
+
+        \item \textbf{C - Morphological Irregularity}
+              \begin{itemize}
+                \item Ventral closure shape changes
+                \item Same metrics as dorsal intercalation
+              \end{itemize}
+
+        \item \textbf{D - Velocity Field Analysis}
+              \begin{itemize}
+                \item Ventral closure speed distributions
+                \item Same analysis as dorsal intercalation
+              \end{itemize}
+      \end{enumerate}
+
+      \vspace{0.2cm}
+      \textbf{Data:} dorsal\_intercalation.txt, ventral\_closure.txt, name\_dictionary.csv, 3D segmentation, triclustering results
+    \end{column}
+  \end{columns}
 \end{frame}
 
 % biblatex bibliography
@@ -49,6 +120,5 @@
   \frametitle{References}
   \printbibliography
 \end{frame}
-
 
 \end{document}
