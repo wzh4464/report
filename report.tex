@@ -1,18 +1,16 @@
 % arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-% arara: biber
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
 \usefonttheme[onlymath]{serif}
-% biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
-
-% 自定义参考文献样式
+\usepackage{listings}
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
@@ -23,12 +21,15 @@
   \setunit{\addspace}%
   \printfield{year}%
 }
-
-% \usetheme{Berlin}
-\title{Weekly Report}
+\usetheme{Madrid}
+\title{CWE Classification Interim Report}
+\subtitle{kimi-k2-code Zero-Shot Performance Snapshot}
 \author{WU Zihan}
+\date{\today}
+
 \begin{document}
 \maketitle
+
 \begin{frame}
   \frametitle{Outline}
   \tableofcontents
@@ -38,17 +39,125 @@
 \begin{frame}
   \frametitle{Introduction}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item \textbf{Objective}: Report interim results for the zero-shot CWE classification performance of the \textbf{kimi-k2-code} model.
+    \item \textbf{Dataset}: ``SVEN'' 720 code samples covering various vulnerability types.
+    \item \textbf{Status}: This is a snapshot of an ongoing evaluation run. The full run takes over an hour to complete.
+          Each generation takes about one hour.
   \end{itemize}
 \end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
+% 新增CWE描述单独页
+\begin{frame}[fragile]
+  \frametitle{CWE Description}
+  \begin{scriptsize}
+  \begin{verbatim}
+CWE_KNOWLEDGE = {
+  "cwe-022": "Path Traversal - Attackers manipulate file paths (e.g., using ../) to access files or directories that should not be exposed by the application. Defense requires strict normalization and whitelisting of input paths.",
+  "cwe-078": "OS Command Injection - When insufficiently sanitized user input is directly concatenated into system commands, attackers can inject malicious commands for arbitrary execution. The best defense is to use parameterized interfaces.",
+  "cwe-079": "Cross-site Scripting - XSS allows attackers to inject malicious scripts that execute under a trusted domain, enabling cookie theft, CSRF, etc. Defense requires context-sensitive output encoding of inputs.",
+  "cwe-089": "SQL Injection - By injecting special characters into SQL statements, attackers can alter query logic and perform unauthorized data operations. The main defense is to use parameterized queries.",
+  "cwe-125": "Out-of-bounds Read - The program reads memory outside the valid buffer, which may leak sensitive information or facilitate further exploitation.",
+  "cwe-190": "Integer Overflow - Integer arithmetic overflow can cause boundary checks to fail, leading to buffer overflows, infinite loops, or arithmetic errors.",
+  "cwe-416": "Use After Free - Accessing memory after it has been freed can corrupt the heap and even lead to remote code execution.",
+  "cwe-476": "NULL Pointer Dereference - Dereferencing a null pointer usually causes program crashes and may be exploited for logic bypass.",
+  "cwe-787": "Out-of-bounds Write - Writing data outside the bounds of a buffer corrupts memory layout and can easily result in arbitrary code execution."
+}
+  \end{verbatim}
+  \end{scriptsize}
 \end{frame}
 
+\section{Experimental Setup}
+\begin{frame}[fragile]
+  \frametitle{Experimental Setup}
+  \textbf{Current Prompt:}
+  \begin{small}
+    \begin{lstlisting}[language=bash, basicstyle=\ttfamily\small]
+Please analyze the following code function and determine what type of vulnerability it contains.
+Function name: {func_name}
+Code: {func_src}
+Known CWE type descriptions: {cwe_descriptions}
+Please determine the type of vulnerability in this function based on code characteristics,
+return only the CWE number (e.g., cwe-022), do not explain.
+  \end{lstlisting}
+  \end{small}
+
+  \textbf{Evaluation Notes:}
+  \begin{itemize}
+    \item The evaluation is executed sequentially, but API calls could be parallelized to improve speed.
+    \item We've observed API timeouts and intermittent connection errors, requiring robust error handling.
+  \end{itemize}
+\end{frame}
+
+\section{Interim Results}
+
+\begin{frame}[fragile]
+  \frametitle{Analysis of Evaluation Results}
+  \begin{itemize}
+    \item \textbf{Core Evaluation Results}: 473/720 = \textbf{65.7\%}.
+  \end{itemize}
+\end{frame}
+
+% Main Error Patterns (1)
+\begin{frame}[fragile]
+  \frametitle{Main Error Patterns}
+  \textbf{Strong Bias Toward Predicting CWE-125 (Out-of-Bounds Read)}
+  \begin{itemize}
+    \item The most prominent issue is the model’s tendency to misclassify various memory safety vulnerabilities as CWE-125. This is the primary source of accuracy loss, as shown below:
+          \begin{itemize}
+            \item CWE-476 (NULL Pointer Dereference) $\rightarrow$ CWE-125: 45 times
+            \item CWE-787 (Out-of-Bounds Write) $\rightarrow$ CWE-125: 37 times
+            \item CWE-416 (Use After Free) $\rightarrow$ CWE-125: 28 times
+            \item CWE-190 (Integer Overflow) $\rightarrow$ CWE-125: 15 times
+          \end{itemize}
+    \item \textit{Analysis}: The model can generally detect the presence of memory operation issues but struggles to distinguish between “read” and “write” errors, pointer-related issues, and integer problems. It tends to default to a broad “out-of-bounds memory access” answer.
+  \end{itemize}
+\end{frame}
+
+% % Main Error Patterns (2)
+% \begin{frame}[fragile]
+%   \frametitle{Main Error Patterns (2)}
+%   \textbf{2. Confusion Between Injection and Path Traversal Vulnerabilities}
+%   \begin{itemize}
+%     \item The model also performs poorly in differentiating between injection and path traversal vulnerabilities:
+%           \begin{itemize}
+%             \item CWE-079 (Cross-Site Scripting) $\rightarrow$ CWE-022 (Path Traversal): 14 times
+%             \item CWE-078 (Command Injection) $\rightarrow$ CWE-022 (Path Traversal): 9 times
+%           \end{itemize}
+%     \item \textit{Analysis}: The model likely recognizes the high-level feature of “unvalidated external input” but fails to accurately determine whether the input is used for HTML generation (XSS), command execution, or file path access.
+%   \end{itemize}
+% \end{frame}
+
+% % Main Error Patterns (3)
+% \begin{frame}[fragile]
+%   \frametitle{Main Error Patterns (3)}
+%   \textbf{3. Specific Categories Cause Model Failures}
+%   \begin{itemize}
+%     \item Certain vulnerability types, especially CWE-089 (SQL Injection), frequently result in the model failing to return a valid answer:
+%           \begin{itemize}
+%             \item CWE-089 $\rightarrow$ error: 9 times
+%           \end{itemize}
+%     \item \textit{Analysis}: This suggests the model has difficulty handling SQL injection patterns or that its response format is unstable, sometimes generating explanatory text instead of the required CWE number. Additionally, outputs like “unknown” indicate a lack of confidence in some cases.
+%   \end{itemize}
+% \end{frame}
+
+% Summary and Recommendations
+\begin{frame}
+  \frametitle{Summary and Recommendations}
+  \begin{itemize}
+    \item \textbf{Key Weakness}: Limited precision in distinguishing between specific memory error types (e.g., read vs. write, use-after-free, integer overflow).
+    \item \textbf{Nature of This Analysis}:
+          \begin{itemize}
+            \item The proposed improvement directions are derived from bias patterns observed in one complete evaluation run.
+            \item Patterns such as “CWE-476 misclassified as CWE-125” were induced from concentrated misclassification clusters.
+            \item However, the current evolutionary prompt tuning process does not take these known biases into account.
+          \end{itemize}
+    \item \textbf{Suggested Next Steps}:
+          \begin{itemize}
+            \item \textbf{Prompt Optimization}: For commonly confused categories, design more discriminative descriptions or incorporate few-shot exemplars in the prompt.
+            \item \textbf{Leverage Feedback Bias}: Integrate these misclassification patterns as prior knowledge to inform future prompt evolution or guide model selection.
+            \item \textbf{Output Format Enforcement}: Reinforce formatting requirements within the prompt, and apply post-processing to discard or correct malformed responses.
+          \end{itemize}
+  \end{itemize}
+\end{frame}
 
 \end{document}
