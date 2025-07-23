@@ -1,18 +1,13 @@
 % arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-% arara: biber
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
+% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 \documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
-% biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
-
-% 自定义参考文献样式
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
@@ -23,32 +18,43 @@
   \setunit{\addspace}%
   \printfield{year}%
 }
-
-% \usetheme{Berlin}
-\title{Weekly Report}
+\title{Daily Report - Prompt Optimization Sprint}
 \author{WU Zihan}
 \begin{document}
 \maketitle
+
+% \begin{frame}
+%   \frametitle{Outline}
+%   \tableofcontents
+% \end{frame}
+
+\section{Implementation and Results}
 \begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
+  \frametitle{Implementation and Results}
+  \textbf{Short-term wins (deployed immediately)}
+  \begin{enumerate}
+    \item \textbf{CWE description refresh}
+          \begin{itemize}
+            \item Re-wrote 9 descriptions to emphasize \textbf{distinguishing features}.
+            \item Added “\textit{vs CWE-xxx}” side-by-side snippets for top-5 confusion pairs.
+          \end{itemize}
+    \item \textbf{Statistical-Bias-Aware EvoPrompt}
+          \begin{itemize}
+            \item After each train-set pass, \textbf{auto-extract} confusion-matrix statistics.
+            \item Feed the bias report (e.g., \texttt{CWE-125 over-predicted by 22 \%}) into the \textbf{evolator}.
+            \item Prompts are mutated/evolved with an \textit{error-penalty} term in fitness.
+          \end{itemize}
+  \end{enumerate}
+  \textbf{Result and Next Step}
+    \begin{enumerate}
+    \item Around $40\%$ accuracy improvement observed.
+    \item Apply the same techniques to \textbf{PrimeVul} next.
+  \end{enumerate}
 \end{frame}
 
-\section{Introduction}
-\begin{frame}
-  \frametitle{Introduction}
-  \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
-  \end{itemize}
-\end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
-\end{frame}
-
-
+% \begin{frame}[allowframebreaks]
+%   \frametitle{References}
+%   \printbibliography
+% \end{frame}
 \end{document}
