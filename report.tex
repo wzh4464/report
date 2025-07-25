@@ -31,21 +31,19 @@
 \section{Implementation and Results}
 \begin{frame}
   \frametitle{Implementation and Results}
-  \textbf{Short-term wins (deployed immediately)}
+  \textbf{Today's Progress}
   \begin{enumerate}
-    \item \textbf{Statistical-Bias-Aware EvoPrompt}
-          \begin{itemize}
-            \item After each train-set pass, \textbf{auto-extract} confusion-matrix statistics.
-            \item Feed the bias report (e.g., \texttt{CWE-125 over-predicted by 22 \%}) into the \textbf{evolator}.
-            \item Prompts are mutated/evolved with an \textit{error-penalty} term in fitness.
-          \end{itemize}
+    \item Deployed \textbf{kimi-k2-coder} model on \textbf{PrimeVul} dataset for vulnerability detection.
+    \item Identified critical issue: \textbf{context length limitations} causing widespread sample processing failures.
+    \item Root cause analysis: Long code snippets exceed model's effective context window.
+    \item Implemented emergency workaround: Switched to \textbf{online API services} to maintain research momentum.
   \end{enumerate}
-  \textbf{Today's Experimental Results}
-    \begin{enumerate}
-    \item Applied yesterday's method to both \textbf{PrimeVul} and \textbf{SVEN} datasets.
-    \item \textbf{SVEN}: Achieved \textbf{94\% F1 score} - excellent performance.
-    \item \textbf{PrimeVul}: Performance declined during training process.
-    \item Root cause unclear - will analyze evolution process tomorrow to identify the issue.
+  
+  \textbf{Future Plans}
+  \begin{enumerate}
+    \item Research and implement \textbf{KV cache optimization} techniques to handle longer contexts.
+    \item Evaluate alternative models with larger context windows.
+    \item Benchmark performance comparison between local and API-based solutions.
   \end{enumerate}
 \end{frame}
 
