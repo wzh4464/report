@@ -1,12 +1,15 @@
 % arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-
+% arara: biber
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+
 \documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
+\usepackage{filecontents} % Used to include bib entry in the tex file
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
-\addbibresource{ref.bib}
+\addbibresource{ref.bib} % The bib resource is now defined below
 \usepackage{hyperref}
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
@@ -20,6 +23,8 @@
 }
 \title{Daily Report - Prompt Optimization Sprint}
 \author{WU Zihan}
+\date{July 28, 2025}
+
 \begin{document}
 \maketitle
 
@@ -29,27 +34,29 @@
 % \end{frame}
 
 \section{Implementation and Results}
-\begin{frame}
-  \frametitle{Implementation and Results}
-  \textbf{Today's Progress}
+\begin{frame}[allowframebreaks]
+  \frametitle{Today's Progress}
   \begin{enumerate}
-    \item Deployed \textbf{kimi-k2-coder} model on \textbf{PrimeVul} dataset for vulnerability detection.
-    \item Identified critical issue: \textbf{context length limitations} causing widespread sample processing failures.
-    \item Root cause analysis: Long code snippets exceed model's effective context window.
-    \item Implemented emergency workaround: Switched to \textbf{online API services} to maintain research momentum.
+    \item \textbf{Recap of Challenge}: A key challenge in our prompt evolution is the \textbf{cold start problem}, where initial prompts lack sufficient signal for effective optimization. Our current solution involves a \textbf{coarse-to-fine classification} strategy to provide intermediate rewards.
+
+    \item \textbf{New Method Identified}: Today's research identified a more robust evaluation metric, \textbf{CoT-Pass@K} (Chain-of-Thought Pass@K), from recent literature \cite{lightman2023verifystep}.
+
+    \item \textbf{Rationale for Adoption}: Unlike standard metrics, CoT-Pass@K rewards a solution only if both the \textbf{final answer} and the \textbf{reasoning process (CoT)} are correct. This directly addresses the issue of "lucky guesses" and provides a much higher quality reward signal for our EvoPrompt framework.
   \end{enumerate}
-  
-  \textbf{Future Plans}
+\end{frame}
+\begin{frame}
+  \frametitle{Future Plans}
   \begin{enumerate}
-    \item Research and implement \textbf{KV cache optimization} techniques to handle longer contexts.
-    \item Evaluate alternative models with larger context windows.
-    \item Benchmark performance comparison between local and API-based solutions.
+    \item Integrate the \textbf{CoT-Pass@K} metric into our evaluation pipeline to guide prompt evolution.
+    \item Begin experiments with process-based reward modeling (PRM) based on the CoT-Pass@K framework.
+    \item Continue research on \textbf{KV cache optimization} to handle longer code contexts locally.
+    \item Evaluate alternative models with larger native context windows.
   \end{enumerate}
 \end{frame}
 
 
-% \begin{frame}[allowframebreaks]
-%   \frametitle{References}
-%   \printbibliography
-% \end{frame}
+\begin{frame}[allowframebreaks]
+  \frametitle{References}
+  \printbibliography
+\end{frame}
 \end{document}
