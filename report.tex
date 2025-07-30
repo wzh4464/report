@@ -1,6 +1,4 @@
 % arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-% arara: biber
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
 \documentclass{beamer}
@@ -9,7 +7,7 @@
 \usefonttheme[onlymath]{serif}
 \usepackage{filecontents} % Used to include bib entry in the tex file
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
-\addbibresource{ref.bib} % The bib resource is now defined below
+% \addbibresource{ref.bib} % The bib resource is now defined below
 \usepackage{hyperref}
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
@@ -21,42 +19,68 @@
   \setunit{\addspace}%
   \printfield{year}%
 }
-\title{Daily Report - Prompt Optimization Sprint}
+
+% Define block style for better visual separation
+\useinnertheme{rounded}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+
+\title{Daily Report - Prompt Engineering for `primevul`}
 \author{WU Zihan}
 \date{July 28, 2025}
 
 \begin{document}
 \maketitle
 
-% \begin{frame}
-%   \frametitle{Outline}
-%   \tableofcontents
-% \end{frame}
-
-\section{Implementation and Results}
-\begin{frame}[allowframebreaks]
-  \frametitle{Today's Progress}
-  \begin{enumerate}
-    \item \textbf{Recap of Challenge}: A key challenge in our prompt evolution is the \textbf{cold start problem}, where initial prompts lack sufficient signal for effective optimization. Our current solution involves a \textbf{coarse-to-fine classification} strategy to provide intermediate rewards.
-
-    \item \textbf{New Method Identified}: Today's research identified a more robust evaluation metric, \textbf{CoT-Pass@K} (Chain-of-Thought Pass@K), from recent literature \cite{lightman2023verifystep}.
-
-    \item \textbf{Rationale for Adoption}: Unlike standard metrics, CoT-Pass@K rewards a solution only if both the \textbf{final answer} and the \textbf{reasoning process (CoT)} are correct. This directly addresses the issue of "lucky guesses" and provides a much higher quality reward signal for our EvoPrompt framework.
-  \end{enumerate}
+\begin{frame}[fragile]
+  \frametitle{What I Did Today}
+  \begin{itemize}
+    \item Due to the massive dataset size (235,768 files), initial tests were run on a \textbf{1\% sample} (approx. 2,350 files) using the \textbf{`kimi-k2-coder`} model to ensure feasibility.
+    \vspace{1em}
+    \item Deployed a structured prompt to guide the model's analysis.
+  \end{itemize}
+  
+  \begin{block}{Core Prompt Structure Example}
+    \textbf{\# Role}: You are a world-class cybersecurity expert...
+    
+    \textbf{\# Task}: 
+    1. Step-by-step analysis...
+    2. Vulnerability judgment...
+    3. Vulnerability classification (CWE)...
+  \end{block}
 \end{frame}
+
 \begin{frame}
-  \frametitle{Future Plans}
+  \frametitle{Challenges I Met}
+    \begin{block}{Primary Obstacle: Unreliable In-Context Examples}
+    The main challenge identified was the poor quality of the few-shot examples generated dynamically by the LLM itself.
+    \end{block}
+
+  \begin{itemize}
+    \item \textbf{Observation}: When prompted to create its own examples for context, the model \textbf{frequently produced incorrect or logically flawed analysis}.
+    \item \textbf{Negative Impact}: These erroneous examples acted as a misleading guide, significantly degrading the model's accuracy on the actual task. It essentially "learned" the wrong patterns from its own flawed reasoning.
+  \end{itemize}
+  
+  \begin{alertblock}{Critical Issue}
+    The model's performance is directly compromised by the poor quality of its self-generated examples. This introduces a high degree of variance and error into the results.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{My Plan to Address the Challenges}
   \begin{enumerate}
-    \item Integrate the \textbf{CoT-Pass@K} metric into our evaluation pipeline to guide prompt evolution.
-    \item Begin experiments with process-based reward modeling (PRM) based on the CoT-Pass@K framework.
-    \item Continue research on \textbf{KV cache optimization} to handle longer code contexts locally.
-    \item Evaluate alternative models with larger native context windows.
+    \item \textbf{Immediate Priority: Stabilize the Prompt}
+    \begin{itemize}
+        \item I will replace the dynamic, model-generated examples with a \textbf{fixed set of manually verified, high-quality examples}.
+        \item This ensures the prompt provides a consistent, accurate, and reliable signal for the model to follow.
+    \end{itemize}
+    \vspace{1em}
+    \item \textbf{Next Steps: Scale and Optimize}
+    \begin{itemize}
+        \item Once the prompt is stabilized, I will re-run the experiments to establish a new, more reliable performance baseline.
+        \item Following that, I will incrementally increase the experiment size from the 1% sample to larger portions of the `primevul` dataset.
+        \item I will also begin researching methods for \textbf{concurrent API querying} to improve throughput for large-scale analysis.
+    \end{itemize}
   \end{enumerate}
 \end{frame}
 
-
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
-\end{frame}
 \end{document}
