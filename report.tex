@@ -24,62 +24,56 @@
 \useinnertheme{rounded}
 \setbeamertemplate{blocks}[rounded][shadow=true]
 
-\title{Daily Report - Prompt Engineering for `primevul`}
+\title{Analysis and Strategy for `primevul` Dataset}
 \author{WU Zihan}
-\date{July 28, 2025}
+\date{July 29, 2025}
 
 \begin{document}
 \maketitle
 
-\begin{frame}[fragile]
-  \frametitle{What I Did Today}
-  \begin{itemize}
-    \item Due to the massive dataset size (235,768 files), initial tests were run on a \textbf{1\% sample} (approx. 2,350 files) using the \textbf{`kimi-k2-coder`} model to ensure feasibility.
-    \vspace{1em}
-    \item Deployed a structured prompt to guide the model's analysis.
-  \end{itemize}
-  
-  \begin{block}{Core Prompt Structure Example}
-    \textbf{\# Role}: You are a world-class cybersecurity expert...
-    
-    \textbf{\# Task}: 
-    1. Step-by-step analysis...
-    2. Vulnerability judgment...
-    3. Vulnerability classification (CWE)...
-  \end{block}
-\end{frame}
-
 \begin{frame}
-  \frametitle{Challenges I Met}
-    \begin{block}{Primary Obstacle: Unreliable In-Context Examples}
-    The main challenge identified was the poor quality of the few-shot examples generated dynamically by the LLM itself.
+  \frametitle{Analysis 1: Scale of the PrimeVul Dataset}
+    \begin{block}{Total Dataset Composition}
+    The full dataset contains approximately \textbf{235,768} distinct functions.
     \end{block}
 
   \begin{itemize}
-    \item \textbf{Observation}: When prompted to create its own examples for context, the model \textbf{frequently produced incorrect or logically flawed analysis}.
-    \item \textbf{Negative Impact}: These erroneous examples acted as a misleading guide, significantly degrading the model's accuracy on the actual task. It essentially "learned" the wrong patterns from its own flawed reasoning.
+    \item \textbf{Vulnerable Functions}: \textasciitilde 6,968 samples.
+    \item \textbf{Benign Functions}: \textasciitilde 228,800 samples.
+    \item \textbf{Diversity}: The dataset covers over 140 different CWE (Common Weakness Enumeration) types, presenting a complex classification challenge.
   \end{itemize}
   
-  \begin{alertblock}{Critical Issue}
-    The model's performance is directly compromised by the poor quality of its self-generated examples. This introduces a high degree of variance and error into the results.
+  \begin{alertblock}{Implication}
+    The sheer volume of data necessitates a highly efficient and scalable processing strategy. Sequential analysis is not feasible.
   \end{alertblock}
 \end{frame}
 
 \begin{frame}
-  \frametitle{My Plan to Address the Challenges}
+  \frametitle{Analysis 2: Token Length Requirements}
+    \begin{block}{Maximum Token Length in Training Set}
+    The dataset contains extremely long code samples, with the longest reaching up to \textbf{\textasciitilde 65,000 tokens}.
+    \end{block}
+
+  \begin{itemize}
+    \item \textbf{Majority of Samples (Bin 1)}: 0 -- 16,384 tokens.
+    \item \textbf{Fewer Samples (Bin 2)}: 16,384 -- 32,768 tokens.
+    \item \textbf{Outlier Sample (Bin 3)}: At least one sample falls in the 32,768 -- 65,536 token range.
+  \end{itemize}
+  
+  \begin{alertblock}{Critical Requirement}
+    Any selected LLM \textbf{must} have a context window large enough to handle at least 65K tokens to avoid losing critical information from the most complex samples.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion: GPT-4o via API is the Optimal Choice}
+  Based on the analysis, GPT-4o is the most suitable model for this task for the following reasons:
   \begin{enumerate}
-    \item \textbf{Immediate Priority: Stabilize the Prompt}
-    \begin{itemize}
-        \item I will replace the dynamic, model-generated examples with a \textbf{fixed set of manually verified, high-quality examples}.
-        \item This ensures the prompt provides a consistent, accurate, and reliable signal for the model to follow.
-    \end{itemize}
+    \item \textbf{Sufficient Context Window}: The GPT-4o API provides a \textbf{128K token} context window, which comfortably accommodates the longest samples in the PrimeVul dataset. This is a key advantage over lightweight models with smaller context limits.
     \vspace{1em}
-    \item \textbf{Next Steps: Scale and Optimize}
-    \begin{itemize}
-        \item Once the prompt is stabilized, I will re-run the experiments to establish a new, more reliable performance baseline.
-        \item Following that, I will incrementally increase the experiment size from the 1\% sample to larger portions of the `primevul` dataset.
-        \item I will also begin researching methods for \textbf{concurrent API querying} to improve throughput for large-scale analysis.
-    \end{itemize}
+    \item \textbf{High-Throughput Feasibility}: While a powerful model, the speed challenge can be overcome. By using the \textbf{API with high-concurrency requests}, we can process the entire 235,768-sample dataset in a reasonable timeframe.
+    \vspace{1em}
+    \item \textbf{API vs. UI Limitation}: It is crucial to use the \textbf{API}, as consumer-facing interfaces like ChatGPT or Copilot often have restricted context windows (e.g., 8K or 64K), which are insufficient for our needs.
   \end{enumerate}
 \end{frame}
 
