@@ -1,7 +1,9 @@
 % arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
+% arara: biber
+% arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
-\documentclass[aspectratio=169]{beamer}
+\documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
@@ -9,123 +11,69 @@
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
-% Define block style for better visual separation
+% Theme settings
 \usetheme{Madrid}
 \useinnertheme[shadow]{rounded}
 \setbeamertemplate{blocks}[rounded][shadow=true]
 
-\title{Weekly Report: Prompt Engineering \& Model Evaluation}
-\subtitle{CWE Classification on SVEN \& PrimeVul Datasets}
-\author{WU Zihan}
+% Custom bibliography style
+\DeclareNameAlias{author}{first-last}
+\DeclareBibliographyDriver{article}{%
+  \printnames{author}%
+  \setunit{\addspace}%
+  \printfield{title}%
+  \newunit
+  \printfield{journaltitle}%
+  \setunit{\addspace}%
+  \printfield{year}%
+}
+
+\title{Prompt Optimization Strategy for Coding Review}
+\subtitle{Inspired by the AutoModSAT Paper}
+\author{Zihan Wu}
 \date{\today}
 
 \begin{document}
 \maketitle
 
 \begin{frame}
-    \frametitle{Outline}
-    \tableofcontents
-\end{frame}
+    \frametitle{Metric for Prompt Evaluation: Shannon Entropy}
+    \begin{block}{Referenced Paper}
+        \textit{Automatically discovering heuristics in a complex SAT solver with large language models} \autocite{sun2025AutomaticallyDiscoveringHeuristics}
+    \end{block}
 
-\section{What I Did This Week}
+    \begin{block}{The Core Idea: Evaluate Prompts via Code Diversity}
+        Instead of using accuracy alone, we can evaluate a prompt by its ability to generate a diverse set of outputs, serving as a "cold-start" heuristic.
+
+        \begin{itemize}
+            \item For a given prompt, generate $N$ samples from the LLM.
+            \item Create a vector embedding for each sample (e.g., using \texttt{CodeT5+}).
+            \item Cluster the embeddings (e.g., using \texttt{K-Means++}) to group similar code reviews.
+            \item Calculate the Shannon Entropy of the cluster distribution: $H(X) = -\sum p_i \log p_i$.
+        \end{itemize}
+        \textbf{Goal:} A higher entropy score indicates a more "creative" prompt that explores a wider solution space.
+    \end{block}
+\end{frame}
 
 \begin{frame}
-    \frametitle{Summary of Activities}
-    \begin{itemize}
-        \item \textbf{Initial Baseline (SVEN Dataset)}: Conducted a zero-shot evaluation of the \textbf{kimi-k2-code} model on the SVEN dataset to establish a performance baseline.
-        \vspace{1em}
-        \item \textbf{Bias-Aware Prompt Optimization}: Identified a strong model bias and developed a "Statistical-Bias-Aware EvoPrompt" strategy, which led to a significant accuracy improvement (\textasciitilde 40\%).
-        \vspace{1em}
-        \item \textbf{Scaled to ``PrimeVul'' Dataset}: Pivoted to the much larger and more complex ``PrimeVul'' dataset, beginning with a 1\% sample for feasibility testing.
-        \vspace{1em}
-        \item \textbf{Dataset and Model Analysis}: Performed a detailed analysis of the ``PrimeVul'' dataset's scale and token requirements, and researched alternative evaluation metrics like CoT-Pass@K.
-    \end{itemize}
-\end{frame}
+    \frametitle{Impact: Why Higher Diversity Leads to Better Performance}
+    The paper empirically demonstrated that optimizing for diversity produced tangibly better results, a principle that directly applies to our coding review task.
 
-\section{Problems Encountered}
-
-\begin{frame}
-    \frametitle{Key Challenges}
-    Several critical issues were identified that impacted model performance.
-    
-    \begin{block}{Problem 1: Strong Model Bias}
-        Severe bias toward predicting \textbf{CWE-125 (Out-of-Bounds Read)}.
+    \begin{alertblock}{Key Findings and Implications}
         \begin{itemize}
-            \item CWE-476 $\rightarrow$ CWE-125: 45 times
-            \item CWE-787 $\rightarrow$ CWE-125: 37 times
-            \item CWE-416 $\rightarrow$ CWE-125: 28 times
+            \item \textbf{Finding from the Paper:} The prompt that generated a more diverse set of potential heuristics ultimately led to a final SAT solver that performed significantly better.
+                  \vspace{1em}
+            \item \textbf{Implication for Coding Review:} A prompt that encourages the LLM to explore varied reasoning paths is more likely to identify a wider range of potential bugs, including subtle or uncommon ones, rather than repeatedly suggesting the most obvious fix.
+                  \vspace{1em}
+            \item \textbf{Benefit for EA:} This improves the exploratory power of your evolutionary search by providing a richer fitness landscape beyond simple pass/fail accuracy.
         \end{itemize}
-    \end{block}
-    
-    \begin{block}{Problem 2: Context Length Limitation}
-        The locally deployed model failed on ``PrimeVul'' samples due to context window limitations for code snippets up to \textbf{65K tokens}.
-    \end{block}
-
-    \begin{block}{Problem 3: Unreliable In-Context Examples}
-        LLM-generated few-shot examples often contained \textbf{logical flaws}, misleading reasoning and degrading accuracy.
-    \end{block}
-\end{frame}
-
-\section{How I Solved Them}
-
-\begin{frame}[fragile]
-    \frametitle{Implemented Solutions}
-    Key actions taken to address the identified problems:
-
-    \begin{enumerate}
-        \item \textbf{Corrected Model Bias with EvoPrompt}:
-        \begin{itemize}
-            \item Enhanced CWE descriptions with distinguishing features
-            \item Added "vs CWE-xxx" comparisons for confused pairs
-            \item Implemented \textbf{Statistical-Bias-Aware EvoPrompt} with confusion matrix feedback
-        \end{itemize}
-
-        \item \textbf{Stabilized Prompts with Verified Examples}:
-        \begin{itemize}
-            \item Replaced unreliable model-generated examples
-            \item Used \textbf{manually verified, high-quality examples}
-            \item Refined core prompt structure
-        \end{itemize}
-    \end{enumerate}
-
-    \begin{block}{Core Prompt Structure}
-    \textbf{Role}: Cybersecurity expert
-    
-    \textbf{Task}: Analysis $\rightarrow$ Judgment $\rightarrow$ Classification
-    
-    \textbf{Examples}: Manually verified few-shot examples
-    \end{block}
-\end{frame}
-
-\section{Future Plans for Unresolved Challenges}
-
-\begin{frame}
-    \frametitle{Strategy for ``PrimeVul'' Dataset}
-    The primary unresolved challenge is efficiently and accurately processing the entire ``PrimeVul'' dataset. The following plan is based on this week's analysis.
-
-    \begin{alertblock}{Challenge}
-        Processing a dataset of \textbf{235,768 files} with samples up to \textbf{65K tokens} is infeasible with the current local model due to context length and throughput limitations.
     \end{alertblock}
+\end{frame}
 
-    \begin{block}{Proposed Plan}
-    \begin{enumerate}
-        \item \textbf{Adopt GPT-4o via API}:
-        \begin{itemize}
-            \item GPT-4o's \textbf{128K token context window} is sufficient for the longest samples in ``PrimeVul''.
-            \item \textbf{Crucially, use the API}, not consumer UIs (like ChatGPT) which have smaller context limits.
-        \end{itemize}
-        \vspace{1em}
-        \item \textbf{Implement High-Concurrency Processing}:
-        \begin{itemize}
-            \item Leverage the API to send a high volume of concurrent requests, making it feasible to process the entire dataset in a reasonable timeframe.
-        \end{itemize}
-        \vspace{1em}
-        \item \textbf{Integrate Advanced Evaluation Metric}:
-        \begin{itemize}
-            \item Implement the \textbf{CoT-Pass@K} (Chain-of-Thought Pass@K) metric to reward solutions where both the reasoning process and final answer are correct. This will provide a higher quality signal for prompt evolution than accuracy alone.
-        \end{itemize}
-    \end{enumerate}
-    \end{block}
+% biblatex bibliography
+\begin{frame}[allowframebreaks]
+    \frametitle{References}
+    \printbibliography
 \end{frame}
 
 \end{document}
