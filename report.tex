@@ -1,6 +1,4 @@
 % arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-% arara: biber
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
 \documentclass{beamer}
@@ -25,30 +23,27 @@
 }
 
 % \usetheme{Berlin}
-\title{Weekly Report}
+\title{Daily Report}
 \author{WU Zihan}
 \begin{document}
 \maketitle
 \begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
-\end{frame}
+    \frametitle{Model API Integration \& Testing}
 
-\section{Introduction}
-\begin{frame}
-  \frametitle{Introduction}
-  \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
-  \end{itemize}
+    \begin{itemize}
+        \item \textbf{API Access Acquired}: Successfully obtained API credentials yesterday.
+        \vspace{1em}
+        \item \textbf{Model Deployment and Testing Initiated}: Began running evaluations today using the following models via API:
+        \begin{itemize}
+            \item \textbf{GPT-4o} (OpenAI)
+            \item \textbf{Claude Sonnet 4} (Anthropic)
+            \item \textbf{Qwen3-250B} (Alibaba)
+        \end{itemize}
+        \vspace{1em}
+        \item \textbf{Objective}: Benchmark performance on ``PrimeVul'' dataset to determine the most suitable model for large-scale processing.
+        \vspace{1em}
+        \item \textbf{Next Steps}: Evaluate quality, speed, and context handling for each model; then select the most effective one for full pipeline integration.
+    \end{itemize}
 \end{frame}
-
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
-\end{frame}
-
 
 \end{document}
