@@ -1,9 +1,8 @@
 % arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-% arara: biber
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
-\documentclass{beamer}
+% force ratio of width to height is 16:9
+\documentclass[aspectratio=169]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
@@ -34,147 +33,169 @@
 \maketitle
 
 \begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
+    \frametitle{Outline}
+    \tableofcontents
 \end{frame}
 
 \section{Introduction}
 \begin{frame}
-  \frametitle{Introduction}
-  \begin{itemize}
-    \item Analysis of cellular co-clustering patterns during C. elegans embryonic morphogenesis
-    \item Demonstration of dorsal intercalation and intestinal primordium formation
-    \item Quantitative visualization of temporal and spatial cell coordination dynamics
-    \item Six demonstration figures illustrating key morphogenetic processes
-  \end{itemize}
+    \frametitle{Introduction}
+    \begin{itemize}
+        \item Analysis of cellular co-clustering patterns during C. elegans embryonic morphogenesis
+        \item Demonstration of dorsal intercalation and intestinal primordium formation
+        \item Quantitative visualization of temporal and spatial cell coordination dynamics
+        \item Six demonstration figures illustrating key morphogenetic processes
+    \end{itemize}
 \end{frame}
 
 \section{Dorsal Intercalation Analysis}
 
 \begin{frame}
-  \frametitle{Figure 1A: Dorsal Left Side Co-clustering}
-  \begin{center}
-    \includegraphics[width=0.7\textwidth]{demo_plots/Demo1A_Dorsal_Left_Coclustering_Heatmap.png}
-  \end{center}
-  
-  \begin{itemize}
-    \item Time-resolved co-clustering probability matrix for left-side dorsal intercalating cells
-    \item Timeline: 220-255 minutes post-fertilization during convergent extension
-    \item High probability values (red) indicate synchronized clustering behavior
-    \item Peak activity during critical intercalation window (225-235 minutes)
-  \end{itemize}
+    \frametitle{Figure 1A: Dorsal Left Side Co-clustering}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{demo_plots/Demo1A_Dorsal_Left_Coclustering_Heatmap.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Time-resolved co-clustering probability matrix for left-side dorsal intercalating cells
+                \item Timeline: 220-255 minutes post-fertilization during convergent extension
+                \item High probability values (red) indicate synchronized clustering behavior
+                \item Peak activity during critical intercalation window (225-235 minutes)
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Figure 1B: Dorsal Right Side Co-clustering}
-  \begin{center}
-    \includegraphics[width=0.7\textwidth]{demo_plots/Demo1B_Dorsal_Right_Coclustering_Heatmap.png}
-  \end{center}
-  
-  \begin{itemize}
-    \item Companion analysis of right-side dorsal intercalating cells
-    \item Coordinates with left-side counterparts to form single-row dorsal epithelium
-    \item Demonstrates bilateral symmetry in morphogenetic coordination
-    \item Red-blue scale represents clustering probability dynamics
-  \end{itemize}
+    \frametitle{Figure 1B: Dorsal Right Side Co-clustering}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{demo_plots/Demo1B_Dorsal_Right_Coclustering_Heatmap.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Companion analysis of right-side dorsal intercalating cells
+                \item Coordinates with left-side counterparts to form single-row dorsal epithelium
+                \item Demonstrates bilateral symmetry in morphogenetic coordination
+                \item Red-blue scale represents clustering probability dynamics
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Figure 2: Cell Trajectory Analysis}
-  \begin{center}
-    \includegraphics[width=0.7\textwidth]{demo_plots/Demo2_Dorsal_Cell_Trajectories.png}
-  \end{center}
-  
-  \begin{itemize}
-    \item Spatial trajectories showing convergent extension movements
-    \item Individual cell paths from bilateral positions to intercalated arrangements
-    \item Illustrates characteristic "finger-like interdigitation" process
-    \item Left (blue) and right (red) populations converge toward dorsal midline
-  \end{itemize}
+    \frametitle{Figure 2: Cell Trajectory Analysis}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{demo_plots/Demo2_Dorsal_Cell_Trajectories.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Spatial trajectories showing convergent extension movements
+                \item Individual cell paths from bilateral positions to intercalated arrangements
+                \item Illustrates characteristic "finger-like interdigitation" process
+                \item Left (blue) and right (red) populations converge toward dorsal midline
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Figure 4: Intestinal Primordium Formation}
-  \begin{center}
-    \includegraphics[width=0.7\textwidth]{demo_plots/Demo4_Intestinal_Primordium_Real.png}
-  \end{center}
-  
-  \begin{itemize}
-    \item Co-clustering matrix for E-lineage cells during gut formation (350-400 min)
-    \item Rise-and-fall pattern: internalization $\rightarrow$ proliferation $\rightarrow$ reorganization $\rightarrow$ tube formation
-    \item 20 clonally-derived intestinal cells (int1DL-int9R)
-    \item Peak activity during reorganization phase (375-385 min)
-  \end{itemize}
+    \frametitle{Figure 4: Intestinal Primordium Formation}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{demo_plots/Demo4_Intestinal_Primordium_Real.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Co-clustering matrix for E-lineage cells during gut formation (350-400 min)
+                \item Rise-and-fall pattern: internalization $\rightarrow$ proliferation $\rightarrow$ reorganization $\rightarrow$ tube formation
+                \item 20 clonally-derived intestinal cells (int1DL-int9R)
+                \item Peak activity during reorganization phase (375-385 min)
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \section{Intestinal Morphogenesis}
 
 \begin{frame}
-  \frametitle{Figure 5: Intestinal Primordium Co-clustering}
-  \begin{center}
-    \includegraphics[width=0.7\textwidth]{demo_plots/Demo4_Intestinal_Coclustering_Heatmap.png}
-  \end{center}
-  
-  \begin{itemize}
-    \item Co-clustering probability matrix for E-lineage cells during intestinal formation
-    \item Timeline: 350-400 minutes post-fertilization during gastrulation
-    \item High clustering probabilities correspond to synchronized cellular behavior
-    \item Demonstrates coordinated morphogenesis from cell mass to epithelial tube
-  \end{itemize}
+    \frametitle{Figure 5: Intestinal Primordium Co-clustering}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{demo_plots/Demo4_Intestinal_Coclustering_Heatmap.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Co-clustering probability matrix for E-lineage cells during intestinal formation
+                \item Timeline: 350-400 minutes post-fertilization during gastrulation
+                \item High clustering probabilities correspond to synchronized cellular behavior
+                \item Demonstrates coordinated morphogenesis from cell mass to epithelial tube
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \section{Quantitative Feature Analysis}
 
 \begin{frame}
-  \frametitle{Figure 6A: Dorsal Intercalation Features}
-  \begin{center}
-    \includegraphics[width=0.6\textwidth]{demo_plots/Demo7A_Dorsal_Coclustering_Features_Pie.png}
-  \end{center}
-  
-  \begin{itemize}
-    \item Quantitative analysis of morphogenetic features contributing to co-clustering
-    \item Y-axis velocity (26\%), cell elongation (21\%), surface curvature (18\%)
-    \item Indicates medial convergence velocity as primary determinant
-    \item Feature weights derived from clustering correlation analysis
-  \end{itemize}
+    \frametitle{Figure 6A: Dorsal Intercalation Features}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{demo_plots/Demo7A_Dorsal_Coclustering_Features_Pie.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Quantitative analysis of morphogenetic features contributing to co-clustering
+                \item Y-axis velocity (26\%), cell elongation (21\%), surface curvature (18\%)
+                \item Indicates medial convergence velocity as primary determinant
+                \item Feature weights derived from clustering correlation analysis
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Figure 6B: Intestinal Morphogenesis Features}
-  \begin{center}
-    \includegraphics[width=0.6\textwidth]{demo_plots/Demo7B_Intestinal_Coclustering_Features_Pie.png}
-  \end{center}
-  
-  \begin{itemize}
-    \item Feature distribution for intestinal primordium co-clustering dynamics
-    \item Z-axis velocity (28\%), apical surface area (24\%), volume change (19\%)
-    \item Reflects predominance of internalization movements
-    \item Apical domain reorganization drives coordinated tube morphogenesis
-  \end{itemize}
+    \frametitle{Figure 6B: Intestinal Morphogenesis Features}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{demo_plots/Demo7B_Intestinal_Coclustering_Features_Pie.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Feature distribution for intestinal primordium co-clustering dynamics
+                \item Z-axis velocity (28\%), apical surface area (24\%), volume change (19\%)
+                \item Reflects predominance of internalization movements
+                \item Apical domain reorganization drives coordinated tube morphogenesis
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \section{Conclusion}
 
 \begin{frame}
-  \frametitle{Summary and Biological Significance}
-  \begin{itemize}
-    \item Demonstrated quantitative analysis of cellular coordination during morphogenesis
-    \item Revealed temporal patterns: synchronized clustering followed by coordination decay
-    \item Identified key morphogenetic features driving co-clustering behavior
-    \item Bilateral coordination in dorsal intercalation vs. internalization in gut formation
-    \item Computational modeling provides insights into developmental mechanisms
-  \end{itemize}
-  
-  \vspace{1em}
-  \begin{block}{Key Finding}
-    Cellular co-clustering exhibits distinct temporal signatures corresponding to specific morphogenetic phases in C. elegans embryonic development.
-  \end{block}
-\end{frame}
+    \frametitle{Summary and Biological Significance}
+    \begin{itemize}
+        \item Demonstrated quantitative analysis of cellular coordination during morphogenesis
+        \item Revealed temporal patterns: synchronized clustering followed by coordination decay
+        \item Identified key morphogenetic features driving co-clustering behavior
+        \item Bilateral coordination in dorsal intercalation vs. internalization in gut formation
+        \item Computational modeling provides insights into developmental mechanisms
+    \end{itemize}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
+    \vspace{1em}
+    \begin{block}{Key Finding}
+        Cellular co-clustering exhibits distinct temporal signatures corresponding to specific morphogenetic phases in C. elegans embryonic development.
+    \end{block}
 \end{frame}
 
 \end{document}
