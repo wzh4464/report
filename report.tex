@@ -1,201 +1,178 @@
-% arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
-% force ratio of width to height is 16:9
-\documentclass[aspectratio=169]{beamer}
+\documentclass{beamer}
 \usepackage{graphicx}
-\usepackage{amssymb,amsfonts,amsmath}
-\usefonttheme[onlymath]{serif}
-% biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
-\addbibresource{ref.bib}
-\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage{microtype} % 更好的排版
 
-% 自定义参考文献样式
-\DeclareNameAlias{author}{first-last}
-\DeclareBibliographyDriver{article}{%
-  \printnames{author}%
-  \setunit{\addspace}%
-  \printfield{title}%
-  \newunit
-  \printfield{journaltitle}%
-  \setunit{\addspace}%
-  \printfield{year}%
-}
+% 减少 hbox 溢出警告
+\setlength{\emergencystretch}{3em}
+\setlength{\hfuzz}{0.5pt}
 
-\usetheme{Berlin}
-\title{C. elegans Embryonic Morphogenesis: Cell Co-clustering Analysis}
-\author{Cell Morphogenesis Demonstration}
-\date{\today}
+% Beamer 主题
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Beamer 设置
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=0.5cm,text margin right=0.5cm}
+
+% 文档信息
+\title[LiveVal]{LiveVal: Real-time and Trajectory-based Data Valuation via Adaptive Reference Points}
+\institute{CIKM '25, Submission Id: 3440}
+\date{November 10-14, 2025}
 
 \begin{document}
 
-\maketitle
-
+% Page 0: Title
 \begin{frame}
-    \frametitle{Outline}
-    \tableofcontents
+    \titlepage
 \end{frame}
+% Page 1: Motivation
+\begin{frame}{Motivation: The Challenge of Data Valuation}
+    \begin{alertblock}{Goal of Data Valuation}
+        Quantify the contribution of each training data point to a model.
+    \end{alertblock}
 
-\section{Introduction}
-\begin{frame}
-    \frametitle{Introduction}
-    \begin{itemize}
-        \item Analysis of cellular co-clustering patterns during C. elegans embryonic morphogenesis
-        \item Demonstration of dorsal intercalation and intestinal primordium formation
-        \item Quantitative visualization of temporal and spatial cell coordination dynamics
-        \item Six demonstration figures illustrating key morphogenetic processes
-    \end{itemize}
-\end{frame}
+    \begin{exampleblock}{Limitations of Existing Methods}
+        \begin{itemize}\small
+            \item \textbf{Post-hoc Analysis:} They evaluate data value only \textit{after} the model is fully trained. This prevents the early detection of `bad' data.
+                  \vspace{0.5em}
+            \item \textbf{High Computational Cost:} They rely on expensive model retraining (like Leave-One-Out) or complex approximations (like Influence Functions), making them unsuitable for real-time scenarios.
+                  \vspace{0.5em}
+            \item \textbf{Erroneous Judgment:} They often misjudge difficult but informative data points (e.g., decision boundary) as having low value.
+        \end{itemize}
+    \end{exampleblock}
 
-\section{Dorsal Intercalation Analysis}
-
-\begin{frame}
-    \frametitle{Figure 1A: Dorsal Left Side Co-clustering}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{demo_plots/Demo1A_Dorsal_Left_Coclustering_Heatmap.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item Time-resolved co-clustering probability matrix for left-side dorsal intercalating cells
-                \item Timeline: 220-255 minutes post-fertilization during convergent extension
-                \item High probability values (red) indicate synchronized clustering behavior
-                \item Peak activity during critical intercalation window (225-235 minutes)
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Figure 1B: Dorsal Right Side Co-clustering}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{demo_plots/Demo1B_Dorsal_Right_Coclustering_Heatmap.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item Companion analysis of right-side dorsal intercalating cells
-                \item Coordinates with left-side counterparts to form single-row dorsal epithelium
-                \item Demonstrates bilateral symmetry in morphogenetic coordination
-                \item Red-blue scale represents clustering probability dynamics
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Figure 2: Cell Trajectory Analysis}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{demo_plots/Demo2_Dorsal_Cell_Trajectories.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item Spatial trajectories showing convergent extension movements
-                \item Individual cell paths from bilateral positions to intercalated arrangements
-                \item Illustrates characteristic "finger-like interdigitation" process
-                \item Left (blue) and right (red) populations converge toward dorsal midline
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Figure 4: Intestinal Primordium Formation}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{demo_plots/Demo4_Intestinal_Primordium_Real.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item Co-clustering matrix for E-lineage cells during gut formation (350-400 min)
-                \item Rise-and-fall pattern: internalization $\rightarrow$ proliferation $\rightarrow$ reorganization $\rightarrow$ tube formation
-                \item 20 clonally-derived intestinal cells (int1DL-int9R)
-                \item Peak activity during reorganization phase (375-385 min)
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\section{Intestinal Morphogenesis}
-
-\begin{frame}
-    \frametitle{Figure 5: Intestinal Primordium Co-clustering}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{demo_plots/Demo4_Intestinal_Coclustering_Heatmap.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item Co-clustering probability matrix for E-lineage cells during intestinal formation
-                \item Timeline: 350-400 minutes post-fertilization during gastrulation
-                \item High clustering probabilities correspond to synchronized cellular behavior
-                \item Demonstrates coordinated morphogenesis from cell mass to epithelial tube
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\section{Quantitative Feature Analysis}
-
-\begin{frame}
-    \frametitle{Figure 6A: Dorsal Intercalation Features}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{demo_plots/Demo7A_Dorsal_Coclustering_Features_Pie.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item Quantitative analysis of morphogenetic features contributing to co-clustering
-                \item Y-axis velocity (26\%), cell elongation (21\%), surface curvature (18\%)
-                \item Indicates medial convergence velocity as primary determinant
-                \item Feature weights derived from clustering correlation analysis
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Figure 6B: Intestinal Morphogenesis Features}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{demo_plots/Demo7B_Intestinal_Coclustering_Features_Pie.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item Feature distribution for intestinal primordium co-clustering dynamics
-                \item Z-axis velocity (28\%), apical surface area (24\%), volume change (19\%)
-                \item Reflects predominance of internalization movements
-                \item Apical domain reorganization drives coordinated tube morphogenesis
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\section{Conclusion}
-
-\begin{frame}
-    \frametitle{Summary and Biological Significance}
-    \begin{itemize}
-        \item Demonstrated quantitative analysis of cellular coordination during morphogenesis
-        \item Revealed temporal patterns: synchronized clustering followed by coordination decay
-        \item Identified key morphogenetic features driving co-clustering behavior
-        \item Bilateral coordination in dorsal intercalation vs. internalization in gut formation
-        \item Computational modeling provides insights into developmental mechanisms
-    \end{itemize}
-
-    \vspace{1em}
-    \begin{block}{Key Finding}
-        Cellular co-clustering exhibits distinct temporal signatures corresponding to specific morphogenetic phases in C. elegans embryonic development.
+    \begin{block}{Our Solution: LiveVal}
+        We propose \textbf{LiveVal}, a real-time and trajectory-based data valuation method designed to overcome these challenges.
     \end{block}
+\end{frame}
+
+% % Page 2: Method
+% \begin{frame}{Method: Adaptive Trajectory-based Valuation}
+%     \small
+%     \begin{block}{Core Idea}
+%         Shift from a static, loss-based assessment to a dynamic, trajectory-based one. A data point is valuable if its gradient consistently guides the model toward a "better" parameter space.
+%     \end{block}
+
+%     \begin{columns}[T]
+%         \begin{column}{0.55\textwidth}
+%             \begin{block}{1. Adaptive Reference Points}
+%                 Instead of using a fixed final model ($\theta^*$) as a reference, LiveVal uses \textbf{near-future model parameters} as a dynamic reference point.
+%                 $$ \theta_{ref}^{t} = \theta_{t-1+\delta_t} $$
+%                 \vspace{-2em}
+%                 \begin{itemize}
+%                     \item The look-ahead window $\delta_t$ is dynamically adjusted based on training stability (e.g., rate of loss change).
+%                     \item This enables \textit{real-time} valuation without waiting for full convergence.
+%                 \end{itemize}
+%             \end{block}
+%         \end{column}
+%         \begin{column}{0.45\textwidth}
+%             \begin{block}{2. Implementation}
+%                 A memory-efficient \textbf{Dual-Queue} architecture is used:
+%                 \begin{itemize}
+%                     \item \textbf{Model Queue ($Q_{\theta}$):} Stores recent model states.
+%                     \item \textbf{Reference Queue ($Q_{ref}$):} Manages pending evaluations.
+%                 \end{itemize}
+%                 This reduces storage from $O(Td)$ to $O(\delta_{max}d)$.
+%             \end{block}
+%         \end{column}
+%     \end{columns}
+
+%     \begin{alertblock}{Theoretical Guarantees}
+%         We prove that LiveVal's valuations are \textbf{bounded}, \textbf{stable}, and ensure \textbf{temporal fairness}, addressing bias from decaying gradients.
+%     \end{alertblock}
+% \end{frame}
+
+% Page 2.5: Method Visualization
+\begin{frame}{Method: Visual Illustration}
+    \begin{block}{Core Idea}
+        Shift from a static, loss-based assessment to a dynamic, trajectory-based one. A data point is valuable if its gradient consistently guides the model toward a "better" parameter space.
+    \end{block}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{figure1.png}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{figure2.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Page 3: Results
+\begin{frame}{Experimental Results}
+    \begin{alertblock}{Key Finding}
+        LiveVal achieves a superior trade-off between accuracy and computational cost.
+    \end{alertblock}
+
+    \begin{columns}[T]
+        \begin{column}{0.58\textwidth}
+            \begin{block}{Performance on Corruption Detection}
+                \centering
+                \resizebox{\columnwidth}{!}{
+                    \begin{tabular}{l c c c}
+                        \toprule
+                        \textbf{Method}  & \textbf{Accuracy} & \textbf{Time}    & \textbf{Scalability}          \\
+                        \midrule
+                        LOO              & 95\%              & 3.5 hrs          & Poor                          \\
+                        Influence Func.  & 70\%              & 38 min           & Poor (2.3TB Mem)              \\
+                        TracIn           & 82\%              & 2.5 hrs          & Moderate                      \\
+                        \textbf{LiveVal} & \textbf{85\%}     & \textbf{1.2 min} & \textbf{Excellent (31GB Mem)} \\
+                        \bottomrule
+                    \end{tabular}
+                }
+                \vspace{0.3em}
+                \small LiveVal obtains a \textbf{180x speedup} over LOO with comparable accuracy.
+            \end{block}
+        \end{column}
+        \begin{column}{0.38\textwidth}
+            \begin{exampleblock}{Early Detection Capability}
+                LiveVal is the only method capable of detecting corrupted data during training:
+                \begin{itemize}
+                    \item 27.5\% of corrupted data found in Epoch 1
+                    \item 72.5\% found by Epoch 3
+                \end{itemize}
+                This allows for intervention \textit{during} training.
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+
+% Page 4: Conclusion
+\begin{frame}{Conclusion}
+    \begin{block}{Summary}
+        \textbf{LiveVal} is a novel, real-time data valuation method that uses \textbf{adaptive reference points} along the optimization trajectory. It provides:
+        \begin{itemize}
+            \item \textbf{Early detection} of harmful data.
+            \item \textbf{Significant computational savings} in both time and memory.
+            \item \textbf{Reliable and fair} valuation, proven by theory and extensive experiments.
+        \end{itemize}
+    \end{block}
+
+    \vfill
+
+    \begin{alertblock}{Key Contributions}
+        \begin{enumerate}
+            \item First real-time data valuation method with theoretical guarantees
+            \item Adaptive reference points for accurate gradient-based assessment
+            \item Memory-efficient implementation with dual-queue architecture
+        \end{enumerate}
+    \end{alertblock}
+
+    \vfill
+
+    \begin{center}
+        \huge \color{gray} Thank You!
+    \end{center}
 \end{frame}
 
 \end{document}
