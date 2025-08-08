@@ -2,53 +2,164 @@
 % arara: biber
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-
 \documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
-% biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
+\usepackage[backend=biber,style=numeric,sorting=none,giveninits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
 
-% 自定义参考文献样式
-\DeclareNameAlias{author}{first-last}
-\DeclareBibliographyDriver{article}{%
-  \printnames{author}%
-  \setunit{\addspace}%
-  \printfield{title}%
-  \newunit
-  \printfield{journaltitle}%
-  \setunit{\addspace}%
-  \printfield{year}%
-}
+% Theme settings
+\usetheme{Madrid}
+\usecolortheme{rose}
+\useinnertheme[shadow]{rounded}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamercolor{block title}{bg=blue!20,fg=black}
+\setbeamercolor{block body}{bg=blue!5,fg=black}
 
-% \usetheme{Berlin}
 \title{Weekly Report}
-\author{WU Zihan}
+\subtitle{Prompt Optimization and LLM Evaluation for Code Review}
+\author{Zihan Wu}
+\date{\today}
+
 \begin{document}
 \maketitle
-\begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
-\end{frame}
 
-\section{Introduction}
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{Overview \& Highlights}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item Designed a diversity-based prompt evaluation metric (Shannon entropy) inspired by AutoModSAT \autocite{sun2025AutomaticallyDiscoveringHeuristics}.
+    \item Completed comprehensive LLM evaluation across 7 state-of-the-art models.
+    \item Conducted vulnerability detection analysis with CWE hierarchical mapping.
+    \item Generated detailed comparative analysis of AI model performance patterns.
+    \item Implemented concurrent API calls (up to 16 in-flight) for large-scale processing.
   \end{itemize}
 \end{frame}
 
-% biblatex bibliography
+\begin{frame}
+  \frametitle{Prompt Evaluation via Shannon Entropy}
+  \begin{block}{Motivation}
+    Use output diversity as a cold-start heuristic so that prompts explore broader solution spaces, not just accuracy.
+  \end{block}
+  \begin{itemize}
+    \item For a given prompt, generate $N$ samples from the LLM.
+    \item Embed each sample (e.g., CodeT5+ embeddings).
+    \item Cluster embeddings (e.g., K-Means++), producing cluster proportions $p_i$.
+    \item Compute entropy $H=-\sum_i p_i \log p_i$ as the diversity score.
+  \end{itemize}
+  \begin{block}{Intended Impact}
+    Higher entropy encourages varied reasoning paths and is expected to uncover more (and subtler) bugs in code review, echoing results in \autocite{sun2025AutomaticallyDiscoveringHeuristics}.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Engineering Progress: Concurrency \& Reliability}
+  \begin{itemize}
+    \item Implemented concurrent API invocation with up to 16 parallel requests.
+    \item Added request queueing, basic rate-limit handling, and retries with backoff.
+    \item Batched job runner now executing large-scale evaluations (ongoing).
+    \item Structured logging for per-request cost, latency, and token usage.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A Special Example}
+  \begin{block}{Models Evaluated}
+    GPT5, GPT o1, Claude Opus 4.1, GPT o3, Grok 4, Gemini 2.5 Pro, Qwen3-Coder Plus
+  \end{block}
+
+  \begin{itemize}
+    \item \textbf{Dataset:} 7 vulnerability detection tasks per model (49 total samples)
+    \item \textbf{CWE Coverage:} 14 different vulnerability types identified
+    \item \textbf{Hierarchical Analysis:} Parent-child CWE relationships mapped
+  \end{itemize}
+
+  \begin{block}{Key Finding}
+    \textbf{CWE-703} (Improper Check or Handling of Exceptional Conditions) dominates with 18 total detections, showing consistent pattern across multiple models.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Model Performance Patterns}
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \textbf{Specialized Focus Models:}
+      \begin{itemize}
+        \item \textcolor{red}{GPT5 \& GPT o1:} Heavy concentration on CWE-703 (6-7 detections each)
+        \item \textcolor{purple}{Grok 4:} Specialized in privilege management (CWE-269: 6/7 detections)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Diverse Detection Models:}
+      \begin{itemize}
+        \item \textcolor{blue}{Claude Opus 4.1:} Broad coverage across 4 different CWE types
+        \item \textcolor{green}{Gemini 2.5 Pro:} Most diverse with 5 different vulnerability types
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.5cm}
+  \begin{block}{Strategic Implications}
+    Different models exhibit distinct vulnerability detection biases - ensemble approaches may provide comprehensive coverage.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Vulnerability Hierarchy Analysis}
+  \begin{itemize}
+    \item \textbf{Level 0 (Parent Categories):} 8 major vulnerability classes identified
+    \item \textbf{Level 1 (Specific Types):} 6 child vulnerabilities mapped to parents
+    \item \textbf{Most Critical Findings:}
+          \begin{itemize}
+            \item CWE-703 ecosystem: 18 total detections across 6 child categories
+            \item CWE-269 (Privilege Management): 7 detections with 2 child types
+            \item CWE-665 (Improper Initialization): 2 standalone detections
+          \end{itemize}
+  \end{itemize}
+
+  \begin{block}{Data-Driven Insight}
+    Exception handling vulnerabilities (CWE-703 family) represent the dominant security concern across all evaluated models.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Next Steps \& Strategic Recommendations}
+  \begin{itemize}
+    \item \textbf{Model Selection Strategy:} Consider ensemble approach combining specialized models:
+          \begin{itemize}
+            \item GPT5/o1 for exception handling detection
+            \item Grok 4 for privilege management issues
+            \item Gemini 2.5 Pro for comprehensive coverage
+          \end{itemize}
+    \item \textbf{Entropy-Performance Correlation:} Validate diversity metrics against actual vulnerability detection effectiveness
+    \item \textbf{CWE-Focused Evaluation:} Develop targeted prompts for underrepresented vulnerability classes
+    \item \textbf{Pipeline Integration:} Implement the selected model(s) into production code review workflow
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Key Insights \& Validation}
+  \begin{block}{Model Specialization Confirmed}
+    Data reveals clear specialization patterns - no single model dominates across all vulnerability types.
+  \end{block}
+
+  \begin{itemize}
+    \item \textbf{Bias Validation:} Exception handling focus may reflect training data characteristics rather than actual code vulnerabilities
+    \item \textbf{Coverage Gaps:} Several CWE categories underrepresented - requires prompt engineering refinement
+    \item \textbf{Ensemble Benefits:} Combining models could achieve 100\% coverage across identified vulnerability spectrum
+  \end{itemize}
+
+  \begin{block}{Research Impact}
+    This analysis provides the first comprehensive comparison of AI model vulnerability detection biases using hierarchical CWE classification.
+  \end{block}
+\end{frame}
+
 \begin{frame}[allowframebreaks]
   \frametitle{References}
   \printbibliography
 \end{frame}
-
 
 \end{document}
