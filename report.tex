@@ -1,92 +1,259 @@
 % arara: xelatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-% arara: biber
 % arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+\documentclass[aspectratio=169]{beamer}
 
-\documentclass{beamer}
-\usepackage{ctex}
-\usepackage[utf8]{inputenc}
+% ---------- Engine & Language ----------
+\usepackage[UTF8]{ctex} % Chinese support (XeLaTeX)
+\usepackage{fontspec}
+\usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{amsmath}
-\usetheme{Madrid}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows.meta, positioning, fit, calc}
 
-\title{AI使能软件工程（AI4SE）探索}
-\subtitle{PTL-评估 + RAGv3}
-\author{软件工程实验室-睿智}
-\date{2025年3月}
+% ---------- Huawei-ish Theme (clean, minimalist, red accents) ----------
+% Colors inspired by Huawei brand feel (do not bundle logo assets)
+\definecolor{HuaweiRed}{HTML}{D7000F}
+\definecolor{Ink}{HTML}{1F1F1F}
+\definecolor{Slate}{HTML}{2B2B2B}
+\definecolor{SoftGray}{HTML}{F5F6F7}
+\definecolor{MidGray}{HTML}{C8CCD0}
+
+% Fonts (adjust to what you have installed)
+% If you have HarmonyOS_Sans SC or Source Han Sans installed, uncomment accordingly.
+% \setCJKmainfont{HarmonyOS Sans SC}
+% \setCJKmainfont{Source Han Sans SC}
+% Fallback reasonable sans faces
+% \setCJKmainfont{Noto Sans CJK SC}
+% \setsansfont{Roboto}
+% \setmainfont{Roboto}
+
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=8mm, text margin right=8mm}
+
+% Title format: bold, tight, high-contrast
+\setbeamercolor{normal text}{fg=Ink,bg=white}
+\setbeamercolor{structure}{fg=HuaweiRed}
+\setbeamercolor{frametitle}{fg=Ink,bg=SoftGray}
+\setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+
+% Itemize bullets
+\setbeamertemplate{itemize item}{\tikz{\fill[HuaweiRed] (0,0) circle (1.2pt);}}
+\setbeamertemplate{itemize subitem}{\tikz{\fill[Ink] (0,0) rectangle (2pt,2pt);}}
+\setbeamertemplate{itemize subsubitem}{\tikz{\draw[Ink, thick] (0,0) -- (2pt,0);}}
+
+% Section page
+\setbeamertemplate{section page}{%
+  \begin{centering}
+    \vspace*{1.5cm}
+    {\color{HuaweiRed}\rule{\linewidth}{1.2pt}}\\[6pt]
+    {\usebeamerfont{section title}\LARGE\bfseries\insertsection}\par
+    \vspace{2mm}
+    {\color{Slate}\insertsectionheadnumber.\,\insertsectionhead}\par
+    \vspace{4pt}
+    {\color{HuaweiRed}\rule{\linewidth}{1.2pt}}
+  \end{centering}
+}
+
+% Footline: thin progress bar + page number
+\newlength{\progressbar}
+\setbeamertemplate{footline}{%
+  \leavevmode
+  \hbox{\begin{beamercolorbox}[wd=\paperwidth,ht=1.4ex,dp=0ex,left]{frametitle}
+    \setlength{\progressbar}{\paperwidth * \insertframenumber / \inserttotalframenumber}
+    \tikz{\fill[MidGray] (0,0) rectangle (\paperwidth,1.4ex);
+          \fill[HuaweiRed] (0,0) rectangle (\progressbar,1.4ex);} 
+  \end{beamercolorbox}}
+  \vspace{0.4ex}
+  \hbox{\begin{beamercolorbox}[wd=\paperwidth,ht=2.6ex,dp=1ex,left]{author in head/foot}
+    \hspace*{0.8em}{\color{Slate}\insertshorttitle}\hfill{\color{Slate}\insertframenumber/\inserttotalframenumber}\hspace*{0.8em}
+  \end{beamercolorbox}}
+}
+
+% Headline: slim separator
+\setbeamertemplate{headline}{\vspace{0.6ex}\color{SoftGray}\rule{\paperwidth}{0.6pt}}
+
+% Title page: red vertical bar, optional logo on the right
+\def\logopath{huawei-logo.pdf} % <- put your logo file here or leave missing
+\setbeamertemplate{title page}{%
+  \vbox{}
+  \vfill
+  \begin{columns}[T,onlytextwidth]
+    \column{0.05\textwidth}
+      {\color{HuaweiRed}\rule{1.5mm}{0.78\textheight}}
+    \column{0.90\textwidth}
+      \begin{flushleft}
+        {\usebeamerfont{title}\bfseries\LARGE\inserttitle}\par\vspace{4pt}
+        {\color{Slate}\large\insertsubtitle}\par\vspace{8pt}
+        {\small \insertauthor}\par\vspace{6pt}
+        {\small \insertdate}
+      \end{flushleft}
+    \column{0.05\textwidth}
+      \begin{flushright}
+        \IfFileExists{\logopath}{\includegraphics[width=1.4cm]{\logopath}}{}
+      \end{flushright}
+  \end{columns}
+  \vfill
+}
+
+% Blocks
+\setbeamercolor{block title}{bg=HuaweiRed!6,fg=Ink}
+\setbeamercolor{block body}{bg=SoftGray,fg=Ink}
+\setbeamerfont{block title}{series=\bfseries}
+
+% Tables and figures caption style
+\setbeamercolor{caption name}{fg=HuaweiRed}
+
+% TikZ default styles matching theme
+\tikzset{
+  process/.style={rectangle, draw=Ink, line width=0.4pt, rounded corners=1pt,
+                  minimum height=8mm, minimum width=24mm, text centered, fill=HuaweiRed!3},
+  highlight/.style={rectangle, draw=HuaweiRed, line width=0.6pt, rounded corners=1pt,
+                    minimum height=8mm, minimum width=24mm, text centered, fill=HuaweiRed!15},
+  dashedlink/.style={->, thick, dashed, color=HuaweiRed},
+  solidlink/.style={->, thick, color=Slate}
+}
+
+% Compact spacing helpers
+\setlength{\parskip}{2pt}
+\setlength{\abovecaptionskip}{6pt}
+\setlength{\belowcaptionskip}{4pt}
+\setlength{\abovedisplayskip}{6pt}
+\setlength{\belowdisplayskip}{6pt}
+
+% ---------- Metadata ----------
+\title[智能代码检视Prompt模板生成研究]{基于进化算法的智能代码检视Prompt模板生成研究}
+\subtitle{面向MoP架构的自动化Prompt优化方法}
+\author{WU Zihan}
+\date{}
+
+% ---------- Document ----------
 \begin{document}
 
-% 封面页
+% 封面
 \begin{frame}
   \titlepage
-
 \end{frame}
 
-% 第2页：iCodeReviewer代码检视
-\begin{frame}{iCodeReviewer代码检视}
-\textbf{基于上下文工程的智能化代码检视总体解决方案：}
+% 第1页：研究背景与系统架构
+% 第1页：核心挑战与解决思路
+\begin{frame}{核心挑战与解决思路}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \begin{block}{{\color{HuaweiRed}问题：人工编写Prompt的瓶颈}}
+      \begin{itemize}
+        \item \textbf{质量局限性:} 专家知识存在主观偏差，难以保证全局最优。
+        \item \textbf{覆盖不完整:} 大量漏洞类型(CWE)缺乏高质量的专家模板。
+        \item \textbf{知识难迁移:} 已有模板无法有效泛化到新的漏洞类型。
+        \item \textbf{维护成本高:} 模板的更新和扩展严重依赖人工，效率低下。
+      \end{itemize}
+    \end{block}
 
-\vspace{0.3cm}
-% \includegraphics[width=\textwidth]{icode_reviewer_architecture_placeholder.jpg} % 占位图
 
-\vspace{0.3cm}
-\textbf{产品验证点效果：}
-\begin{tabular}{lccc}
-\toprule
-类别 & 个数 & 比例 \\
-\midrule
-已标 & 42 & 84\% \\
-误标 & 8 & 16\% \\
-总计 & 50 & 100\% \\
-\bottomrule
-\end{tabular}
+    \column{0.5\textwidth}
+    \begin{alertblock}{目标}
+      实现从 \textbf{人工专家设计} 到 \textbf{算法自动化生成} 高质量Prompt模板的转变。
+    \end{alertblock}
+    \begin{block}{核心思路：进化算法 + MoP}
+      \centering
+      \begin{tikzpicture}[
+          scale=0.6, transform shape, node distance=0.8cm and 1.2cm, auto,
+          box/.style={rectangle, draw, rounded corners, fill=blue!15, align=center, font=\small, minimum width=2.0cm, minimum height=0.7cm},
+          highlight/.style={rectangle, draw, rounded corners, fill=red!20, align=center, font=\small, minimum width=2.4cm, minimum height=0.8cm},
+          note/.style={rectangle, draw, rounded corners, fill=green!15, align=center, font=\small, minimum width=1.8cm, minimum height=0.5cm},
+          solidlink/.style={-latex, thin},
+          dashedlink/.style={-latex, thin, dashed}
+        ]
 
-\vspace{0.3cm}
-\textbf{我们的方案与DeepSeek R1的对比：}
+        % 两个起点
+        \node[box] (expert) {专家种子\\Prompt};
+        \node[box, right=1.8cm of expert] (general) {通用\\Prompt};
 
-\begin{tabular}{lcccc}
-\toprule
-模型 & Precision & Recall & F1值 & 精确度 Accuracy \\
-\midrule
-Ours - OwenZQ & 85.90\% & 66.26\% & 74.92\% & 80.77\% \\
-DeepSeek R1 Distilled Owen & 79.24\% & 65.75\% & 71.96\% & 64.10\% \\
-\bottomrule
-\end{tabular}
+        % 引擎
+        \node[highlight, below=1.0cm of $(expert)!0.5!(general)$] (engine) {\textbf{进化引擎}\\(GA/DE)};
+
+        % MoP 模板库
+        \node[box, below=0.5cm of engine, minimum width=2.8cm] (mop) {MoP 模板库};
+
+        % 目标场景/任务
+        \node[note, below left=0.8cm and 1.0cm of mop] (sceneA) {场景 A};
+        \node[note, below right=0.8cm and 1.0cm of mop] (sceneB) {场景 B};
+
+        % 连接
+        \draw[solidlink] (expert) -- (engine);
+        \draw[solidlink] (general) -- (engine);
+        \draw[solidlink] (engine) -- (mop);
+        \draw[solidlink] (mop) -- (sceneA);
+        \draw[solidlink] (mop) -- (sceneB);
+
+        % 迁移（可选：显示从 A 到 B 的迁移）
+        \draw[dashedlink, bend left=15] (sceneA) to node[midway, above, font=\tiny]{迁移} (sceneB);
+
+      \end{tikzpicture}
+    \end{block}
+  \end{columns}
 \end{frame}
 
-% 第3页：AI使能SE新研究范式
-\begin{frame}{AI使能SE新研究范式}
-\textbf{DeepSeek 的 MoE 架构：}
+% 第2页：技术架构与核心优势
+\begin{frame}{技术架构与核心优势}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.55\textwidth}
+    \begin{block}{自动化生成与优化流程}
+      \centering
+      \begin{tikzpicture}[scale=0.9, transform shape, node distance=0.5cm,
+          process/.style={rectangle, draw, rounded corners, fill=blue!20, text width=2.6cm, align=center, font=\normalsize},
+          highlight/.style={rectangle, draw, rounded corners, fill=red!20, text width=2.6cm, align=center, font=\normalsize},
+          solidlink/.style={},
+          dashedlink/.style={dashed}]
+        \node[process] (seed) {1. 专家种子};
+        \node[highlight, below=0.5cm of seed] (mutate) {2. 语义变异};
+        \node[highlight, below=of mutate] (cross) {3. 交叉重组};
+        \node[process, right=0.5cm of cross] (eval) {适应度评估\\F1-Score};
+        \node[highlight, below=of cross] (select) {4. 择优选择};
+        \node[process, below=of select] (output) {5. 输出MoP库};
 
-\vspace{0.2cm}
-% \includegraphics[width=0.45\textwidth]{deepseek_moe_placeholder.jpg}
-\hfill
-% \includegraphics[width=0.45\textwidth]{mop_router_placeholder.jpg}
+        \draw[solidlink, ->] (seed) -- (mutate);
+        \draw[solidlink, ->] (mutate) -- (cross);
+        \draw[solidlink, ->] (cross) -- (select);
+        \draw[solidlink, ->] (select) -- (output);
+        \draw[dashedlink, ->] (select) -- (eval);
+        \draw[dashedlink, ->] (eval) -- (select);
+        \draw[solidlink, ->] (select) to[out=180,in=180,looseness=3] (mutate);
+        \node[draw=red, dashed, inner sep=3pt, fit=(mutate) (cross) (select)] (loop) {};
+        \node[above=0 of loop, color=red, font=\tiny] {\textbf{进化循环}};
+      \end{tikzpicture}
+    \end{block}
 
-\vspace{0.3cm}
-\begin{columns}
-\column{0.48\textwidth}
-\textbf{Mixture of Experts (MoE)} 混合专家模型：
-\begin{itemize}
-    \item 一种稀疏建模架构；
-    \item 模型由若干小的专家模型组成，每个专家擅长不同问题；
-    \item 每次推理只激活其中的一小部分专家模型；
-    \item 是目前性能最好的模型架构；
-\end{itemize}
-
-\column{0.48\textwidth}
-\textbf{Mixture of Prompts (MoP)} 混合提示词架构：
-\begin{itemize}
-    \item 一种新的提示词架构；
-    \item 聚合SE任务相关的提示词模板组成；
-    \item 每次推理仅激活部分提示词模板；
-    \item 希望能成为目前性能最优的提示词架构；
-\end{itemize}
-\end{columns}
-
-\vspace{0.3cm}
-\textcolor{red}{不同训练，能处理更多类型的软工任务！}
+    \column{0.43\textwidth}
+    \begin{block}{核心优势}
+      \begin{itemize}
+        \item \textbf{全局最优化:} 突破人工编写的局部最优限制，发掘更优模板。
+        \item \textbf{自动化扩展:} 为新漏洞类型快速、低成本地生成高质量Prompt。
+        \item \textbf{可持续演进:} 可基于新数据自动迭代，保持模板的先进性。
+        \item \textbf{保证一致性:} 算法驱动生成，确保模板风格和质量的统一。
+      \end{itemize}
+    \end{block}
+  \end{columns}
 \end{frame}
+
+\begin{frame}{初步成果}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.36\textwidth}
+    \begin{figure}
+      \centering
+      \includegraphics[width=\textwidth]{cwe_category_distribution.png}
+      \caption{CWE类别分布}
+    \end{figure}
+    \column{0.62\textwidth}
+    \begin{figure}
+      \centering
+      \includegraphics[width=\textwidth]{cwe_category_distribution_bar.png}
+      \caption{按类别 F1 Score}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
 
 \end{document}
