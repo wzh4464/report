@@ -1,0 +1,2177 @@
+fitness,generation,individual_id,metadata_feedback_applied,metadata_improvement,metadata_prompt_index,metadata_sample_wise_feedback,metadata_target_fitness,operation,prompt,timestamp
+,0,initial_0,,,0,True,,initialization,"Analyze this code for security vulnerabilities and classify it into one of these CWE major categories: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. If no vulnerability is found, respond with 'Benign'.
+
+Code to analyze:
+{input}
+
+CWE Major Category:",2025-08-14T17:47:38.858603
+,0,initial_1,,,1,True,,initialization,"You are a security expert. Examine this code and identify the primary CWE major category from: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. For secure code, use 'Benign'.
+
+Code: {input}
+
+CWE Classification:",2025-08-14T17:47:38.858725
+,0,initial_2,,,2,True,,initialization,"Perform detailed security analysis and classify into CWE major categories:
+- Buffer Errors: buffer overflows, bounds checking issues
+- Injection: SQL, command, XSS injection attacks
+- Memory Management: use-after-free, double-free, memory leaks
+- Pointer Dereference: null pointer, invalid pointer usage
+- Integer Errors: overflow, underflow, wraparound
+- Concurrency Issues: race conditions, synchronization problems
+- Path Traversal: directory traversal attacks
+- Cryptography Issues: weak crypto, broken algorithms
+- Information Exposure: data leaks, privacy issues
+- Other: other security issues
+- Benign: no vulnerabilities
+
+Code: {input}
+
+Category:",2025-08-14T17:47:38.858776
+,0,initial_3,,,3,True,,initialization,"Identify the primary vulnerability type. Choose from: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. Focus on the most significant security issue present.
+
+{input}
+
+Primary vulnerability category:",2025-08-14T17:47:38.858831
+,0,initial_4,,,4,True,,initialization,"As a cybersecurity expert, classify this code's primary security issue using CWE major categories: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. Use 'Benign' for secure code.
+
+Code under review:
+{input}
+
+Expert classification:",2025-08-14T17:47:38.858864
+,0,initial_5,,,5,True,,initialization,"Security code review: Examine for buffer errors, injection flaws, memory issues, pointer problems, integer errors, concurrency bugs, path traversal, crypto weaknesses, or information exposure. Classify accordingly or mark as 'Benign'.
+
+Code: {input}
+
+Security classification:",2025-08-14T17:47:38.858896
+,0,initial_6,,,6,True,,initialization,"Systematic vulnerability analysis:
+1. Check for buffer/bounds issues → Buffer Errors
+2. Look for injection vectors → Injection
+3. Analyze memory management → Memory Management
+4. Check pointer usage → Pointer Dereference
+5. Review integer operations → Integer Errors
+6. Examine concurrency → Concurrency Issues
+7. Check path handling → Path Traversal
+8. Review cryptography → Cryptography Issues
+9. Look for data leaks → Information Exposure
+10. Other security issues → Other
+11. No issues → Benign
+
+Code: {input}
+
+Result:",2025-08-14T17:47:38.858945
+,0,initial_7,,,7,True,,initialization,"Identify CWE patterns and map to major categories. Examples:
+- CWE-120,119,787: Buffer Errors
+- CWE-78,79,89: Injection
+- CWE-416,415,401: Memory Management
+- CWE-476: Pointer Dereference
+- CWE-190,191: Integer Errors
+- CWE-362: Concurrency Issues
+- CWE-22: Path Traversal
+- CWE-327,326: Cryptography Issues
+- CWE-200: Information Exposure
+
+Classify: {input}
+
+CWE Major Category:",2025-08-14T17:47:38.859019
+,0,initial_8,,,8,True,,initialization,"From an attacker's perspective, what's the primary exploitable weakness? Categorize as: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'.
+
+{input}
+
+Exploitable weakness category:",2025-08-14T17:47:38.859076
+,0,initial_9,,,9,True,,initialization,"Security category classification. Options: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'.
+
+Code: {input}
+
+Category:",2025-08-14T17:47:38.859129
+,0,initial_10,,,10,True,,initialization,"Vulnerability type identification. Choose the most appropriate: Buffer Errors, Injection, Memory Management, Pointer Dereference, Integer Errors, Concurrency Issues, Path Traversal, Cryptography Issues, Information Exposure, Other, or Benign.
+
+{input}
+
+Type:",2025-08-14T17:47:38.859182
+,0,initial_11,,,11,True,,initialization,"Defense-focused analysis: What type of security control would prevent exploitation? Map to vulnerability categories: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'.
+
+Code to protect:
+{input}
+
+Vulnerability category:",2025-08-14T17:47:38.859248
+0.18571428571428572,0,gen0_ind0,,,,,,initial_evaluation,"Analyze this code for security vulnerabilities and classify it into one of these CWE major categories: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. If no vulnerability is found, respond with 'Benign'.
+
+Code to analyze:
+{input}
+
+CWE Major Category:",2025-08-14T17:54:47.999235
+0.2857142857142857,0,gen0_ind1,,,,,,initial_evaluation,"You are a security expert. Examine this code and identify the primary CWE major category from: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. For secure code, use 'Benign'.
+
+Code: {input}
+
+CWE Classification:",2025-08-14T17:54:48.000007
+0.7285714285714285,0,gen0_ind2,,,,,,initial_evaluation,"Perform detailed security analysis and classify into CWE major categories:
+- Buffer Errors: buffer overflows, bounds checking issues
+- Injection: SQL, command, XSS injection attacks
+- Memory Management: use-after-free, double-free, memory leaks
+- Pointer Dereference: null pointer, invalid pointer usage
+- Integer Errors: overflow, underflow, wraparound
+- Concurrency Issues: race conditions, synchronization problems
+- Path Traversal: directory traversal attacks
+- Cryptography Issues: weak crypto, broken algorithms
+- Information Exposure: data leaks, privacy issues
+- Other: other security issues
+- Benign: no vulnerabilities
+
+Code: {input}
+
+Category:",2025-08-14T17:54:48.000352
+0.4857142857142857,0,gen0_ind3,,,,,,initial_evaluation,"Identify the primary vulnerability type. Choose from: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. Focus on the most significant security issue present.
+
+{input}
+
+Primary vulnerability category:",2025-08-14T17:54:48.000584
+0.4,0,gen0_ind4,,,,,,initial_evaluation,"As a cybersecurity expert, classify this code's primary security issue using CWE major categories: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. Use 'Benign' for secure code.
+
+Code under review:
+{input}
+
+Expert classification:",2025-08-14T17:54:48.000672
+0.34285714285714286,0,gen0_ind5,,,,,,initial_evaluation,"Security code review: Examine for buffer errors, injection flaws, memory issues, pointer problems, integer errors, concurrency bugs, path traversal, crypto weaknesses, or information exposure. Classify accordingly or mark as 'Benign'.
+
+Code: {input}
+
+Security classification:",2025-08-14T17:54:48.000751
+0.34285714285714286,0,gen0_ind6,,,,,,initial_evaluation,"Systematic vulnerability analysis:
+1. Check for buffer/bounds issues → Buffer Errors
+2. Look for injection vectors → Injection
+3. Analyze memory management → Memory Management
+4. Check pointer usage → Pointer Dereference
+5. Review integer operations → Integer Errors
+6. Examine concurrency → Concurrency Issues
+7. Check path handling → Path Traversal
+8. Review cryptography → Cryptography Issues
+9. Look for data leaks → Information Exposure
+10. Other security issues → Other
+11. No issues → Benign
+
+Code: {input}
+
+Result:",2025-08-14T17:54:48.000847
+0.9571428571428572,0,gen0_ind7,,,,,,initial_evaluation,"Identify CWE patterns and map to major categories. Examples:
+- CWE-120,119,787: Buffer Errors
+- CWE-78,79,89: Injection
+- CWE-416,415,401: Memory Management
+- CWE-476: Pointer Dereference
+- CWE-190,191: Integer Errors
+- CWE-362: Concurrency Issues
+- CWE-22: Path Traversal
+- CWE-327,326: Cryptography Issues
+- CWE-200: Information Exposure
+
+Classify: {input}
+
+CWE Major Category:",2025-08-14T17:54:48.000932
+0.2714285714285714,0,gen0_ind8,,,,,,initial_evaluation,"From an attacker's perspective, what's the primary exploitable weakness? Categorize as: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'.
+
+{input}
+
+Exploitable weakness category:",2025-08-14T17:54:48.001133
+0.42857142857142855,0,gen0_ind9,,,,,,initial_evaluation,"Security category classification. Options: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'.
+
+Code: {input}
+
+Category:",2025-08-14T17:54:48.001268
+0.21428571428571427,0,gen0_ind10,,,,,,initial_evaluation,"Vulnerability type identification. Choose the most appropriate: Buffer Errors, Injection, Memory Management, Pointer Dereference, Integer Errors, Concurrency Issues, Path Traversal, Cryptography Issues, Information Exposure, Other, or Benign.
+
+{input}
+
+Type:",2025-08-14T17:54:48.001362
+0.18571428571428572,0,gen0_ind11,,,,,,initial_evaluation,"Defense-focused analysis: What type of security control would prevent exploitation? Map to vulnerability categories: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'.
+
+Code to protect:
+{input}
+
+Vulnerability category:",2025-08-14T17:54:48.001425
+0.8285714285714286,1,gen1_trial_0,True,0.6428571428571429,,,0.18571428571428572,sample_feedback_evolution,"Perform a comprehensive security analysis of the following code. Examine it for common vulnerability patterns including but not limited to: buffer overflows, injection flaws, memory leaks, null pointer dereferences, integer overflows, race conditions, path traversal, weak cryptography, and information disclosure.
+
+Analyze the code systematically by:
+1. Identifying potentially dangerous functions or operations
+2. Tracing data flow for untrusted inputs
+3. Checking for proper input validation and sanitization
+4. Evaluating memory management practices
+5. Assessing error handling mechanisms
+
+Code to analyze:
+{input}
+
+Based on your analysis, determine if the code contains any exploitable security vulnerabilities. If you identify any security weakness that could be exploited by an attacker, respond with 'vulnerable'. If the code appears secure with no identifiable vulnerabilities, respond with 'benign'.
+
+Classification:",2025-08-14T17:55:37.051081
+0.014285714285714285,1,gen1_trial_1,True,-0.2714285714285714,,,0.2857142857142857,sample_feedback_evolution,"You are an expert security analyst conducting a comprehensive vulnerability assessment. Analyze the provided code through multiple security lenses to determine if it contains exploitable vulnerabilities.
+
+**Analysis Framework:**
+1. **Static Code Review**: Examine code structure, function calls, and data flow patterns
+2. **Attack Vector Assessment**: Consider how an attacker might exploit potential weaknesses
+3. **Security Pattern Recognition**: Identify common vulnerability patterns and anti-patterns
+
+**Key Vulnerability Categories to Evaluate:**
+- Buffer Errors (overflows, bounds checking failures)
+- Injection flaws (SQL, command, XSS, code injection)
+- Memory Management issues (use-after-free, double-free, leaks)
+- Pointer Dereference problems (null/invalid pointer usage)
+- Integer handling errors (overflow, underflow, wraparound)
+- Concurrency vulnerabilities (race conditions, synchronization flaws)
+
+Code: {input}
+
+Security assessment:",2025-08-14T17:57:01.495491
+0.8142857142857143,1,gen1_trial_2,True,0.08571428571428574,,,0.7285714285714285,sample_feedback_evolution,"As a cybersecurity expert, perform comprehensive security analysis on the provided code. Analyze for vulnerability patterns across multiple dimensions:
+
+**Static Analysis**: Examine code structure, data flow, and control flow for security flaws
+**CWE Pattern Matching**: Identify specific Common Weakness Enumeration patterns
+**Risk Assessment**: Evaluate potential exploit scenarios and impact
+
+Classify vulnerabilities into CWE major categories with specific pattern recognition:
+- Buffer Errors (CWE-120,119,787): buffer overflows, bounds checking failures
+- Injection (CWE-78,79,89): SQL, command, XSS injection vectors  
+- Memory Management (CWE-416,415,401): use-after-free, double-free, leaks
+- Pointer Dereference (CWE-476): null pointer, invalid pointer access
+- Integer Errors (CWE-190,
+
+Code: {input}
+
+Security assessment:",2025-08-14T17:57:53.111589
+0.8571428571428571,1,gen1_trial_3,True,0.3714285714285714,,,0.4857142857142857,sample_feedback_evolution,"You are a cybersecurity expert conducting a comprehensive security analysis. Examine the provided code through multiple analytical lenses:
+
+1. **Static Analysis**: Review for common vulnerability patterns and CWE categories
+2. **Defense Perspective**: Consider what security controls would be needed to prevent exploitation
+3. **Attack Surface**: Identify potential entry points and exploitation vectors
+
+Analyze this code for security vulnerabilities across all major categories including Buffer Errors, Injection flaws, Memory Management issues, Pointer Dereference problems, Integer Errors, Concurrency Issues, Path Traversal, Cryptography Issues, Information Exposure, and other security weaknesses.
+
+Code under review:
+{input}
+
+Based on your comprehensive analysis, classify this code as either 'vulnerable' if any security issues are present, or 'benign' if the code is secure.
+
+Classification:",2025-08-14T17:59:28.527855
+0.8857142857142857,1,gen1_trial_4,True,0.48571428571428565,,,0.4,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through multiple security lenses:
+
+1. **Static Analysis**: Examine the code structure, function calls, and data flow patterns
+2. **Runtime Behavior**: Consider potential execution paths and edge cases
+3. **Attack Surface**: Identify entry points and data validation gaps
+4. **Common Vulnerability Patterns**: Look for known security anti-patterns
+
+Classify the code's security status as either 'vulnerable' or 'benign'. Use 'vulnerable' if any security weakness is present that could be exploited, regardless of severity. Use 'benign' only if the code demonstrates secure practices with no identifiable vulnerabilities.
+
+Focus on detecting these primary security issues:
+- Buffer overflows and memory corruption
+- Injection vulnerabilities (SQL, command, etc.)
+- Memory management flaws
+- Unsafe pointer operations
+- Integer overflow/
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:00:44.857153
+0.014285714285714285,1,gen1_trial_5,True,-0.32857142857142857,,,0.34285714285714286,sample_feedback_evolution,"**Security Vulnerability Analysis**: Conduct a comprehensive security assessment of the provided code from multiple analytical perspectives:
+
+1. **Static Analysis**: Examine code structure for buffer overflows, injection vulnerabilities, memory management flaws, unsafe pointer operations, integer overflow/underflow, race conditions, directory traversal, cryptographic weaknesses, and data exposure risks.
+
+2. **Threat Modeling**: From an attacker's viewpoint, identify the most exploitable weakness and potential attack vectors.
+
+3. **Risk Assessment**: Evaluate the severity and exploitability of any identified security issues, considering both direct vulnerabilities and subtle implementation flaws.
+
+Analyze the code for these vulnerability categories: Buffer Errors, Injection, Memory Management, Pointer Dereference, Integer Errors, Concurrency Issues, Path Traversal, Cryptography Issues, Information Exposure, and Other security concerns.
+
+Code: {input}
+
+Based on your multi-",2025-08-14T18:01:43.210866
+0.4857142857142857,1,gen1_trial_6,True,0.14285714285714285,,,0.34285714285714286,sample_feedback_evolution,"You are a security expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses:
+
+**Defense Analysis**: What security controls would be needed to prevent exploitation of this code?
+**CWE Classification**: Identify potential weaknesses across major vulnerability categories
+**Attack Vector Assessment**: Consider how an attacker might exploit any identified issues
+
+Analyze for these vulnerability types:
+- Buffer/bounds violations and memory corruption
+- Injection attacks (SQL, command, XSS, etc.)
+- Memory management flaws (leaks, use-after-free, double-free)
+- Unsafe pointer operations and null dereferences
+- Integer overflow/underflow and arithmetic errors
+- Race conditions and concurrency vulnerabilities
+- Path traversal and file system access issues
+- Cryptographic implementation weaknesses
+- Information disclosure and data exposure
+- Authentication, authorization, and access control flaws
+
+Code to analyze:
+{input}",2025-08-14T18:02:56.771851
+0.9,1,gen1_trial_7,True,-0.05714285714285716,,,0.9571428571428572,sample_feedback_evolution,"As a cybersecurity expert, analyze the following code from multiple perspectives to identify security vulnerabilities:
+
+**Analysis Framework:**
+1. **Static Analysis**: Examine code patterns for known CWE categories
+2. **Attacker Perspective**: Consider how this code could be exploited
+3. **Security Best Practices**: Evaluate against secure coding standards
+
+**CWE Major Categories to Consider:**
+- Buffer Errors (CWE-120,119,787): buffer overflows, bounds checking issues
+- Injection (CWE-78,79,89): SQL, command, XSS injection attacks  
+- Memory Management (CWE-416,415,401): use-after-free, double-free, memory leaks
+- Pointer Dereference (CWE-476): null pointer, invalid pointer usage
+- Integer Errors (CWE-190,191): overflow, underflow
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:03:46.336719
+0.9571428571428572,1,gen1_trial_8,True,0.6857142857142857,,,0.2714285714285714,sample_feedback_evolution,"Analyze the following code from a security perspective using multiple assessment approaches:
+
+1. **Attacker Mindset**: What would an attacker target first?
+2. **Systematic Review**: Check each vulnerability class methodically
+3. **Impact Assessment**: Consider exploitability and severity
+
+Vulnerability Categories:
+- Buffer Errors: overflows, bounds violations, buffer mismanagement
+- Injection: SQL, command, XSS, code injection vulnerabilities  
+- Memory Management: use-after-free, double-free, memory corruption
+- Pointer Dereference: null/invalid pointer access, dangling pointers
+- Integer Errors: overflow, underflow, wraparound conditions
+- Concurrency Issues: race conditions, synchronization flaws
+- Path Traversal: directory traversal, file access bypasses
+- Cryptography Issues: weak algorithms, implementation flaws
+- Information Exposure: data le
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:04:33.946759
+0.0,1,gen1_trial_9,True,-0.42857142857142855,,,0.42857142857142855,sample_feedback_evolution,"As a cybersecurity expert, perform a systematic vulnerability analysis of the provided code using CWE-based security patterns. Follow this structured approach:
+
+1. **Buffer/Bounds Analysis**: Check for buffer overflows, underflows, or out-of-bounds access (CWE-120, 119, 787)
+2. **Injection Vector Assessment**: Look for SQL, command, or code injection vulnerabilities (CWE-78, 79, 89)
+3. **Memory Management Review**: Analyze for use-after-free, double-free, or memory leaks (CWE-416, 415, 401)
+4. **Pointer Safety Check**: Examine null pointer dereferences or dangling pointers (CWE-476)
+5. **Integer Operation Validation**: Review for integer overflows, underflows, or wraparound (CWE-190, 191)
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:05:32.678073
+0.7142857142857143,1,gen1_trial_10,True,0.5,,,0.21428571428571427,sample_feedback_evolution,"You are a security analyst tasked with detecting vulnerabilities in code. Perform a comprehensive security review by examining the code for common weakness patterns including buffer overflows, injection attacks, memory corruption, unsafe pointer operations, integer overflow/underflow, race conditions, directory traversal, cryptographic flaws, and information leakage.
+
+Analyze the following code systematically:
+1. Check for input validation and sanitization
+2. Examine memory operations and bounds checking
+3. Look for unsafe function calls and API usage
+4. Assess data flow and potential attack vectors
+
+Code to analyze:
+{input}
+
+Based on your security analysis, classify this code as either 'vulnerable' if any security weakness is detected, or 'benign' if no vulnerabilities are found.
+
+Classification:",2025-08-14T18:06:39.579467
+0.4857142857142857,1,gen1_trial_11,True,0.3,,,0.18571428571428572,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses:
+
+1. **Static Analysis**: Identify potential CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+2. **Attack Surface Assessment**: Evaluate input validation, boundary checks, and data flow security
+3. **Defensive Controls**: Consider what security mechanisms are missing or inadequate
+
+Analyze this code for security vulnerabilities across these categories: 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'.
+
+Code to analyze:
+{input}
+
+If any significant security vulnerability is detected, respond with 'vulnerable'. If the code appears secure with proper defensive measures, respon",2025-08-14T18:09:40.667747
+0.8285714285714286,1,gen1_ind0,,,,,,sample_feedback_generation_complete,"Perform a comprehensive security analysis of the following code. Examine it for common vulnerability patterns including but not limited to: buffer overflows, injection flaws, memory leaks, null pointer dereferences, integer overflows, race conditions, path traversal, weak cryptography, and information disclosure.
+
+Analyze the code systematically by:
+1. Identifying potentially dangerous functions or operations
+2. Tracing data flow for untrusted inputs
+3. Checking for proper input validation and sanitization
+4. Evaluating memory management practices
+5. Assessing error handling mechanisms
+
+Code to analyze:
+{input}
+
+Based on your analysis, determine if the code contains any exploitable security vulnerabilities. If you identify any security weakness that could be exploited by an attacker, respond with 'vulnerable'. If the code appears secure with no identifiable vulnerabilities, respond with 'benign'.
+
+Classification:",2025-08-14T18:09:40.668148
+0.2857142857142857,1,gen1_ind1,,,,,,sample_feedback_generation_complete,"You are a security expert. Examine this code and identify the primary CWE major category from: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. For secure code, use 'Benign'.
+
+Code: {input}
+
+CWE Classification:",2025-08-14T18:09:40.668389
+0.8142857142857143,1,gen1_ind2,,,,,,sample_feedback_generation_complete,"As a cybersecurity expert, perform comprehensive security analysis on the provided code. Analyze for vulnerability patterns across multiple dimensions:
+
+**Static Analysis**: Examine code structure, data flow, and control flow for security flaws
+**CWE Pattern Matching**: Identify specific Common Weakness Enumeration patterns
+**Risk Assessment**: Evaluate potential exploit scenarios and impact
+
+Classify vulnerabilities into CWE major categories with specific pattern recognition:
+- Buffer Errors (CWE-120,119,787): buffer overflows, bounds checking failures
+- Injection (CWE-78,79,89): SQL, command, XSS injection vectors  
+- Memory Management (CWE-416,415,401): use-after-free, double-free, leaks
+- Pointer Dereference (CWE-476): null pointer, invalid pointer access
+- Integer Errors (CWE-190,
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:09:40.668500
+0.8571428571428571,1,gen1_ind3,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting a comprehensive security analysis. Examine the provided code through multiple analytical lenses:
+
+1. **Static Analysis**: Review for common vulnerability patterns and CWE categories
+2. **Defense Perspective**: Consider what security controls would be needed to prevent exploitation
+3. **Attack Surface**: Identify potential entry points and exploitation vectors
+
+Analyze this code for security vulnerabilities across all major categories including Buffer Errors, Injection flaws, Memory Management issues, Pointer Dereference problems, Integer Errors, Concurrency Issues, Path Traversal, Cryptography Issues, Information Exposure, and other security weaknesses.
+
+Code under review:
+{input}
+
+Based on your comprehensive analysis, classify this code as either 'vulnerable' if any security issues are present, or 'benign' if the code is secure.
+
+Classification:",2025-08-14T18:09:40.668606
+0.8857142857142857,1,gen1_ind4,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through multiple security lenses:
+
+1. **Static Analysis**: Examine the code structure, function calls, and data flow patterns
+2. **Runtime Behavior**: Consider potential execution paths and edge cases
+3. **Attack Surface**: Identify entry points and data validation gaps
+4. **Common Vulnerability Patterns**: Look for known security anti-patterns
+
+Classify the code's security status as either 'vulnerable' or 'benign'. Use 'vulnerable' if any security weakness is present that could be exploited, regardless of severity. Use 'benign' only if the code demonstrates secure practices with no identifiable vulnerabilities.
+
+Focus on detecting these primary security issues:
+- Buffer overflows and memory corruption
+- Injection vulnerabilities (SQL, command, etc.)
+- Memory management flaws
+- Unsafe pointer operations
+- Integer overflow/
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:09:40.668717
+0.34285714285714286,1,gen1_ind5,,,,,,sample_feedback_generation_complete,"Security code review: Examine for buffer errors, injection flaws, memory issues, pointer problems, integer errors, concurrency bugs, path traversal, crypto weaknesses, or information exposure. Classify accordingly or mark as 'Benign'.
+
+Code: {input}
+
+Security classification:",2025-08-14T18:09:40.668891
+0.4857142857142857,1,gen1_ind6,,,,,,sample_feedback_generation_complete,"You are a security expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses:
+
+**Defense Analysis**: What security controls would be needed to prevent exploitation of this code?
+**CWE Classification**: Identify potential weaknesses across major vulnerability categories
+**Attack Vector Assessment**: Consider how an attacker might exploit any identified issues
+
+Analyze for these vulnerability types:
+- Buffer/bounds violations and memory corruption
+- Injection attacks (SQL, command, XSS, etc.)
+- Memory management flaws (leaks, use-after-free, double-free)
+- Unsafe pointer operations and null dereferences
+- Integer overflow/underflow and arithmetic errors
+- Race conditions and concurrency vulnerabilities
+- Path traversal and file system access issues
+- Cryptographic implementation weaknesses
+- Information disclosure and data exposure
+- Authentication, authorization, and access control flaws
+
+Code to analyze:
+{input}",2025-08-14T18:09:40.668976
+0.9571428571428572,1,gen1_ind7,,,,,,sample_feedback_generation_complete,"Identify CWE patterns and map to major categories. Examples:
+- CWE-120,119,787: Buffer Errors
+- CWE-78,79,89: Injection
+- CWE-416,415,401: Memory Management
+- CWE-476: Pointer Dereference
+- CWE-190,191: Integer Errors
+- CWE-362: Concurrency Issues
+- CWE-22: Path Traversal
+- CWE-327,326: Cryptography Issues
+- CWE-200: Information Exposure
+
+Classify: {input}
+
+CWE Major Category:",2025-08-14T18:09:40.669068
+0.9571428571428572,1,gen1_ind8,,,,,,sample_feedback_generation_complete,"Analyze the following code from a security perspective using multiple assessment approaches:
+
+1. **Attacker Mindset**: What would an attacker target first?
+2. **Systematic Review**: Check each vulnerability class methodically
+3. **Impact Assessment**: Consider exploitability and severity
+
+Vulnerability Categories:
+- Buffer Errors: overflows, bounds violations, buffer mismanagement
+- Injection: SQL, command, XSS, code injection vulnerabilities  
+- Memory Management: use-after-free, double-free, memory corruption
+- Pointer Dereference: null/invalid pointer access, dangling pointers
+- Integer Errors: overflow, underflow, wraparound conditions
+- Concurrency Issues: race conditions, synchronization flaws
+- Path Traversal: directory traversal, file access bypasses
+- Cryptography Issues: weak algorithms, implementation flaws
+- Information Exposure: data le
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:09:40.669166
+0.42857142857142855,1,gen1_ind9,,,,,,sample_feedback_generation_complete,"Security category classification. Options: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'.
+
+Code: {input}
+
+Category:",2025-08-14T18:09:40.669309
+0.7142857142857143,1,gen1_ind10,,,,,,sample_feedback_generation_complete,"You are a security analyst tasked with detecting vulnerabilities in code. Perform a comprehensive security review by examining the code for common weakness patterns including buffer overflows, injection attacks, memory corruption, unsafe pointer operations, integer overflow/underflow, race conditions, directory traversal, cryptographic flaws, and information leakage.
+
+Analyze the following code systematically:
+1. Check for input validation and sanitization
+2. Examine memory operations and bounds checking
+3. Look for unsafe function calls and API usage
+4. Assess data flow and potential attack vectors
+
+Code to analyze:
+{input}
+
+Based on your security analysis, classify this code as either 'vulnerable' if any security weakness is detected, or 'benign' if no vulnerabilities are found.
+
+Classification:",2025-08-14T18:09:40.669395
+0.4857142857142857,1,gen1_ind11,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses:
+
+1. **Static Analysis**: Identify potential CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+2. **Attack Surface Assessment**: Evaluate input validation, boundary checks, and data flow security
+3. **Defensive Controls**: Consider what security mechanisms are missing or inadequate
+
+Analyze this code for security vulnerabilities across these categories: 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'.
+
+Code to analyze:
+{input}
+
+If any significant security vulnerability is detected, respond with 'vulnerable'. If the code appears secure with proper defensive measures, respon",2025-08-14T18:09:40.669488
+0.7142857142857143,2,gen2_trial_0,True,-0.11428571428571432,,,0.8285714285714286,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses using a systematic approach:
+
+**Phase 1 - Static Analysis & CWE Assessment**:
+- Identify potential CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Examine code for dangerous functions, unsafe API usage, and improper error handling
+- Look for missing or inadequate defensive controls
+
+**Phase 2 - Attack Surface & Data Flow Analysis**:
+- Trace untrusted input paths and evaluate input validation/sanitization
+- Assess boundary checks, memory operations, and pointer safety
+- Examine data flow for potential attack vectors and privilege escalation
+
+**Phase 3 - Security Pattern Recognition**:
+Systematically check for vulnerabilities across these critical categories:
+- Buffer Errors (overflows, underflows, bounds checking)
+- Injection flaws
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:10:35.583535
+0.2,2,gen2_trial_1,True,-0.08571428571428569,,,0.2857142857142857,sample_feedback_evolution,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code through systematic security assessment using multiple analysis techniques:
+
+**Static Code Analysis**: Analyze code structure, data flow, and control flow for security weaknesses
+**CWE Pattern Recognition**: Identify specific vulnerability patterns across major weakness categories
+**Attack Vector Assessment**: Evaluate how an attacker could exploit identified issues
+**Defense Gap Analysis**: Determine what security controls are missing or insufficient
+
+Systematically analyze for these vulnerability categories:
+- Buffer Errors: buffer overflows, bounds checking failures, memory corruption (CWE-120,119,787)
+- Injection Flaws: SQL, command, XSS, and other injection vectors (CWE-78,79,89)
+- Memory Management: use-after-free, double-free, memory leaks (CWE-416,415,401)
+- Pointer Issues: null pointer
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:11:30.083840
+0.9,2,gen2_trial_2,True,0.08571428571428574,,,0.8142857142857143,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a multi-layered security assessment. Analyze the provided code through comprehensive security evaluation:
+
+**Multi-Dimensional Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, function calls, data flow patterns, and control flow logic
+2. **Dynamic Behavior Assessment**: Consider potential execution paths, edge cases, and runtime vulnerabilities
+3. **Attack Surface Mapping**: Identify entry points, input validation gaps, and exploitable interfaces
+4. **Defense Gap Analysis**: Evaluate missing security controls and protective mechanisms
+
+**CWE Pattern Recognition** - Systematically scan for these vulnerability categories:
+- **Buffer Errors** (CWE-120,119,787): buffer overflows, bounds checking failures, array access violations
+- **Injection Flaws** (CWE-78,79,89): SQL injection, command injection, XSS, code injection vectors
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:12:18.269129
+0.014285714285714285,2,gen2_trial_3,True,-0.8428571428571429,,,0.8571428571428571,sample_feedback_evolution,"You are a cybersecurity expert conducting multi-layered vulnerability analysis. Examine the provided code systematically through these complementary analytical approaches:
+
+**Phase 1 - Static Code Analysis**: 
+- Scan for CWE vulnerability patterns: buffer overflows, injection flaws, memory corruption, logic errors
+- Check input validation mechanisms and boundary conditions
+- Review data flow paths for untrusted input handling
+
+**Phase 2 - Attack Surface Mapping**:
+- Identify all potential entry points and user-controllable inputs
+- Evaluate trust boundaries and privilege escalation opportunities  
+- Assess external interfaces and data sources
+
+**Phase 3 - Security Control Assessment**:
+- Determine what defensive mechanisms are present vs. missing
+- Analyze adequacy of existing protections (sanitization, validation, encoding)
+- Consider bypass techniques for implemented controls
+
+**Target Vulnerability Categories**: 'Buffer Errors', '
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:13:15.867767
+0.8857142857142857,2,gen2_trial_4,True,0.0,,,0.8857142857142857,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses and analytical approaches:
+
+**1. Static Code Analysis**: 
+- Review code structure, function calls, and data flow patterns
+- Identify potential CWE vulnerabilities and anti-patterns
+- Examine boundary conditions and edge case handling
+
+**2. Attack Surface Assessment**: 
+- Evaluate all input validation mechanisms and entry points
+- Assess data sanitization and boundary checks
+- Consider potential exploitation vectors and attack chains
+
+**3. Defense-in-Depth Analysis**: 
+- Determine what security controls are missing or inadequate
+- Consider bypass scenarios for existing protections
+- Evaluate the robustness of defensive measures
+
+**4. Runtime Behavior Analysis**: 
+- Consider potential execution paths and state changes
+- Analyze memory allocation/deallocation patterns
+- Assess concurrency and timing-related behaviors
+
+Systemat
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:13:55.330454
+0.5857142857142857,2,gen2_trial_5,True,0.24285714285714288,,,0.34285714285714286,sample_feedback_evolution,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code through multiple security analysis methodologies:
+
+**Multi-Layered Analysis Approach**:
+1. **Static Code Analysis**: Examine code structure, control flow, and data flow patterns
+2. **CWE Pattern Recognition**: Identify specific Common Weakness Enumeration vulnerabilities
+3. **Attack Vector Assessment**: Trace how untrusted inputs could be exploited
+4. **Defense Gap Analysis**: Evaluate missing security controls and validation
+
+**Systematic Vulnerability Detection**:
+- **Buffer/Memory Errors**: Buffer overflows, bounds violations, memory corruption (CWE-120,119,787)
+- **Injection Flaws**: SQL, command, XSS, and other injection vectors (CWE-78,79,89)
+- **Memory Management**: Use-after-free, double-free, memory leaks
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:14:42.762670
+0.8285714285714286,2,gen2_trial_6,True,0.3428571428571429,,,0.4857142857142857,sample_feedback_evolution,"You are a cybersecurity expert conducting systematic vulnerability analysis. Perform comprehensive security assessment of the provided code using multiple analytical approaches:
+
+**Multi-Layered Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, control flow, and data flow patterns
+2. **CWE Pattern Recognition**: Map findings to specific Common Weakness Enumeration categories
+3. **Attack Surface Evaluation**: Trace untrusted input paths and identify exploitation vectors
+4. **Defense Gap Assessment**: Evaluate missing or insufficient security controls
+
+**Systematic Vulnerability Detection**:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, use-after-free, double-free, memory leaks
+- **Injection Vulnerabilities** (CWE-78,79,89): SQL injection, command injection, XSS, code injection
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:15:29.905379
+0.21428571428571427,2,gen2_trial_7,True,-0.7428571428571429,,,0.9571428571428572,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple analytical perspectives:
+
+**Analysis Framework:**
+1. **Static Code Review**: Scan for CWE vulnerability patterns across major categories
+2. **Attack Surface Assessment**: Evaluate input validation, boundary conditions, and data flow paths
+3. **Defensive Controls Evaluation**: Assess missing or inadequate security mechanisms
+
+**CWE Category Mapping:**
+- CWE-120,119,787: Buffer Errors (overflows, underflows, out-of-bounds access)
+- CWE-78,79,89: Injection (command, SQL, XSS, code injection)
+- CWE-416,415,401: Memory Management (use-after-free, double-free, memory leaks)
+- CWE-476: Pointer Dereference (null pointer, uninitialized pointer
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:16:14.756826
+0.8714285714285714,2,gen2_trial_8,True,-0.08571428571428574,,,0.9571428571428572,sample_feedback_evolution,"You are a security expert performing comprehensive vulnerability analysis. Examine the provided code through multiple complementary assessment approaches:
+
+**Attacker Perspective**: What would an attacker target first? Consider entry points, trust boundaries, and high-value targets.
+
+**Systematic CWE Analysis**: Methodically check for Common Weakness Enumeration patterns across major vulnerability categories:
+- Buffer Errors (CWE-120,119,787): overflows, bounds violations, buffer mismanagement
+- Injection Flaws (CWE-78,79,89): SQL, command, XSS, code injection vectors
+- Memory Management (CWE-416,415,401): use-after-free, double-free, memory corruption, leaks
+- Pointer Issues (CWE-476): null/invalid pointer access, dangling pointers
+- Integer Errors (CWE-190,191): overflow,
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:17:07.644609
+0.8714285714285714,2,gen2_trial_9,True,0.4428571428571429,,,0.42857142857142855,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through multiple analytical lenses to detect vulnerabilities across all major security categories:
+
+**Analysis Framework:**
+1. **Static Analysis**: Examine code structure, function calls, data flow patterns, and common vulnerability patterns
+2. **Runtime Behavior**: Consider potential execution paths, edge cases, and attack vectors
+3. **Attack Surface**: Identify entry points, data validation gaps, and exploitation opportunities
+4. **Defense Perspective**: Evaluate what security controls would be needed to prevent exploitation
+
+**Security Categories to Assess:**
+- Buffer Errors (overflows, underflows, boundary violations)
+- Injection flaws (SQL, command, code injection)
+- Memory Management issues (leaks, use-after-free, double-free)
+- Pointer Dereference problems (null pointers, dangling pointers)
+- Integer Errors (
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:17:53.833809
+0.6,2,gen2_trial_10,True,-0.11428571428571432,,,0.7142857142857143,sample_feedback_evolution,"You are a security expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security assessment approaches:
+
+**1. Attacker Mindset Analysis**: What would an attacker target first? Consider the most exploitable entry points and attack surfaces.
+
+**2. Systematic CWE Review**: Methodically examine each major vulnerability category:
+- Buffer/bounds violations and memory corruption
+- Injection attacks (SQL, command, XSS, code injection)
+- Memory management flaws (use-after-free, double-free, leaks)
+- Unsafe pointer operations and null dereferences
+- Integer overflow/underflow and arithmetic errors
+- Race conditions and concurrency vulnerabilities
+- Path traversal and file system access issues
+- Cryptographic implementation weaknesses
+- Information disclosure and data exposure
+- Authentication, authorization, and access control flaws
+
+**3. Defense Gap Assessment**: What security controls are missing that would be
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:18:41.431562
+0.8428571428571429,2,gen2_trial_11,True,0.35714285714285715,,,0.4857142857142857,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses using a systematic approach:
+
+**Phase 1 - Static Code Analysis:**
+- Identify CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Examine unsafe function calls, API misuse, and dangerous programming patterns
+- Check for input validation gaps and boundary condition failures
+
+**Phase 2 - Attack Vector Assessment:**
+- Evaluate potential attack surfaces and entry points
+- Assess data flow security from input to output
+- Consider how an attacker might exploit identified weaknesses
+
+**Phase 3 - Defense Gap Analysis:**
+- Identify missing or inadequate security controls
+- Evaluate what defensive measures would be needed to prevent exploitation
+- Consider the exploitability and impact of any discovered issues
+
+Systematically analyze for these vulnerability categories:
+- **Buffer/Memory Errors**:
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:19:51.880328
+0.8285714285714286,2,gen2_ind0,,,,,,sample_feedback_generation_complete,"Perform a comprehensive security analysis of the following code. Examine it for common vulnerability patterns including but not limited to: buffer overflows, injection flaws, memory leaks, null pointer dereferences, integer overflows, race conditions, path traversal, weak cryptography, and information disclosure.
+
+Analyze the code systematically by:
+1. Identifying potentially dangerous functions or operations
+2. Tracing data flow for untrusted inputs
+3. Checking for proper input validation and sanitization
+4. Evaluating memory management practices
+5. Assessing error handling mechanisms
+
+Code to analyze:
+{input}
+
+Based on your analysis, determine if the code contains any exploitable security vulnerabilities. If you identify any security weakness that could be exploited by an attacker, respond with 'vulnerable'. If the code appears secure with no identifiable vulnerabilities, respond with 'benign'.
+
+Classification:",2025-08-14T18:19:51.880757
+0.2857142857142857,2,gen2_ind1,,,,,,sample_feedback_generation_complete,"You are a security expert. Examine this code and identify the primary CWE major category from: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. For secure code, use 'Benign'.
+
+Code: {input}
+
+CWE Classification:",2025-08-14T18:19:51.880882
+0.9,2,gen2_ind2,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a multi-layered security assessment. Analyze the provided code through comprehensive security evaluation:
+
+**Multi-Dimensional Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, function calls, data flow patterns, and control flow logic
+2. **Dynamic Behavior Assessment**: Consider potential execution paths, edge cases, and runtime vulnerabilities
+3. **Attack Surface Mapping**: Identify entry points, input validation gaps, and exploitable interfaces
+4. **Defense Gap Analysis**: Evaluate missing security controls and protective mechanisms
+
+**CWE Pattern Recognition** - Systematically scan for these vulnerability categories:
+- **Buffer Errors** (CWE-120,119,787): buffer overflows, bounds checking failures, array access violations
+- **Injection Flaws** (CWE-78,79,89): SQL injection, command injection, XSS, code injection vectors
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:19:51.880969
+0.8571428571428571,2,gen2_ind3,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting a comprehensive security analysis. Examine the provided code through multiple analytical lenses:
+
+1. **Static Analysis**: Review for common vulnerability patterns and CWE categories
+2. **Defense Perspective**: Consider what security controls would be needed to prevent exploitation
+3. **Attack Surface**: Identify potential entry points and exploitation vectors
+
+Analyze this code for security vulnerabilities across all major categories including Buffer Errors, Injection flaws, Memory Management issues, Pointer Dereference problems, Integer Errors, Concurrency Issues, Path Traversal, Cryptography Issues, Information Exposure, and other security weaknesses.
+
+Code under review:
+{input}
+
+Based on your comprehensive analysis, classify this code as either 'vulnerable' if any security issues are present, or 'benign' if the code is secure.
+
+Classification:",2025-08-14T18:19:51.881107
+0.8857142857142857,2,gen2_ind4,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through multiple security lenses:
+
+1. **Static Analysis**: Examine the code structure, function calls, and data flow patterns
+2. **Runtime Behavior**: Consider potential execution paths and edge cases
+3. **Attack Surface**: Identify entry points and data validation gaps
+4. **Common Vulnerability Patterns**: Look for known security anti-patterns
+
+Classify the code's security status as either 'vulnerable' or 'benign'. Use 'vulnerable' if any security weakness is present that could be exploited, regardless of severity. Use 'benign' only if the code demonstrates secure practices with no identifiable vulnerabilities.
+
+Focus on detecting these primary security issues:
+- Buffer overflows and memory corruption
+- Injection vulnerabilities (SQL, command, etc.)
+- Memory management flaws
+- Unsafe pointer operations
+- Integer overflow/
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:19:51.881186
+0.5857142857142857,2,gen2_ind5,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code through multiple security analysis methodologies:
+
+**Multi-Layered Analysis Approach**:
+1. **Static Code Analysis**: Examine code structure, control flow, and data flow patterns
+2. **CWE Pattern Recognition**: Identify specific Common Weakness Enumeration vulnerabilities
+3. **Attack Vector Assessment**: Trace how untrusted inputs could be exploited
+4. **Defense Gap Analysis**: Evaluate missing security controls and validation
+
+**Systematic Vulnerability Detection**:
+- **Buffer/Memory Errors**: Buffer overflows, bounds violations, memory corruption (CWE-120,119,787)
+- **Injection Flaws**: SQL, command, XSS, and other injection vectors (CWE-78,79,89)
+- **Memory Management**: Use-after-free, double-free, memory leaks
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:19:51.881263
+0.8285714285714286,2,gen2_ind6,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting systematic vulnerability analysis. Perform comprehensive security assessment of the provided code using multiple analytical approaches:
+
+**Multi-Layered Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, control flow, and data flow patterns
+2. **CWE Pattern Recognition**: Map findings to specific Common Weakness Enumeration categories
+3. **Attack Surface Evaluation**: Trace untrusted input paths and identify exploitation vectors
+4. **Defense Gap Assessment**: Evaluate missing or insufficient security controls
+
+**Systematic Vulnerability Detection**:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, use-after-free, double-free, memory leaks
+- **Injection Vulnerabilities** (CWE-78,79,89): SQL injection, command injection, XSS, code injection
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:19:51.881336
+0.9571428571428572,2,gen2_ind7,,,,,,sample_feedback_generation_complete,"Identify CWE patterns and map to major categories. Examples:
+- CWE-120,119,787: Buffer Errors
+- CWE-78,79,89: Injection
+- CWE-416,415,401: Memory Management
+- CWE-476: Pointer Dereference
+- CWE-190,191: Integer Errors
+- CWE-362: Concurrency Issues
+- CWE-22: Path Traversal
+- CWE-327,326: Cryptography Issues
+- CWE-200: Information Exposure
+
+Classify: {input}
+
+CWE Major Category:",2025-08-14T18:19:51.881456
+0.9571428571428572,2,gen2_ind8,,,,,,sample_feedback_generation_complete,"Analyze the following code from a security perspective using multiple assessment approaches:
+
+1. **Attacker Mindset**: What would an attacker target first?
+2. **Systematic Review**: Check each vulnerability class methodically
+3. **Impact Assessment**: Consider exploitability and severity
+
+Vulnerability Categories:
+- Buffer Errors: overflows, bounds violations, buffer mismanagement
+- Injection: SQL, command, XSS, code injection vulnerabilities  
+- Memory Management: use-after-free, double-free, memory corruption
+- Pointer Dereference: null/invalid pointer access, dangling pointers
+- Integer Errors: overflow, underflow, wraparound conditions
+- Concurrency Issues: race conditions, synchronization flaws
+- Path Traversal: directory traversal, file access bypasses
+- Cryptography Issues: weak algorithms, implementation flaws
+- Information Exposure: data le
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:19:51.881532
+0.8714285714285714,2,gen2_ind9,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through multiple analytical lenses to detect vulnerabilities across all major security categories:
+
+**Analysis Framework:**
+1. **Static Analysis**: Examine code structure, function calls, data flow patterns, and common vulnerability patterns
+2. **Runtime Behavior**: Consider potential execution paths, edge cases, and attack vectors
+3. **Attack Surface**: Identify entry points, data validation gaps, and exploitation opportunities
+4. **Defense Perspective**: Evaluate what security controls would be needed to prevent exploitation
+
+**Security Categories to Assess:**
+- Buffer Errors (overflows, underflows, boundary violations)
+- Injection flaws (SQL, command, code injection)
+- Memory Management issues (leaks, use-after-free, double-free)
+- Pointer Dereference problems (null pointers, dangling pointers)
+- Integer Errors (
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:19:51.881603
+0.7142857142857143,2,gen2_ind10,,,,,,sample_feedback_generation_complete,"You are a security analyst tasked with detecting vulnerabilities in code. Perform a comprehensive security review by examining the code for common weakness patterns including buffer overflows, injection attacks, memory corruption, unsafe pointer operations, integer overflow/underflow, race conditions, directory traversal, cryptographic flaws, and information leakage.
+
+Analyze the following code systematically:
+1. Check for input validation and sanitization
+2. Examine memory operations and bounds checking
+3. Look for unsafe function calls and API usage
+4. Assess data flow and potential attack vectors
+
+Code to analyze:
+{input}
+
+Based on your security analysis, classify this code as either 'vulnerable' if any security weakness is detected, or 'benign' if no vulnerabilities are found.
+
+Classification:",2025-08-14T18:19:51.881674
+0.8428571428571429,2,gen2_ind11,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses using a systematic approach:
+
+**Phase 1 - Static Code Analysis:**
+- Identify CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Examine unsafe function calls, API misuse, and dangerous programming patterns
+- Check for input validation gaps and boundary condition failures
+
+**Phase 2 - Attack Vector Assessment:**
+- Evaluate potential attack surfaces and entry points
+- Assess data flow security from input to output
+- Consider how an attacker might exploit identified weaknesses
+
+**Phase 3 - Defense Gap Analysis:**
+- Identify missing or inadequate security controls
+- Evaluate what defensive measures would be needed to prevent exploitation
+- Consider the exploitability and impact of any discovered issues
+
+Systematically analyze for these vulnerability categories:
+- **Buffer/Memory Errors**:
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:19:51.881782
+0.9285714285714286,3,gen3_trial_0,True,0.09999999999999998,,,0.8285714285714286,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through multiple analytical lenses using a systematic, multi-phase approach to detect vulnerabilities across all major security categories:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, function calls, data flow patterns, and common vulnerability patterns
+- Identify CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Check for unsafe function calls, API misuse, and dangerous programming patterns
+- Evaluate input validation gaps and boundary condition failures
+
+**Phase 2 - Runtime Behavior & Attack Vector Assessment:**
+- Consider potential execution paths, edge cases, and attack vectors
+- Identify entry points, data validation gaps, and exploitation opportunities
+- Trace data flow for untrusted inputs from source to sink
+- Assess how an attacker might exploit identified weaknesses
+
+**Phase 3 - Defense
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:20:31.320278
+0.014285714285714285,3,gen3_trial_1,True,-0.2714285714285714,,,0.2857142857142857,sample_feedback_evolution,"You are a cybersecurity expert conducting systematic vulnerability analysis. Examine the provided code using a comprehensive multi-phase approach to identify security weaknesses.
+
+**Analysis Framework:**
+
+**Phase 1 - Static Code Examination:**
+- Analyze code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming constructs
+- Examine input validation mechanisms and boundary condition handling
+
+**Phase 2 - CWE Pattern Recognition:**
+Map any identified issues to these major vulnerability categories:
+- **Buffer Errors** (CWE-120,119,787): Buffer overflows, bounds violations, array access errors
+- **Injection** (CWE-78,79,89): SQL injection, command injection, XSS, code injection
+- **Memory Management** (CWE-416,415,401): Use-after-free, double-free, memory leaks
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:21:27.960264
+0.9,3,gen3_trial_2,True,0.0,,,0.9,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through systematic multi-perspective evaluation to detect vulnerabilities across all major security categories:
+
+**Integrated Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, function calls, data flow patterns, control flow logic, and syntactic vulnerability indicators
+2. **Dynamic Behavior Assessment**: Trace potential execution paths, runtime conditions, edge cases, and state-dependent vulnerabilities
+3. **Attack Surface Mapping**: Identify all entry points, input validation gaps, data boundaries, and exploitable interfaces
+4. **Defense Gap Analysis**: Evaluate missing security controls, insufficient validation, and protective mechanism failures
+
+**Systematic CWE Pattern Recognition** - Comprehensively scan for these vulnerability categories:
+- **Buffer/Memory Errors** (CWE-120,119,787): buffer overflows, bounds checking failures, array access violations, stack
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:22:42.925006
+0.9714285714285714,3,gen3_trial_3,True,0.11428571428571432,,,0.8571428571428571,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a multi-phase comprehensive security assessment. Analyze the provided code through systematic security evaluation:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack vectors
+- Examine entry points, user-controlled inputs, and external interfaces
+- Consider how malicious actors might chain vulnerabilities for maximum impact
+
+**Phase 2 - Systematic Vulnerability Detection:**
+Methodically examine each category using static analysis patterns:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, memory corruption, use-after-free, double-free
+- **Injection Vulnerabilities**: SQL injection, command injection, XSS, code injection, LDAP injection
+- **Memory Management Flaws**: uninitialized memory, memory leaks, dangling pointers, heap corruption
+- **Pointer
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:23:24.564422
+0.8571428571428571,3,gen3_trial_4,True,-0.02857142857142858,,,0.8857142857142857,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through a systematic multi-phase security assessment:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Review for CWE vulnerability patterns and common security anti-patterns
+- Check input validation gaps and boundary condition failures
+
+**Phase 2 - Attack Vector Assessment:**
+- Trace how untrusted inputs flow through the system
+- Identify potential entry points and exploitation vectors
+- Evaluate attack surfaces and consider edge cases
+- Assess how an attacker might exploit identified weaknesses
+
+**Phase 3 - Defense Gap Analysis:**
+- Evaluate missing or inadequate security controls
+- Consider what defensive measures would be needed to prevent exploitation
+- Analyze the exploitability and potential impact of discovered issues
+
+**Systematic
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:24:11.543107
+0.9285714285714286,3,gen3_trial_5,True,0.34285714285714286,,,0.5857142857142857,sample_feedback_evolution,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code through multiple security analysis methodologies using a systematic multi-phase approach:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Check for CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Analyze input validation gaps and boundary condition failures
+
+**Phase 2 - Attack Vector Assessment:**
+- Evaluate potential attack surfaces and entry points
+- Trace how untrusted inputs could be exploited through the system
+- Assess data flow security from input to output
+- Consider realistic exploitation scenarios and attack chains
+
+**Phase 3 - Defense Gap Analysis:**
+- Identify missing or inadequate security controls
+- Evaluate what defensive measures would be needed to prevent exploitation
+-
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:25:11.050569
+0.7142857142857143,3,gen3_trial_6,True,-0.11428571428571432,,,0.8285714285714286,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Perform systematic security assessment of the provided code using a multi-perspective analytical framework:
+
+**Comprehensive Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, function calls, data flow patterns, control flow logic, and syntactic vulnerability indicators
+2. **Dynamic Execution Assessment**: Trace potential execution paths, edge cases, runtime behaviors, and state transitions
+3. **Attacker Perspective Analysis**: Identify what an adversary would target first, exploitation vectors, and attack entry points
+4. **Defense Gap Evaluation**: Assess missing security controls, insufficient input validation, and protective mechanism failures
+
+**Systematic Vulnerability Detection Categories**:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, array access violations, use-after-free, double-free, memory le
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:25:59.572612
+0.37142857142857144,3,gen3_trial_7,True,-0.5857142857142857,,,0.9571428571428572,sample_feedback_evolution,"You are an expert cybersecurity analyst performing comprehensive vulnerability detection. Analyze the provided code through multiple security assessment methodologies to determine if it contains exploitable vulnerabilities.
+
+**Multi-Layered Detection Framework:**
+
+1. **Static Code Analysis**: Examine code structure, control flow, function calls, and data flow patterns for vulnerability indicators
+2. **CWE Pattern Matching**: Systematically check for specific Common Weakness Enumeration patterns:
+   - **Buffer Errors** (CWE-120,119,787): Overflows, bounds violations, buffer mismanagement
+   - **Injection Flaws** (CWE-78,79,89): SQL, command, XSS, and code injection vectors
+   - **Memory Management** (CWE-416,415,401): Use-after-free, double-free, memory leaks
+   - **Pointer Dereference**
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:26:52.609965
+0.8857142857142857,3,gen3_trial_8,True,-0.07142857142857151,,,0.9571428571428572,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through multiple analytical lenses to detect vulnerabilities across all major security categories.
+
+**Multi-Layered Analysis Framework:**
+
+1. **Attacker Mindset Analysis**: What would an adversary target first? Identify the most attractive attack vectors and entry points from an exploitation perspective.
+
+2. **Static Code Analysis**: Examine code structure, function calls, data flow patterns, and common vulnerability signatures. Look for dangerous functions, improper input validation, and unsafe coding practices.
+
+3. **Runtime Behavior Assessment**: Consider potential execution paths, edge cases, boundary conditions, and how the code behaves under stress or unexpected inputs.
+
+4. **CWE Pattern Recognition**: Map identified issues to specific Common Weakness Enumeration categories for precise classification.
+
+**Systematic Vulnerability Assessment - Check Each Category:**
+
+- **Buffer Errors** (CWE
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:27:36.631398
+0.9428571428571428,3,gen3_trial_9,True,0.0714285714285714,,,0.8714285714285714,sample_feedback_evolution,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, function calls, and data flow patterns
+- Identify unsafe function usage, API misuse, and dangerous programming constructs
+- Scan for CWE vulnerability patterns and common security anti-patterns
+
+**Phase 2 - Dynamic Behavior Assessment:**
+- Evaluate potential execution paths, edge cases, and runtime attack scenarios
+- Consider how malicious inputs could exploit weaknesses during execution
+- Assess state changes and side effects that could lead to vulnerabilities
+
+**Phase 3 - Attack Surface Mapping:**
+- Identify all entry points, input validation gaps, and exploitable interfaces
+- Map data flow from untrusted sources to sensitive operations
+- Evaluate boundary conditions and error handling weaknesses
+
+**Phase
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:28:24.159252
+0.38571428571428573,3,gen3_trial_10,True,-0.32857142857142857,,,0.7142857142857143,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive vulnerability assessment. Perform multi-layered security analysis of the provided code using systematic approaches to detect weaknesses across all major security categories.
+
+**Analysis Framework:**
+1. **Static Code Analysis**: Examine code structure, control flow, data flow patterns, and function call sequences
+2. **CWE Pattern Recognition**: Map identified issues to specific Common Weakness Enumeration categories
+3. **Attack Surface Evaluation**: Trace untrusted input paths from entry points to sensitive operations
+4. **Defense Gap Assessment**: Evaluate missing or insufficient security controls and validation mechanisms
+5. **Runtime Behavior Analysis**: Consider potential execution paths, edge cases, and exploitation vectors
+
+**Comprehensive Security Categories:**
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows/underflows, bounds violations, use-after-free, double
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:29:24.798170
+0.9428571428571428,3,gen3_trial_11,True,0.09999999999999998,,,0.8428571428571429,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses using a systematic approach:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack surfaces
+- Trace potential exploitation paths from user input to system compromise
+- Consider how discovered weaknesses could be chained together
+
+**Phase 2 - Systematic Vulnerability Review:**
+- **Buffer/Memory Errors**: overflows, bounds violations, buffer mismanagement, use-after-free, double-free, memory corruption
+- **Injection Vulnerabilities**: SQL, command, XSS, code injection, LDAP injection
+- **Pointer Operations**: null/invalid pointer access, dangling pointers, uninitialized pointers
+- **Integer Errors**: overflow, underflow, wraparound conditions, signedness issues
+- **
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.846056
+0.9285714285714286,3,gen3_ind0,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through multiple analytical lenses using a systematic, multi-phase approach to detect vulnerabilities across all major security categories:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, function calls, data flow patterns, and common vulnerability patterns
+- Identify CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Check for unsafe function calls, API misuse, and dangerous programming patterns
+- Evaluate input validation gaps and boundary condition failures
+
+**Phase 2 - Runtime Behavior & Attack Vector Assessment:**
+- Consider potential execution paths, edge cases, and attack vectors
+- Identify entry points, data validation gaps, and exploitation opportunities
+- Trace data flow for untrusted inputs from source to sink
+- Assess how an attacker might exploit identified weaknesses
+
+**Phase 3 - Defense
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.846386
+0.2857142857142857,3,gen3_ind1,,,,,,sample_feedback_generation_complete,"You are a security expert. Examine this code and identify the primary CWE major category from: 'Benign', 'Buffer Errors', 'Injection', 'Memory Management', 'Pointer Dereference', 'Integer Errors', 'Concurrency Issues', 'Path Traversal', 'Cryptography Issues', 'Information Exposure', 'Other'. For secure code, use 'Benign'.
+
+Code: {input}
+
+CWE Classification:",2025-08-14T18:30:10.846576
+0.9,3,gen3_ind2,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a multi-layered security assessment. Analyze the provided code through comprehensive security evaluation:
+
+**Multi-Dimensional Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, function calls, data flow patterns, and control flow logic
+2. **Dynamic Behavior Assessment**: Consider potential execution paths, edge cases, and runtime vulnerabilities
+3. **Attack Surface Mapping**: Identify entry points, input validation gaps, and exploitable interfaces
+4. **Defense Gap Analysis**: Evaluate missing security controls and protective mechanisms
+
+**CWE Pattern Recognition** - Systematically scan for these vulnerability categories:
+- **Buffer Errors** (CWE-120,119,787): buffer overflows, bounds checking failures, array access violations
+- **Injection Flaws** (CWE-78,79,89): SQL injection, command injection, XSS, code injection vectors
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.846697
+0.9714285714285714,3,gen3_ind3,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a multi-phase comprehensive security assessment. Analyze the provided code through systematic security evaluation:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack vectors
+- Examine entry points, user-controlled inputs, and external interfaces
+- Consider how malicious actors might chain vulnerabilities for maximum impact
+
+**Phase 2 - Systematic Vulnerability Detection:**
+Methodically examine each category using static analysis patterns:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, memory corruption, use-after-free, double-free
+- **Injection Vulnerabilities**: SQL injection, command injection, XSS, code injection, LDAP injection
+- **Memory Management Flaws**: uninitialized memory, memory leaks, dangling pointers, heap corruption
+- **Pointer
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.846809
+0.8857142857142857,3,gen3_ind4,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through multiple security lenses:
+
+1. **Static Analysis**: Examine the code structure, function calls, and data flow patterns
+2. **Runtime Behavior**: Consider potential execution paths and edge cases
+3. **Attack Surface**: Identify entry points and data validation gaps
+4. **Common Vulnerability Patterns**: Look for known security anti-patterns
+
+Classify the code's security status as either 'vulnerable' or 'benign'. Use 'vulnerable' if any security weakness is present that could be exploited, regardless of severity. Use 'benign' only if the code demonstrates secure practices with no identifiable vulnerabilities.
+
+Focus on detecting these primary security issues:
+- Buffer overflows and memory corruption
+- Injection vulnerabilities (SQL, command, etc.)
+- Memory management flaws
+- Unsafe pointer operations
+- Integer overflow/
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.846917
+0.9285714285714286,3,gen3_ind5,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code through multiple security analysis methodologies using a systematic multi-phase approach:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Check for CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Analyze input validation gaps and boundary condition failures
+
+**Phase 2 - Attack Vector Assessment:**
+- Evaluate potential attack surfaces and entry points
+- Trace how untrusted inputs could be exploited through the system
+- Assess data flow security from input to output
+- Consider realistic exploitation scenarios and attack chains
+
+**Phase 3 - Defense Gap Analysis:**
+- Identify missing or inadequate security controls
+- Evaluate what defensive measures would be needed to prevent exploitation
+-
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.847021
+0.8285714285714286,3,gen3_ind6,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting systematic vulnerability analysis. Perform comprehensive security assessment of the provided code using multiple analytical approaches:
+
+**Multi-Layered Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, control flow, and data flow patterns
+2. **CWE Pattern Recognition**: Map findings to specific Common Weakness Enumeration categories
+3. **Attack Surface Evaluation**: Trace untrusted input paths and identify exploitation vectors
+4. **Defense Gap Assessment**: Evaluate missing or insufficient security controls
+
+**Systematic Vulnerability Detection**:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, use-after-free, double-free, memory leaks
+- **Injection Vulnerabilities** (CWE-78,79,89): SQL injection, command injection, XSS, code injection
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.847116
+0.9571428571428572,3,gen3_ind7,,,,,,sample_feedback_generation_complete,"Identify CWE patterns and map to major categories. Examples:
+- CWE-120,119,787: Buffer Errors
+- CWE-78,79,89: Injection
+- CWE-416,415,401: Memory Management
+- CWE-476: Pointer Dereference
+- CWE-190,191: Integer Errors
+- CWE-362: Concurrency Issues
+- CWE-22: Path Traversal
+- CWE-327,326: Cryptography Issues
+- CWE-200: Information Exposure
+
+Classify: {input}
+
+CWE Major Category:",2025-08-14T18:30:10.847215
+0.9571428571428572,3,gen3_ind8,,,,,,sample_feedback_generation_complete,"Analyze the following code from a security perspective using multiple assessment approaches:
+
+1. **Attacker Mindset**: What would an attacker target first?
+2. **Systematic Review**: Check each vulnerability class methodically
+3. **Impact Assessment**: Consider exploitability and severity
+
+Vulnerability Categories:
+- Buffer Errors: overflows, bounds violations, buffer mismanagement
+- Injection: SQL, command, XSS, code injection vulnerabilities  
+- Memory Management: use-after-free, double-free, memory corruption
+- Pointer Dereference: null/invalid pointer access, dangling pointers
+- Integer Errors: overflow, underflow, wraparound conditions
+- Concurrency Issues: race conditions, synchronization flaws
+- Path Traversal: directory traversal, file access bypasses
+- Cryptography Issues: weak algorithms, implementation flaws
+- Information Exposure: data le
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.847323
+0.9428571428571428,3,gen3_ind9,,,,,,sample_feedback_generation_complete,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, function calls, and data flow patterns
+- Identify unsafe function usage, API misuse, and dangerous programming constructs
+- Scan for CWE vulnerability patterns and common security anti-patterns
+
+**Phase 2 - Dynamic Behavior Assessment:**
+- Evaluate potential execution paths, edge cases, and runtime attack scenarios
+- Consider how malicious inputs could exploit weaknesses during execution
+- Assess state changes and side effects that could lead to vulnerabilities
+
+**Phase 3 - Attack Surface Mapping:**
+- Identify all entry points, input validation gaps, and exploitable interfaces
+- Map data flow from untrusted sources to sensitive operations
+- Evaluate boundary conditions and error handling weaknesses
+
+**Phase
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.847422
+0.7142857142857143,3,gen3_ind10,,,,,,sample_feedback_generation_complete,"You are a security analyst tasked with detecting vulnerabilities in code. Perform a comprehensive security review by examining the code for common weakness patterns including buffer overflows, injection attacks, memory corruption, unsafe pointer operations, integer overflow/underflow, race conditions, directory traversal, cryptographic flaws, and information leakage.
+
+Analyze the following code systematically:
+1. Check for input validation and sanitization
+2. Examine memory operations and bounds checking
+3. Look for unsafe function calls and API usage
+4. Assess data flow and potential attack vectors
+
+Code to analyze:
+{input}
+
+Based on your security analysis, classify this code as either 'vulnerable' if any security weakness is detected, or 'benign' if no vulnerabilities are found.
+
+Classification:",2025-08-14T18:30:10.847518
+0.9428571428571428,3,gen3_ind11,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses using a systematic approach:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack surfaces
+- Trace potential exploitation paths from user input to system compromise
+- Consider how discovered weaknesses could be chained together
+
+**Phase 2 - Systematic Vulnerability Review:**
+- **Buffer/Memory Errors**: overflows, bounds violations, buffer mismanagement, use-after-free, double-free, memory corruption
+- **Injection Vulnerabilities**: SQL, command, XSS, code injection, LDAP injection
+- **Pointer Operations**: null/invalid pointer access, dangling pointers, uninitialized pointers
+- **Integer Errors**: overflow, underflow, wraparound conditions, signedness issues
+- **
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:30:10.847614
+0.9571428571428572,4,gen4_trial_0,True,0.02857142857142858,,,0.9285714285714286,sample_feedback_evolution,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Attacker Mindset & Entry Point Analysis:**
+- What would an attacker target first? Identify the most attractive attack vectors and entry points
+- Examine user-controlled inputs, external interfaces, and data sources that could be weaponized
+- Consider how malicious actors might chain vulnerabilities for maximum impact
+
+**Phase 2 - Systematic Static Code Analysis:**
+Methodically examine each vulnerability category using pattern recognition:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, memory corruption, use-after-free, double-free, uninitialized memory
+- **Injection Vulnerabilities**: SQL injection, command injection, XSS, code injection, LDAP injection, format string attacks
+- **Memory Management Fl
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:31:00.001834
+0.4,4,gen4_trial_1,True,0.11428571428571432,,,0.2857142857142857,sample_feedback_evolution,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code using a systematic multi-phase approach to detect security weaknesses:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Check for common CWE vulnerability patterns and unsafe operations
+- Analyze input validation gaps and boundary condition failures
+
+**Phase 2 - Attack Vector Assessment:**
+- Evaluate potential attack surfaces and entry points for untrusted data
+- Trace how malicious inputs could flow through the system
+- Consider realistic exploitation scenarios and attack chains
+- Assess data flow security from input sources to output sinks
+
+**Phase 3 - Vulnerability Pattern Mapping:**
+Map identified issues to major CWE categories:
+- Buffer Errors (CWE-120,119,787): Buffer overflows
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:31:44.438879
+0.9428571428571428,4,gen4_trial_2,True,0.042857142857142816,,,0.9,sample_feedback_evolution,"You are an elite cybersecurity analyst conducting a comprehensive multi-dimensional security assessment. Analyze the provided code using systematic vulnerability detection methodologies across multiple analytical frameworks:
+
+**Phase 1 - Attacker Surface Reconnaissance:**
+- Identify all entry points, input vectors, and exploitable interfaces from an attacker's perspective
+- Map the most attractive attack surfaces and potential exploitation pathways
+- Trace untrusted data flow from sources through transformations to critical sinks
+
+**Phase 2 - Static Code Analysis & Pattern Recognition:**
+- Examine code structure, control flow logic, function calls, and data flow patterns
+- Systematically scan for CWE vulnerability categories:
+  - **Buffer/Memory Errors** (CWE-120,119,787,416,415): buffer overflows, bounds violations, use-after-free, double-free, memory corruption
+  - **Injection Flaws** (C
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:32:33.876751
+0.9571428571428572,4,gen4_trial_3,True,-0.014285714285714235,,,0.9714285714285714,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code through systematic security evaluation using multiple analytical approaches:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack vectors and entry points
+- Examine user-controlled inputs, external interfaces, and data flow paths
+- Consider how malicious actors might chain vulnerabilities for maximum impact
+- Trace potential exploitation paths from input to system compromise
+
+**Phase 2 - Multi-Dimensional Security Analysis:**
+Combine static analysis, dynamic behavior assessment, and attack surface mapping:
+- **Static Code Analysis**: Examine code structure, function calls, control flow logic, and data flow patterns
+- **Runtime Behavior Assessment**: Consider potential execution paths, edge cases, and runtime vulnerabilities
+- **Attack Surface Mapping**: Identify all entry points, input validation gaps, and explo
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:33:20.384135
+0.9142857142857143,4,gen4_trial_4,True,0.02857142857142858,,,0.8857142857142857,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code using a systematic multi-phase approach to detect vulnerabilities across all major security categories:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Check for CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, integer errors, and logic flaws
+- Analyze input validation gaps, boundary condition failures, and missing security controls
+
+**Phase 2 - Attack Vector & Runtime Assessment:**
+- Identify attack surfaces, entry points, and potential exploitation paths
+- Trace untrusted data flow from input sources to sensitive operations
+- Consider realistic attack scenarios and exploitation chains
+- Evaluate potential execution paths, edge cases, and race conditions
+
+**Phase 3 - Defense Gap Analysis:**
+-
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:34:06.543542
+0.7857142857142857,4,gen4_trial_5,True,-0.1428571428571429,,,0.9285714285714286,sample_feedback_evolution,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code through multiple security analysis methodologies using a systematic multi-phase approach:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Check for CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Analyze input validation gaps and boundary condition failures
+
+**Phase 2 - Runtime Behavior Assessment:**
+- Consider potential execution paths and edge cases that could lead to vulnerabilities
+- Evaluate how the code behaves under different input conditions
+- Trace data flow from untrusted inputs through the system
+- Assess memory operations, bounds checking, and resource management
+
+**Phase 3 - Attack Surface & Vector Analysis:**
+- Identify all potential entry points and attack surfaces
+-
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:34:52.880462
+0.8857142857142857,4,gen4_trial_6,True,0.05714285714285705,,,0.8285714285714286,sample_feedback_evolution,"You are a cybersecurity expert conducting systematic vulnerability analysis. Perform comprehensive security assessment of the provided code using multiple analytical approaches:
+
+**Multi-Layered Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, control flow, data flow patterns, function calls, and dangerous programming patterns
+2. **Attacker Mindset Assessment**: Consider what an attacker would target first and potential exploitation vectors
+3. **CWE Pattern Recognition**: Map findings to specific Common Weakness Enumeration categories
+4. **Attack Surface Evaluation**: Trace untrusted input paths from source to sink and identify exploitation opportunities
+5. **Defense Gap Assessment**: Evaluate missing or insufficient security controls and boundary condition failures
+
+**Systematic Vulnerability Detection**:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, use-after-free,
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:35:55.279508
+0.9,4,gen4_trial_7,True,-0.05714285714285716,,,0.9571428571428572,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through systematic vulnerability detection using multiple security analysis methodologies:
+
+**Static Analysis Framework:**
+- Examine code structure, control flow, function calls, and data flow patterns
+- Identify unsafe function usage, API misuse, and dangerous programming constructs
+- Map potential CWE vulnerability patterns to major security categories:
+  - Buffer Errors (CWE-120,119,787): Overflow/underflow conditions
+  - Injection Flaws (CWE-78,79,89): Command, SQL, code injection vectors
+  - Memory Management (CWE-416,415,401): Use-after-free, double-free, leaks
+  - Pointer Operations (CWE-476): Null dereference, dangling pointers
+  - Integer Errors (CWE-190,191):
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:36:44.619184
+0.5714285714285714,4,gen4_trial_8,True,-0.3857142857142858,,,0.9571428571428572,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting comprehensive vulnerability assessment. Analyze the provided code using a multi-layered security evaluation framework and respond with either 'vulnerable' or 'benign'.
+
+**Multi-Phase Security Assessment Framework:**
+
+**Phase 1 - Attack Surface Analysis:**
+- Identify all entry points, user-controlled inputs, and external interfaces
+- Map data flow from untrusted sources through the application
+- Examine how an attacker would target the most accessible attack vectors first
+
+**Phase 2 - CWE Pattern Detection:**
+Systematically scan for vulnerability patterns mapped to Common Weakness Enumeration:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, use-after-free, double-free, memory corruption, uninitialized memory
+- **Injection Vulnerabilities** (CWE
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:37:49.932924
+0.9571428571428572,4,gen4_trial_9,True,0.014285714285714346,,,0.9428571428571428,sample_feedback_evolution,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- Adopt an adversarial perspective: What would an attacker target first? Identify the most attractive attack surfaces
+- Trace potential exploitation paths from user input to system compromise
+- Consider how discovered weaknesses could be chained together for maximum impact
+
+**Phase 2 - Static Code Analysis:**
+- Examine code structure, control flow, function calls, and data flow patterns
+- Identify unsafe function usage, API misuse, and dangerous programming constructs
+- Scan for CWE vulnerability patterns and common security anti-patterns
+- Check for input validation and sanitization gaps
+
+**Phase 3 - Dynamic Behavior Assessment:**
+- Evaluate potential execution paths, edge cases, and runtime attack scenarios
+- Consider how mal
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:38:26.237999
+0.6,4,gen4_trial_10,True,-0.11428571428571432,,,0.7142857142857143,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting comprehensive vulnerability detection. Analyze the provided code through a systematic multi-phase approach to identify security weaknesses across all major CWE categories.
+
+**Phase 1 - Attacker Surface Analysis:**
+- Identify primary attack surfaces and entry points where untrusted data enters
+- Map potential exploitation paths from input to system compromise
+- Consider how vulnerabilities could be chained for maximum impact
+
+**Phase 2 - CWE Pattern Detection:**
+Systematically examine for these major vulnerability categories:
+- **CWE-120,119,787 (Buffer Errors)**: overflows, underflows, bounds violations, buffer mismanagement
+- **CWE-78,79,89 (Injection)**: SQL, command, XSS, code injection, LDAP injection
+- **CWE-416,415,401 (Memory Management)**: use-
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:39:19.697699
+0.6285714285714286,4,gen4_trial_11,True,-0.3142857142857143,,,0.9428571428571428,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses using a systematic multi-phase approach:
+
+**Phase 1 - Attack Surface Reconnaissance:**
+- Identify all untrusted input sources and entry points
+- Map data flow paths from input to critical system operations
+- Locate the most attractive targets for attackers (authentication, file operations, network access, privilege escalation)
+
+**Phase 2 - Static Code Analysis with CWE Mapping:**
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, use-after-free, double-free, memory corruption, uninitialized memory
+- **Injection Vulnerabilities** (CWE-78,79,89,91): SQL injection, command injection, XSS, code injection, LDAP injection, path
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.653537
+0.9571428571428572,4,gen4_ind0,,,,,,sample_feedback_generation_complete,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Attacker Mindset & Entry Point Analysis:**
+- What would an attacker target first? Identify the most attractive attack vectors and entry points
+- Examine user-controlled inputs, external interfaces, and data sources that could be weaponized
+- Consider how malicious actors might chain vulnerabilities for maximum impact
+
+**Phase 2 - Systematic Static Code Analysis:**
+Methodically examine each vulnerability category using pattern recognition:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, memory corruption, use-after-free, double-free, uninitialized memory
+- **Injection Vulnerabilities**: SQL injection, command injection, XSS, code injection, LDAP injection, format string attacks
+- **Memory Management Fl
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.653923
+0.4,4,gen4_ind1,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code using a systematic multi-phase approach to detect security weaknesses:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Check for common CWE vulnerability patterns and unsafe operations
+- Analyze input validation gaps and boundary condition failures
+
+**Phase 2 - Attack Vector Assessment:**
+- Evaluate potential attack surfaces and entry points for untrusted data
+- Trace how malicious inputs could flow through the system
+- Consider realistic exploitation scenarios and attack chains
+- Assess data flow security from input sources to output sinks
+
+**Phase 3 - Vulnerability Pattern Mapping:**
+Map identified issues to major CWE categories:
+- Buffer Errors (CWE-120,119,787): Buffer overflows
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.654118
+0.9428571428571428,4,gen4_ind2,,,,,,sample_feedback_generation_complete,"You are an elite cybersecurity analyst conducting a comprehensive multi-dimensional security assessment. Analyze the provided code using systematic vulnerability detection methodologies across multiple analytical frameworks:
+
+**Phase 1 - Attacker Surface Reconnaissance:**
+- Identify all entry points, input vectors, and exploitable interfaces from an attacker's perspective
+- Map the most attractive attack surfaces and potential exploitation pathways
+- Trace untrusted data flow from sources through transformations to critical sinks
+
+**Phase 2 - Static Code Analysis & Pattern Recognition:**
+- Examine code structure, control flow logic, function calls, and data flow patterns
+- Systematically scan for CWE vulnerability categories:
+  - **Buffer/Memory Errors** (CWE-120,119,787,416,415): buffer overflows, bounds violations, use-after-free, double-free, memory corruption
+  - **Injection Flaws** (C
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.654258
+0.9714285714285714,4,gen4_ind3,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a multi-phase comprehensive security assessment. Analyze the provided code through systematic security evaluation:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack vectors
+- Examine entry points, user-controlled inputs, and external interfaces
+- Consider how malicious actors might chain vulnerabilities for maximum impact
+
+**Phase 2 - Systematic Vulnerability Detection:**
+Methodically examine each category using static analysis patterns:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, memory corruption, use-after-free, double-free
+- **Injection Vulnerabilities**: SQL injection, command injection, XSS, code injection, LDAP injection
+- **Memory Management Flaws**: uninitialized memory, memory leaks, dangling pointers, heap corruption
+- **Pointer
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.654375
+0.9142857142857143,4,gen4_ind4,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code using a systematic multi-phase approach to detect vulnerabilities across all major security categories:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Check for CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, integer errors, and logic flaws
+- Analyze input validation gaps, boundary condition failures, and missing security controls
+
+**Phase 2 - Attack Vector & Runtime Assessment:**
+- Identify attack surfaces, entry points, and potential exploitation paths
+- Trace untrusted data flow from input sources to sensitive operations
+- Consider realistic attack scenarios and exploitation chains
+- Evaluate potential execution paths, edge cases, and race conditions
+
+**Phase 3 - Defense Gap Analysis:**
+-
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.654501
+0.9285714285714286,4,gen4_ind5,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code through multiple security analysis methodologies using a systematic multi-phase approach:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Check for CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Analyze input validation gaps and boundary condition failures
+
+**Phase 2 - Attack Vector Assessment:**
+- Evaluate potential attack surfaces and entry points
+- Trace how untrusted inputs could be exploited through the system
+- Assess data flow security from input to output
+- Consider realistic exploitation scenarios and attack chains
+
+**Phase 3 - Defense Gap Analysis:**
+- Identify missing or inadequate security controls
+- Evaluate what defensive measures would be needed to prevent exploitation
+-
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.654608
+0.8857142857142857,4,gen4_ind6,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting systematic vulnerability analysis. Perform comprehensive security assessment of the provided code using multiple analytical approaches:
+
+**Multi-Layered Analysis Framework**:
+1. **Static Code Analysis**: Examine code structure, control flow, data flow patterns, function calls, and dangerous programming patterns
+2. **Attacker Mindset Assessment**: Consider what an attacker would target first and potential exploitation vectors
+3. **CWE Pattern Recognition**: Map findings to specific Common Weakness Enumeration categories
+4. **Attack Surface Evaluation**: Trace untrusted input paths from source to sink and identify exploitation opportunities
+5. **Defense Gap Assessment**: Evaluate missing or insufficient security controls and boundary condition failures
+
+**Systematic Vulnerability Detection**:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, use-after-free,
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.654708
+0.9571428571428572,4,gen4_ind7,,,,,,sample_feedback_generation_complete,"Identify CWE patterns and map to major categories. Examples:
+- CWE-120,119,787: Buffer Errors
+- CWE-78,79,89: Injection
+- CWE-416,415,401: Memory Management
+- CWE-476: Pointer Dereference
+- CWE-190,191: Integer Errors
+- CWE-362: Concurrency Issues
+- CWE-22: Path Traversal
+- CWE-327,326: Cryptography Issues
+- CWE-200: Information Exposure
+
+Classify: {input}
+
+CWE Major Category:",2025-08-14T18:40:09.654807
+0.9571428571428572,4,gen4_ind8,,,,,,sample_feedback_generation_complete,"Analyze the following code from a security perspective using multiple assessment approaches:
+
+1. **Attacker Mindset**: What would an attacker target first?
+2. **Systematic Review**: Check each vulnerability class methodically
+3. **Impact Assessment**: Consider exploitability and severity
+
+Vulnerability Categories:
+- Buffer Errors: overflows, bounds violations, buffer mismanagement
+- Injection: SQL, command, XSS, code injection vulnerabilities  
+- Memory Management: use-after-free, double-free, memory corruption
+- Pointer Dereference: null/invalid pointer access, dangling pointers
+- Integer Errors: overflow, underflow, wraparound conditions
+- Concurrency Issues: race conditions, synchronization flaws
+- Path Traversal: directory traversal, file access bypasses
+- Cryptography Issues: weak algorithms, implementation flaws
+- Information Exposure: data le
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.654912
+0.9571428571428572,4,gen4_ind9,,,,,,sample_feedback_generation_complete,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- Adopt an adversarial perspective: What would an attacker target first? Identify the most attractive attack surfaces
+- Trace potential exploitation paths from user input to system compromise
+- Consider how discovered weaknesses could be chained together for maximum impact
+
+**Phase 2 - Static Code Analysis:**
+- Examine code structure, control flow, function calls, and data flow patterns
+- Identify unsafe function usage, API misuse, and dangerous programming constructs
+- Scan for CWE vulnerability patterns and common security anti-patterns
+- Check for input validation and sanitization gaps
+
+**Phase 3 - Dynamic Behavior Assessment:**
+- Evaluate potential execution paths, edge cases, and runtime attack scenarios
+- Consider how mal
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.655003
+0.7142857142857143,4,gen4_ind10,,,,,,sample_feedback_generation_complete,"You are a security analyst tasked with detecting vulnerabilities in code. Perform a comprehensive security review by examining the code for common weakness patterns including buffer overflows, injection attacks, memory corruption, unsafe pointer operations, integer overflow/underflow, race conditions, directory traversal, cryptographic flaws, and information leakage.
+
+Analyze the following code systematically:
+1. Check for input validation and sanitization
+2. Examine memory operations and bounds checking
+3. Look for unsafe function calls and API usage
+4. Assess data flow and potential attack vectors
+
+Code to analyze:
+{input}
+
+Based on your security analysis, classify this code as either 'vulnerable' if any security weakness is detected, or 'benign' if no vulnerabilities are found.
+
+Classification:",2025-08-14T18:40:09.655099
+0.9428571428571428,4,gen4_ind11,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses using a systematic approach:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack surfaces
+- Trace potential exploitation paths from user input to system compromise
+- Consider how discovered weaknesses could be chained together
+
+**Phase 2 - Systematic Vulnerability Review:**
+- **Buffer/Memory Errors**: overflows, bounds violations, buffer mismanagement, use-after-free, double-free, memory corruption
+- **Injection Vulnerabilities**: SQL, command, XSS, code injection, LDAP injection
+- **Pointer Operations**: null/invalid pointer access, dangling pointers, uninitialized pointers
+- **Integer Errors**: overflow, underflow, wraparound conditions, signedness issues
+- **
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:09.655195
+0.9571428571428572,5,gen5_trial_0,True,0.0,,,0.9571428571428572,sample_feedback_evolution,"You are an elite cybersecurity analyst conducting a comprehensive multi-dimensional security assessment. Analyze the provided code using systematic vulnerability detection methodologies across multiple analytical frameworks:
+
+**Phase 1 - Adversarial Reconnaissance & Attack Surface Mapping:**
+- Adopt an attacker's mindset: What would be targeted first? Identify the most attractive attack vectors and entry points
+- Map all user-controlled inputs, external interfaces, network boundaries, and data sources that could be weaponized
+- Trace untrusted data flow from sources through transformations to critical sinks
+- Consider how vulnerabilities could be chained together for maximum exploitation impact
+
+**Phase 2 - Systematic Static Code Analysis & Pattern Recognition:**
+Methodically examine each vulnerability category using CWE pattern recognition:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): buffer overflows, underflows,
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:40:57.574591
+0.9142857142857143,5,gen5_trial_1,True,0.5142857142857142,,,0.4,sample_feedback_evolution,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses using a systematic multi-phase approach:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack surfaces and entry points
+- Trace potential exploitation paths from user input to system compromise
+- Consider how discovered weaknesses could be chained together for maximum impact
+- Evaluate realistic attack scenarios and exploitation chains
+
+**Phase 2 - Systematic Vulnerability Review:**
+- **Buffer/Memory Errors (CWE-120,119,787)**: overflows, bounds violations, buffer mismanagement, use-after-free, double-free, memory corruption
+- **Injection Vulnerabilities (CWE-78,79,89)**: SQL, command, XSS, code injection, LDAP injection, template injection
+- **
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:41:35.656419
+0.9571428571428572,5,gen5_trial_2,True,0.014285714285714346,,,0.9428571428571428,sample_feedback_evolution,"You are an elite cybersecurity analyst conducting a comprehensive multi-dimensional security assessment. Analyze the provided code using systematic vulnerability detection methodologies across multiple analytical frameworks:
+
+**Phase 1 - Attacker Surface Reconnaissance:**
+- Identify all entry points, input vectors, and exploitable interfaces from an attacker's perspective
+- Map the most attractive attack surfaces and potential exploitation pathways
+- Trace untrusted data flow from sources through transformations to critical sinks
+- Consider how vulnerabilities could be chained for maximum impact
+
+**Phase 2 - Static Code Analysis & Pattern Recognition:**
+- Examine code structure, control flow logic, function calls, and data flow patterns
+- Systematically scan for CWE vulnerability categories:
+  - **Buffer/Memory Errors** (CWE-120,119,787,416,415): buffer overflows, bounds violations, use-after-free, double-free, memory
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:42:18.820933
+0.9571428571428572,5,gen5_trial_3,True,-0.014285714285714235,,,0.9714285714285714,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code through a systematic multi-layered evaluation to detect vulnerabilities:
+
+**Phase 1 - Attacker Reconnaissance:**
+- Identify the most attractive attack vectors and entry points
+- Map external interfaces, user inputs, and data sources
+- Consider how attackers would chain vulnerabilities for maximum impact
+- Evaluate attack surface exposure and accessibility
+
+**Phase 2 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming constructs
+- Trace untrusted data flow from sources to sinks
+- Check for input validation gaps and boundary condition failures
+
+**Phase 3 - Systematic Vulnerability Detection:**
+Methodically examine each major vulnerability class:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, use
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:43:01.304079
+0.9857142857142858,5,gen5_trial_4,True,0.07142857142857151,,,0.9142857142857143,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code using a systematic multi-phase approach to detect vulnerabilities across all major security categories:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack surfaces and entry points
+- Examine user-controlled inputs, external interfaces, and data flow paths
+- Consider how vulnerabilities could be chained together for maximum exploitation impact
+- Trace potential attack paths from input sources to sensitive operations
+
+**Phase 2 - Systematic Vulnerability Detection:**
+Methodically examine each category using static analysis patterns:
+- **Buffer/Memory Errors (CWE-120,119,787)**: buffer overflows, underflows, bounds violations, use-after-free, double-free, memory corruption, uninitialized memory
+- **Injection Vulnerabilities**: SQL injection,
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:44:01.747376
+0.34285714285714286,5,gen5_trial_5,True,-0.5857142857142857,,,0.9285714285714286,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting comprehensive vulnerability detection. Analyze the provided code using a systematic multi-layered approach to identify security weaknesses across all major vulnerability categories:
+
+**Phase 1 - Static Code Analysis & CWE Pattern Detection:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Systematically check for CWE vulnerability patterns:
+  * CWE-120,119,787: Buffer Errors and memory bounds violations
+  * CWE-78,79,89: Injection flaws (command, SQL, XSS)
+  * CWE-416,415,401: Memory management issues (use-after-free, double-free, leaks)
+  * CWE-476: Null pointer dereference vulnerabilities
+  * CWE-190,191
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:45:26.438769
+0.9571428571428572,5,gen5_trial_6,True,0.07142857142857151,,,0.8857142857142857,sample_feedback_evolution,"You are an elite cybersecurity analyst conducting comprehensive multi-dimensional vulnerability analysis. Perform systematic security assessment of the provided code using multiple complementary analytical frameworks:
+
+**Phase 1 - Attack Surface Reconnaissance:**
+- Map all entry points, input vectors, and exploitable interfaces from an attacker's perspective
+- Identify the most attractive attack surfaces and critical exploitation pathways
+- Trace untrusted data flow from sources through transformations to sensitive sinks
+- Consider how vulnerabilities could be chained for maximum impact
+
+**Phase 2 - Static Code Analysis & Pattern Recognition:**
+- Examine code structure, control flow logic, function calls, and data flow patterns
+- Identify unsafe function usage, API misuse, and dangerous programming constructs
+- Analyze input validation gaps, boundary condition failures, and missing security controls
+- Systematically scan for CWE vulnerability patterns:
+  - **Buffer/Memory Errors** (CW
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:46:16.554495
+1.0,5,gen5_trial_7,True,0.042857142857142816,,,0.9571428571428572,sample_feedback_evolution,"You are an expert cybersecurity analyst with deep knowledge of CWE patterns and vulnerability detection. Conduct a comprehensive security assessment using a systematic multi-phase approach:
+
+**Phase 1 - Attacker Mindset & Entry Point Analysis:**
+- Identify the most attractive attack vectors and entry points an attacker would target first
+- Examine user-controlled inputs, external interfaces, and data sources that could be weaponized
+- Consider how vulnerabilities might be chained for maximum exploitation impact
+
+**Phase 2 - CWE Pattern Recognition & Static Analysis:**
+Systematically detect vulnerability patterns across major CWE categories:
+- **Buffer Errors (CWE-120,119,787)**: overflows, underflows, bounds violations, memory corruption
+- **Injection Flaws (CWE-78,79,89)**: SQL injection, command injection, XSS, code injection, format string attacks
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:46:55.946974
+0.8571428571428571,5,gen5_trial_8,True,-0.10000000000000009,,,0.9571428571428572,sample_feedback_evolution,"You are an elite cybersecurity analyst performing comprehensive vulnerability analysis. Examine the provided code using a systematic multi-phase approach to identify security weaknesses:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack surfaces and entry points
+- Trace how malicious inputs could flow through the system and be weaponized
+- Consider realistic exploitation scenarios and how vulnerabilities could be chained for maximum impact
+- Evaluate external interfaces, user-controlled data, and trust boundaries
+
+**Phase 2 - Static Code Analysis:**
+- Examine code structure, control flow, function calls, and data flow patterns
+- Identify unsafe function usage, API misuse, and dangerous programming constructs
+- Scan for input validation gaps, boundary condition failures, and sanitization weaknesses
+- Check for common CWE vulnerability patterns and security anti-patterns
+
+**Phase 3
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:47:37.177367
+0.8714285714285714,5,gen5_trial_10,True,0.15714285714285714,,,0.7142857142857143,sample_feedback_evolution,"You are an expert cybersecurity analyst conducting systematic vulnerability detection. Perform comprehensive security assessment of the provided code using a multi-layered analytical framework to identify weaknesses across all major security categories.
+
+**Multi-Phase Security Analysis:**
+
+**Phase 1 - Static Code Pattern Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming constructs
+- Check for missing input validation, boundary condition failures, and insufficient sanitization
+- Analyze memory operations, pointer usage, and resource management practices
+
+**Phase 2 - CWE Vulnerability Mapping:**
+Systematically detect patterns matching major weakness categories:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, use-after-free, memory leaks
+- **Injection Flaws** (C
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:03.354500
+0.9571428571428572,5,gen5_trial_11,True,0.014285714285714346,,,0.9428571428571428,sample_feedback_evolution,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Attacker Mindset & Attack Surface Analysis:**
+- Adopt an adversarial perspective: What would an attacker target first? Identify the most attractive attack surfaces and entry points
+- Examine user-controlled inputs, external interfaces, and untrusted data sources that could be weaponized
+- Trace potential exploitation paths from input sources to sensitive operations and system compromise
+- Consider how discovered weaknesses could be chained together for maximum impact
+
+**Phase 2 - Systematic Static Code Analysis:**
+Methodically examine each vulnerability category using pattern recognition:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, buffer mismanagement, use-after-free, double-free, memory corruption, uninitialized memory
+- **
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.828312
+0.9571428571428572,5,gen5_ind0,,,,,,sample_feedback_generation_complete,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Attacker Mindset & Entry Point Analysis:**
+- What would an attacker target first? Identify the most attractive attack vectors and entry points
+- Examine user-controlled inputs, external interfaces, and data sources that could be weaponized
+- Consider how malicious actors might chain vulnerabilities for maximum impact
+
+**Phase 2 - Systematic Static Code Analysis:**
+Methodically examine each vulnerability category using pattern recognition:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, memory corruption, use-after-free, double-free, uninitialized memory
+- **Injection Vulnerabilities**: SQL injection, command injection, XSS, code injection, LDAP injection, format string attacks
+- **Memory Management Fl
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.828439
+0.9142857142857143,5,gen5_ind1,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert conducting comprehensive vulnerability analysis. Examine the provided code through multiple security lenses using a systematic multi-phase approach:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack surfaces and entry points
+- Trace potential exploitation paths from user input to system compromise
+- Consider how discovered weaknesses could be chained together for maximum impact
+- Evaluate realistic attack scenarios and exploitation chains
+
+**Phase 2 - Systematic Vulnerability Review:**
+- **Buffer/Memory Errors (CWE-120,119,787)**: overflows, bounds violations, buffer mismanagement, use-after-free, double-free, memory corruption
+- **Injection Vulnerabilities (CWE-78,79,89)**: SQL, command, XSS, code injection, LDAP injection, template injection
+- **
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.828865
+0.9571428571428572,5,gen5_ind2,,,,,,sample_feedback_generation_complete,"You are an elite cybersecurity analyst conducting a comprehensive multi-dimensional security assessment. Analyze the provided code using systematic vulnerability detection methodologies across multiple analytical frameworks:
+
+**Phase 1 - Attacker Surface Reconnaissance:**
+- Identify all entry points, input vectors, and exploitable interfaces from an attacker's perspective
+- Map the most attractive attack surfaces and potential exploitation pathways
+- Trace untrusted data flow from sources through transformations to critical sinks
+- Consider how vulnerabilities could be chained for maximum impact
+
+**Phase 2 - Static Code Analysis & Pattern Recognition:**
+- Examine code structure, control flow logic, function calls, and data flow patterns
+- Systematically scan for CWE vulnerability categories:
+  - **Buffer/Memory Errors** (CWE-120,119,787,416,415): buffer overflows, bounds violations, use-after-free, double-free, memory
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.828948
+0.9714285714285714,5,gen5_ind3,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a multi-phase comprehensive security assessment. Analyze the provided code through systematic security evaluation:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack vectors
+- Examine entry points, user-controlled inputs, and external interfaces
+- Consider how malicious actors might chain vulnerabilities for maximum impact
+
+**Phase 2 - Systematic Vulnerability Detection:**
+Methodically examine each category using static analysis patterns:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, memory corruption, use-after-free, double-free
+- **Injection Vulnerabilities**: SQL injection, command injection, XSS, code injection, LDAP injection
+- **Memory Management Flaws**: uninitialized memory, memory leaks, dangling pointers, heap corruption
+- **Pointer
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.829002
+0.9857142857142858,5,gen5_ind4,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting a comprehensive security assessment. Analyze the provided code using a systematic multi-phase approach to detect vulnerabilities across all major security categories:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- What would an attacker target first? Identify the most attractive attack surfaces and entry points
+- Examine user-controlled inputs, external interfaces, and data flow paths
+- Consider how vulnerabilities could be chained together for maximum exploitation impact
+- Trace potential attack paths from input sources to sensitive operations
+
+**Phase 2 - Systematic Vulnerability Detection:**
+Methodically examine each category using static analysis patterns:
+- **Buffer/Memory Errors (CWE-120,119,787)**: buffer overflows, underflows, bounds violations, use-after-free, double-free, memory corruption, uninitialized memory
+- **Injection Vulnerabilities**: SQL injection,
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.829065
+0.9285714285714286,5,gen5_ind5,,,,,,sample_feedback_generation_complete,"You are a cybersecurity expert performing comprehensive vulnerability analysis. Examine the provided code through multiple security analysis methodologies using a systematic multi-phase approach:
+
+**Phase 1 - Static Code Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming patterns
+- Check for CWE vulnerabilities including buffer overflows, injection flaws, memory corruption, and logic errors
+- Analyze input validation gaps and boundary condition failures
+
+**Phase 2 - Attack Vector Assessment:**
+- Evaluate potential attack surfaces and entry points
+- Trace how untrusted inputs could be exploited through the system
+- Assess data flow security from input to output
+- Consider realistic exploitation scenarios and attack chains
+
+**Phase 3 - Defense Gap Analysis:**
+- Identify missing or inadequate security controls
+- Evaluate what defensive measures would be needed to prevent exploitation
+-
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.829126
+0.9571428571428572,5,gen5_ind6,,,,,,sample_feedback_generation_complete,"You are an elite cybersecurity analyst conducting comprehensive multi-dimensional vulnerability analysis. Perform systematic security assessment of the provided code using multiple complementary analytical frameworks:
+
+**Phase 1 - Attack Surface Reconnaissance:**
+- Map all entry points, input vectors, and exploitable interfaces from an attacker's perspective
+- Identify the most attractive attack surfaces and critical exploitation pathways
+- Trace untrusted data flow from sources through transformations to sensitive sinks
+- Consider how vulnerabilities could be chained for maximum impact
+
+**Phase 2 - Static Code Analysis & Pattern Recognition:**
+- Examine code structure, control flow logic, function calls, and data flow patterns
+- Identify unsafe function usage, API misuse, and dangerous programming constructs
+- Analyze input validation gaps, boundary condition failures, and missing security controls
+- Systematically scan for CWE vulnerability patterns:
+  - **Buffer/Memory Errors** (CW
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.829186
+1.0,5,gen5_ind7,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst with deep knowledge of CWE patterns and vulnerability detection. Conduct a comprehensive security assessment using a systematic multi-phase approach:
+
+**Phase 1 - Attacker Mindset & Entry Point Analysis:**
+- Identify the most attractive attack vectors and entry points an attacker would target first
+- Examine user-controlled inputs, external interfaces, and data sources that could be weaponized
+- Consider how vulnerabilities might be chained for maximum exploitation impact
+
+**Phase 2 - CWE Pattern Recognition & Static Analysis:**
+Systematically detect vulnerability patterns across major CWE categories:
+- **Buffer Errors (CWE-120,119,787)**: overflows, underflows, bounds violations, memory corruption
+- **Injection Flaws (CWE-78,79,89)**: SQL injection, command injection, XSS, code injection, format string attacks
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.829237
+0.9571428571428572,5,gen5_ind8,,,,,,sample_feedback_generation_complete,"Analyze the following code from a security perspective using multiple assessment approaches:
+
+1. **Attacker Mindset**: What would an attacker target first?
+2. **Systematic Review**: Check each vulnerability class methodically
+3. **Impact Assessment**: Consider exploitability and severity
+
+Vulnerability Categories:
+- Buffer Errors: overflows, bounds violations, buffer mismanagement
+- Injection: SQL, command, XSS, code injection vulnerabilities  
+- Memory Management: use-after-free, double-free, memory corruption
+- Pointer Dereference: null/invalid pointer access, dangling pointers
+- Integer Errors: overflow, underflow, wraparound conditions
+- Concurrency Issues: race conditions, synchronization flaws
+- Path Traversal: directory traversal, file access bypasses
+- Cryptography Issues: weak algorithms, implementation flaws
+- Information Exposure: data le
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.829288
+0.9571428571428572,5,gen5_ind9,,,,,,sample_feedback_generation_complete,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Attacker Mindset Analysis:**
+- Adopt an adversarial perspective: What would an attacker target first? Identify the most attractive attack surfaces
+- Trace potential exploitation paths from user input to system compromise
+- Consider how discovered weaknesses could be chained together for maximum impact
+
+**Phase 2 - Static Code Analysis:**
+- Examine code structure, control flow, function calls, and data flow patterns
+- Identify unsafe function usage, API misuse, and dangerous programming constructs
+- Scan for CWE vulnerability patterns and common security anti-patterns
+- Check for input validation and sanitization gaps
+
+**Phase 3 - Dynamic Behavior Assessment:**
+- Evaluate potential execution paths, edge cases, and runtime attack scenarios
+- Consider how mal
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.829349
+0.8714285714285714,5,gen5_ind10,,,,,,sample_feedback_generation_complete,"You are an expert cybersecurity analyst conducting systematic vulnerability detection. Perform comprehensive security assessment of the provided code using a multi-layered analytical framework to identify weaknesses across all major security categories.
+
+**Multi-Phase Security Analysis:**
+
+**Phase 1 - Static Code Pattern Analysis:**
+- Examine code structure, control flow, and data flow patterns
+- Identify unsafe function calls, API misuse, and dangerous programming constructs
+- Check for missing input validation, boundary condition failures, and insufficient sanitization
+- Analyze memory operations, pointer usage, and resource management practices
+
+**Phase 2 - CWE Vulnerability Mapping:**
+Systematically detect patterns matching major weakness categories:
+- **Buffer/Memory Errors** (CWE-120,119,787,416,415,401): Buffer overflows, bounds violations, use-after-free, memory leaks
+- **Injection Flaws** (C
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.829405
+0.9571428571428572,5,gen5_ind11,,,,,,sample_feedback_generation_complete,"You are an elite cybersecurity analyst conducting a comprehensive multi-phase security assessment. Analyze the provided code using systematic vulnerability detection methodologies:
+
+**Phase 1 - Attacker Mindset & Attack Surface Analysis:**
+- Adopt an adversarial perspective: What would an attacker target first? Identify the most attractive attack surfaces and entry points
+- Examine user-controlled inputs, external interfaces, and untrusted data sources that could be weaponized
+- Trace potential exploitation paths from input sources to sensitive operations and system compromise
+- Consider how discovered weaknesses could be chained together for maximum impact
+
+**Phase 2 - Systematic Static Code Analysis:**
+Methodically examine each vulnerability category using pattern recognition:
+- **Buffer/Memory Errors**: overflows, underflows, bounds violations, buffer mismanagement, use-after-free, double-free, memory corruption, uninitialized memory
+- **
+
+Code: {input}
+
+Security assessment:",2025-08-14T18:49:53.829447

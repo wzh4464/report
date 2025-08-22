@@ -1,0 +1,68 @@
+{
+  "task_description": "Classify a single code snippet into one high-level CWE category from a fixed list, explaining briefly.",
+  "output_format_spec": {
+    "lines": [
+      "Category: CWE-XXX (Name)",
+      "Reason: <1–3 concise sentences>"
+    ],
+    "select_exactly_one": true
+  },
+  "dataset_alignment": {
+    "use_ground_truth_to_shape_rules": true,
+    "never_reveal_labels": true,
+    "tie_breaking_policy": "Prefer 'Others' over speculative mapping; 'Correct' only when explicit absence of vulnerability is established."
+  },
+  "rubric": {
+    "evidence_priority": [
+      "Concrete misuse (API, memory, concurrency, auth)",
+      "Control/exception flow handling",
+      "Resource lifetime management",
+      "Data validation/neutralization",
+      "Coding standard violations without concrete fault"
+    ],
+    "reason_style": "Brief, specific to the snippet; avoid generic CWE definitions."
+  },
+  "confusion_pairs": [
+    {
+      "pair": ["CWE-703", "CWE-710"],
+      "disambiguation": "If mishandled error states, cleanup, or propagation -> CWE-703; if only style/standards issues without fault -> CWE-710."
+    },
+    {
+      "pair": ["CWE-693", "CWE-284"],
+      "disambiguation": "Mechanism present but failing (e.g., crypto or auth checks broken) -> CWE-693; missing/incorrect enforcement of access rules -> CWE-284."
+    }
+  ],
+  "failure_modes": [
+    "Selecting multiple categories or deviating from required format",
+    "Picking 'Correct' without strong justification",
+    "Over-indexing on comments rather than code behavior",
+    "Ignoring mask/cleanup/NULL checks leading to resource leaks"
+  ],
+  "metrics": {
+    "overall_accuracy": 0.81,
+    "precision_by_label": { "CWE-703": 0.74, "CWE-710": 0.68 },
+    "common_fp_labels": ["Correct (no vulnerability)", "CWE-710"],
+    "notes": "High confusion CWE-703 vs CWE-710; add sharper rules."
+  },
+  "exemplars": {
+    "positive": [
+      {
+        "pattern": "Early return on error without freeing allocated buffer",
+        "expected_label": "CWE-703",
+        "why": "Improper exception/cleanup handling"
+      }
+    ],
+    "hard_negatives": [
+      {
+        "pattern": "Style-only violations (naming, comments)",
+        "expected_label": "CWE-710",
+        "why": "Standards adherence without concrete vulnerability"
+      }
+    ]
+  },
+  "guardrails": {
+    "forbid_extra_output": true,
+    "forbid_label_leakage": true,
+    "time_budget_tokens": 250
+  }
+}
