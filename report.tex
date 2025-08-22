@@ -1,54 +1,59 @@
 % arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-% arara: biber
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
 \documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usefonttheme[onlymath]{serif}
-% biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
+\usepackage[backend=biber,style=numeric,sorting=none,giveninits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
 
-% 自定义参考文献样式
-\DeclareNameAlias{author}{first-last}
-\DeclareBibliographyDriver{article}{%
-  \printnames{author}%
-  \setunit{\addspace}%
-  \printfield{title}%
-  \newunit
-  \printfield{journaltitle}%
-  \setunit{\addspace}%
-  \printfield{year}%
-}
+% Theme settings
+\usetheme{Madrid}
+\usecolortheme{rose}
+\useinnertheme[shadow]{rounded}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamercolor{block title}{bg=blue!20,fg=black}
+\setbeamercolor{block body}{bg=blue!5,fg=black}
 
-% \usetheme{Berlin}
 \title{Weekly Report}
-\author{WU Zihan}
+\subtitle{Progress on Model Evaluation and Prompt Handling}
+\author{Zihan Wu}
+\date{\today}
+
 \begin{document}
 \maketitle
-\begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
-\end{frame}
 
-\section{Introduction}
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{Key Progress This Week}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item \textbf{Generalization:} Achieved 80\% accuracy on unseen dev set.
+    \item \textbf{Challenge:} Adding \textit{correct} caused high confusion with \textit{others}.
+    \item \textbf{Solution:} Introduced a binary stage (\textit{vulnerable} vs. \textit{benign}), reaching \textbf{F1 = 0.92}.
+    \item \textbf{Status:} 1\% scale experiment running; 10\% setting under test.
+    \item \textbf{Prompt Control:} Growth issue mitigated by capping at 5,000 tokens, then summarizing while keeping task and format unchanged.
   \end{itemize}
 \end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
-\end{frame}
+\begin{frame}
+  \frametitle{Insights \& Next Steps}
+  \begin{block}{Insights}
+    \begin{itemize}
+      \item Binary classification greatly reduces confusion, providing a cleaner pipeline.
+      \item Summarization strategy prevents prompt explosion without hurting task fidelity.
+    \end{itemize}
+  \end{block}
 
+  \begin{block}{Next Steps}
+    \begin{itemize}
+      \item Scale binary-first pipeline to full experiments.
+      \item Monitor summarization impact on accuracy at higher percentages.
+      \item Explore finer distinctions between \textit{correct} and \textit{others}.
+    \end{itemize}
+  \end{block}
+\end{frame}
 
 \end{document}
