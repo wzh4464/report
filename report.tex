@@ -27,33 +27,95 @@
 \begin{document}
 \maketitle
 
+% --- Slide 1: Executive Summary ---
 \begin{frame}
-  \frametitle{Key Progress This Week}
+  \frametitle{Executive Summary}
   \begin{itemize}
-    \item \textbf{Generalization:} Achieved 80\% accuracy on unseen dev set.
-    \item \textbf{Challenge:} Adding \textit{correct} caused high confusion with \textit{others}.
-    \item \textbf{Solution:} Introduced a binary stage (\textit{vulnerable} vs. \textit{benign}), reaching \textbf{F1 = 0.92}.
-    \item \textbf{Status:} 1\% scale experiment running; 10\% setting under test.
-    \item \textbf{Prompt Control:} Growth issue mitigated by capping at 5,000 tokens, then summarizing while keeping task and format unchanged.
+    \item \textbf{Generalization:} 80\% accuracy on an \textit{unseen} dev set.
+    \item \textbf{Issue Observed:} After adding the \textit{correct} label, confusion with \textit{others} increased notably.
+    \item \textbf{Remedy:} Insert a first-stage binary classifier (\textit{vulnerable} vs. \textit{benign}); achieved \textbf{F1 = 0.92}.
+    \item \textbf{Run Status:} The pipeline with this stage is currently running at \textbf{1\%} scale.
+    \item \textbf{Prompt Control:} With the intended \textbf{10\%} setting, prompts keep growing; apply a \textbf{5{,}000-token cap} then summarize while keeping task \& output format unchanged.
   \end{itemize}
 \end{frame}
 
+% --- Slide 2: Findings & Confusion ---
 \begin{frame}
-  \frametitle{Insights \& Next Steps}
-  \begin{block}{Insights}
-    \begin{itemize}
-      \item Binary classification greatly reduces confusion, providing a cleaner pipeline.
-      \item Summarization strategy prevents prompt explosion without hurting task fidelity.
-    \end{itemize}
+  \frametitle{Findings \& Confusion Analysis}
+
+  % 第一行：Observations 和 Key Numbers 并排
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{1. Observations}
+        \begin{itemize}
+          \item The \textit{correct} label overlaps semantically with \textit{others}, causing high misclassification.
+          \item Downstream metrics become unstable when \textit{correct} is introduced directly.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{2. Key Numbers}
+        \begin{tabular}{@{}ll@{}}
+          \toprule
+          Metric & Value \\
+          \midrule
+          Dev Accuracy (unseen) & \textbf{0.80} \\
+          Stage-1 F1 & \textbf{0.92} \\
+          Token Cap & \textbf{5{,}000} \\
+          Current Scale & \textbf{1\%} run \\
+          Planned Scale & \textbf{10\%} \\
+          \bottomrule
+        \end{tabular}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  % 第二行：Design Choice 单独一行
+  \vspace{0.4cm}
+  \begin{block}{3. Design Choice}
+    \textbf{Two-stage pipeline:}
+    \begin{enumerate}
+      \item \textit{Stage-1 (Binary):} \textbf{vulnerable} vs. \textbf{benign}.
+      \item \textit{Stage-2 (Fine-grained):} Apply only to predicted \textbf{vulnerable}.
+    \end{enumerate}
   \end{block}
 
-  \begin{block}{Next Steps}
-    \begin{itemize}
-      \item Scale binary-first pipeline to full experiments.
-      \item Monitor summarization impact on accuracy at higher percentages.
-      \item Explore finer distinctions between \textit{correct} and \textit{others}.
-    \end{itemize}
-  \end{block}
+\end{frame}
+
+% --- Slide 3: Binary-First Results ---
+\begin{frame}
+  \frametitle{Binary-First Stage: Early Result \& Impact}
+  \begin{itemize}
+    \item \textbf{Effectiveness:} Stage-1 reaches \textbf{F1 = 0.92}, substantially reducing noise for downstream labels.
+    \item \textbf{Impact on Confusion:} By filtering \textbf{benign} early, confusion between \textit{correct} and \textit{others} is minimized in Stage-2.
+    \item \textbf{Operational Simplicity:} Cleaner decision boundary enables faster iteration on fine-grained prompts only where needed.
+    \item \textbf{Next Validation:} Confirm stability as we scale beyond \textbf{1\%} toward \textbf{10\%}.
+  \end{itemize}
+\end{frame}
+
+% --- Slide 4: Prompt Management & Next Steps ---
+\begin{frame}
+  \frametitle{Prompt Management \& Next Steps}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Prompt Growth Control}
+        \begin{itemize}
+          \item \textbf{Cap:} Limit running context to \textbf{5{,}000 tokens}.
+          \item \textbf{Summarize:} Once over cap, summarize while \textit{preserving task and output schema}.
+          \item \textbf{Goal:} Prevent prompt explosion at \textbf{10\%} scale without degrading accuracy.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Next Steps}
+        \begin{itemize}
+          \item Finish the \textbf{1\%} run; promote to \textbf{10\%}.
+          \item Track accuracy drift before/after summarization.
+          \item Tighten \textit{correct} vs. \textit{others} with auxiliary rules or calibrators if needed.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \end{document}
