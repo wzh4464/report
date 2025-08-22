@@ -25,7 +25,7 @@
 ### 2. Key Numbers
 - Dev Accuracy (unseen): 0.80
 - Stage-1 F1: 0.92
-- Token Cap: 5,000
+- Token Cap: 1,000
 - Current Scale: 1% run
 - Planned Scale: 10%
 
@@ -48,7 +48,7 @@
 ## Slide 4: Prompt Management & Next Steps
 
 ### Prompt Growth Control
-- 设置 5000 tokens 上限
+- 设置 1000 tokens 上限
 - 超过上限时，进行总结压缩，但保持任务要求和输出格式不变
 - 目标是：在 10% 规模下防止 prompt 爆炸，同时不牺牲准确率
 

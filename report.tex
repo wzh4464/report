@@ -61,7 +61,7 @@
           \midrule
           Dev Accuracy (unseen) & \textbf{0.80} \\
           Stage-1 F1 & \textbf{0.92} \\
-          Token Cap & \textbf{5{,}000} \\
+          Token Cap & \textbf{1{,}000} \\
           Current Scale & \textbf{1\%} run \\
           Planned Scale & \textbf{10\%} \\
           \bottomrule
@@ -100,7 +100,7 @@
     \begin{column}{0.5\textwidth}
       \begin{block}{Prompt Growth Control}
         \begin{itemize}
-          \item \textbf{Cap:} Limit running context to \textbf{5{,}000 tokens}.
+          \item \textbf{Cap:} Limit running context to \textbf{1{,}000 tokens}.
           \item \textbf{Summarize:} Once over cap, summarize while \textit{preserving task and output schema}.
           \item \textbf{Goal:} Prevent prompt explosion at \textbf{10\%} scale without degrading accuracy.
         \end{itemize}
