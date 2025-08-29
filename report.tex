@@ -2,13 +2,13 @@
 % arara: biber
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-
 \documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
+\usepackage{textcomp}
 \usefonttheme[onlymath]{serif}
 % biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
+\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true,url=false]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
@@ -34,16 +34,212 @@
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{Prochemy: Execution-Driven Prompt Optimization}
+
+\subsection{Motivation}
 \begin{frame}
-  \frametitle{Introduction}
+  \frametitle{Prompt Alchemy\cite{ye2025PromptAlchemyAutomatic}: Motivation}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item \textbf{Key Insight}: Leverage \textbf{code execution results} as optimization feedback
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \begin{block}{Connection to Our Project}
+    Similar to our MoP architecture introducing \textbf{statistical vulnerability patterns}, Prochemy introduces \textbf{execution outcomes} as new optimization signals beyond traditional text-based evaluation.
+  \end{block}
+  \begin{block}{Two-Stage Framework:}
+    \begin{enumerate}
+      \item \textbf{Training Set Generation}
+            \begin{itemize}
+              \item Existing data: K=10 samples from external datasets
+              \item Mutated data: K=10 LLM-generated variants
+              \item Validation: Code execution + test case verification
+            \end{itemize}
+      \item \textbf{Iterative Optimization}
+            \begin{itemize}
+              \item \textcolor{blue}{Mutation}: Generate n=10 prompt variants
+              \item \textcolor{red}{Evaluation}: Execute code, compute weighted scores
+              \item \textcolor{brown}{Selection}: Choose best-performing prompts
+            \end{itemize}
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\subsection{Core Approach}
+\begin{frame}
+  \frametitle{Prompt Alchemy\cite{ye2025PromptAlchemyAutomatic}: Core Approach}
+  \includegraphics[width=\textwidth]{prochemy_overview.png}
+\end{frame}
+
+\subsection{Technical Details}
+\begin{frame}
+  \frametitle{Prompt Alchemy\cite{ye2025PromptAlchemyAutomatic}: Technical Details}
+
+  \textbf{1. Weighted Evaluation Mechanism} (Most Relevant to Our Work)
+  \begin{align}
+    w_j                  & = \frac{|P^{(k)}|}{N_{\text{successful}}(T_j)} \\
+    \text{WS}(P_i^{(k)}) & = \sum_j w_j \cdot M_{ij}
+  \end{align}
+
+  \begin{itemize}
+    \item Harder tasks receive higher weights
+    \item Prevents easy tasks from dominating optimization
+    \item \textcolor{red}{\textbf{Direct application}}: Weight rare/critical vulnerabilities higher in MoP
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \textbf{2. Simple Mutation Strategy}
+  \begin{itemize}
+    \item \textbf{Role Clarification}: Clearly specify the assistant's role
+    \item \textbf{Goal Definition}: Make task objectives explicit
+    \item \textbf{Efficiency \& Accuracy Focus}: Emphasize performance requirements
+    \item \textbf{Task-Specific Adaptation}: Tailor prompts to the specific task
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Prompt Alchemy\cite{ye2025PromptAlchemyAutomatic}: Results}
+
+  \textbf{Datasets Used:}
+  \begin{itemize}
+    \item \textbf{Code Generation}: HumanEval, MBPP, HumanEval+, MBPP+, LiveCodeBench
+    \item \textbf{Code Translation}: CodeNet, AVATAR (Java$\leftrightarrow$Python)
+    \item \textbf{Models}: GPT-3.5-Turbo, GPT-4o, Claude-3, DeepSeek-V3
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \textbf{Key Results:}
+  \begin{itemize}
+    \item Average +4.04\% improvement on code generation (Pass@1)
+    \item +13.68\% on Java-to-Python translation
+    \item \textbf{SOTA}: 96.3\% on HumanEval when combined with LDB
+    \item Consistent improvements across different model architectures
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \textbf{Convergence}: Early stopping after 3 iterations without improvement (typically converges within 10 iterations)
+\end{frame}
+
+\begin{frame}
+  \frametitle{Prompt Alchemy\cite{ye2025PromptAlchemyAutomatic}: Applications to Our Project}
+
+  \textbf{1. Weighted Expert Prompt Optimization}
+  \begin{align}
+    w_j                  & = \frac{|P^{(k)}|}{N_{\text{successful}}(T_j)} \quad \text{(Higher weight for harder tasks)} \\
+    \text{WS}(P_i^{(k)}) & = \sum_j w_j \cdot M_{ij} \quad \text{(Weighted performance score)}
+  \end{align}
+
+  \begin{itemize}
+    \item Weight rare/critical vulnerabilities
+    \item Weight hard problems
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \textbf{2. Execution-Based Feedback Adaptation}
+  \begin{itemize}
+    \item \textbf{Parallel Innovation \& Technical Analogy}:
+          Prochemy uses \textcolor{blue}{execution feedback} to optimize prompts; our work leverages \textcolor{red}{vulnerability patterns} to enhance operators.
+    \item \textbf{Storytelling \& Extension}:
+          From "beyond input features" to "domain-specific feedback" $\rightarrow$ "systematic improvement", extended with \textcolor{brown}{static analysis results}.
+  \end{itemize}
+\end{frame}
+\section{EvoGit: Decentralized Code Evolution via Git-Based Multi-Agent Collaboration}
+
+\subsection{Motivation}
+\begin{frame}
+  \frametitle{EvoGit\cite{huang2025evogit}: Motivation}
+  \begin{itemize}
+    \item \textbf{Key Problem}: Existing agent-based frameworks often rely on \textbf{centralized orchestration}, \textbf{scalar rewards}, or \textbf{dense human feedback}, which limits scalability and traceability.
+    \item \textbf{Key Insight}: Treat \textbf{software evolution} as an \textbf{asynchronous multi-agent search} over a Git-based version graph (DAG).
+    \item \textbf{Minimal Human-in-the-Loop}: Humans provide only high-level initialization and sparse periodic guidance.
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \begin{block}{Connection to Our Project}
+    Our MoP leverages \textbf{structural vulnerability patterns}; EvoGit introduces \textbf{structural version lineage} as the coordination substrate. Both approaches move away from scalar optimization toward \textbf{domain-structured signals}.
+  \end{block}
+\end{frame}
+
+\subsection{Core Approach}
+\begin{frame}
+  \frametitle{EvoGit\cite{huang2025evogit}: Core Approach}
+  \includegraphics[width=\textwidth]{evogit_overview.png}
+
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item \textbf{Git DAG}: N - code versions; E - transitions.
+    \item \textbf{Decentralized Agents}
+    \item \textbf{Coordination without Messaging}: Synchronization emerges implicitly from the evolving version graph.
+    \item \textbf{Lineage-Aware Evolution}: Crossover preserves semantic context and ancestry relationships.
+  \end{itemize}
+\end{frame}
+
+\subsection{Technical Details}
+\begin{frame}
+  \frametitle{EvoGit\cite{huang2025evogit}: Technical Details}
+
+  \begin{block}{\textbf{Mutation}}
+    \begin{itemize}
+      \item \textbf{Local code edits}: refinement, restructuring.
+      \item \textbf{One parent} $\rightarrow$ \textbf{one child} in the Git DAG.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{\textbf{Crossover}}
+    \begin{itemize}
+      \item \textbf{Merge two branches} into a new version.
+      \item \textbf{Two parents} $\rightarrow$ \textbf{one child}, preserving lineage.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{\textbf{Selection}}
+    \begin{itemize}
+      \item \textbf{Automatic}: pairwise validation ensures only valid children enter the DAG.
+      \item \textbf{Human}: periodic pruning and promotion of promising branches.
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+\subsection{Results}
+\begin{frame}
+  \frametitle{EvoGit\cite{huang2025evogit}: Results}
+
+  \textbf{Experimental Settings:}
+  \begin{itemize}
+    \item 16 agents, 120 iterations
+    \item Human feedback every 20 iterations
+    \item Full repositories released for reproducibility
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \textbf{Task 1: Web Application Development}
+  \begin{itemize}
+    \item From empty Next.js scaffold $\rightarrow$ fully interactive SPA
+    \item Achieved correct UI layout, modularity, smooth animations
+    \item Demonstrated \textbf{emergent adherence to good SE practices}
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \textbf{Task 2: Meta-Level Code Synthesis}
+  \begin{itemize}
+    \item Built an automated pipeline for bin-packing solver design
+    \item Emergent best practices: validation, logging, exception handling
+    \item Demonstrated feasibility of \textbf{recursive development}
+  \end{itemize}
+\end{frame}
+
+\subsection{Applications to Our Project}
+\begin{frame}
+  \frametitle{EvoGit\cite{huang2025evogit}: Applications to Our Project}
+
+  \textbf{Structured Coordination via Version Graph}
+  \begin{itemize}
+    \item Provides \textbf{inspectable, replayable evolution history}
+    \item Same structure may improve MoP evolutionary operator.
+  \end{itemize}
+
+\end{frame}
 % biblatex bibliography
 \begin{frame}[allowframebreaks]
   \frametitle{References}
