@@ -1,8 +1,7 @@
 % arara: pdflatex: { options: ["--synctex=1"] }
-% arara: biber if found('log', 'LaTeX Warning: There were undefined references.') || changed('ref.bib')
-% arara: pdflatex: { synctex: yes } until !found('log', 'undefined references')
+% arara: pdflatex: { options: ["--synctex=1"] }
 
-\documentclass{beamer}
+\documentclass[ratio=169]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage{subcaption}
@@ -165,74 +164,99 @@
 % }
 
 % \usetheme{Berlin}
-\title{Self-Introduction \& Research Overview}
-\subtitle{Machine Learning, Computer Vision, and Data Mining}
+\title{Building High-Quality Datasets for AI}
 \author{WU Zihan}
-\institute{PhD Candidate\\Electrical Engineering\\City University of Hong Kong}
-\date{\today}
+%\institute{PhD, Electrical Engineering\\City University of Hong Kong}
+\date{ }
 \begin{document}
 \maketitle
+\section{Outline}
 \begin{frame}
   \frametitle{Outline}
-  \tableofcontents
+
+  \begin{enumerate}
+    \item \textbf{Education Background}
+    \item \textbf{Research Work}
+    \item \textbf{Huawei Internship Experience}
+  \end{enumerate}
+
 \end{frame}
 
+
 \section{Self Introduction}
+
 \begin{frame}
   \frametitle{Wu Zihan}
 
-  % Two-column layout
-  % \begin{columns}[T]
-  %     % Left column for Education and Contact
-  %     \begin{column}{0.48\textwidth}
-  \textbf{\large Education}
+  \textbf{\large Education Background}
   \begin{itemize}
-    \item \textbf{Ph.D. Candidate}, Electrical Engineering\\
-          City University of Hong Kong, expected 2025
-    \item \textbf{B.Sc.}, Double Major:\\
-          Physics; Mathematics and Applied Mathematics\\
-          University of Science and Technology of China (School for the Gifted Young)
+    \item \textbf{Ph.D.}, Electrical Engineering\\
+          City University of Hong Kong \\
+          Supervisor: Prof. Hong Yan (IEEE Life Fellow, IAPR Fellow)
+          \vspace{1em}
+    \item \textbf{B.Sc.} Mathematics and Applied Mathematics\\
+    \item \textbf{B.Sc.} Physics (Double Major)\\
+          School of Gifted Young\\  University of Science and Technology of China (USTC)
   \end{itemize}
-  % \end{column}
-
-  % Right column for Research Interests
-  % \begin{column}{0.48\textwidth}
-  \textbf{\large Research Interests}
-
-  Machine learning, computer vision, and data mining with focus on:
-
-  \begin{itemize}
-    \item \textbf{Large Model Data Valuation}
-          \begin{itemize}
-            \item LMEraser system for language model unlearning
-            \item Prompt tuning for ViT (86M params) \& Swin (88M)
-            \item 100-fold speedup in unlearning process
-          \end{itemize}
-
-    \item \textbf{Co-Clustering Algorithms}
-          \begin{itemize}
-            \item Scalable algorithms for large datasets (800K+ docs)
-            \item Novel approaches for ellipse detection
-            \item Cell protrusion analysis via convex-hull methods
-          \end{itemize}
-  \end{itemize}
-  %     \end{column}
-  % \end{columns}
 \end{frame}
 
-\section{Selected Publications}
+\begin{frame}
+  \frametitle{Research Interests}
+  \textbf{\large Data-Centric AI}\\
+  Building high-quality datasets for efficient and reliable AI systems
+  \vspace{1em}
+  \begin{itemize}
+    \item \textbf{Data Influence Analysis}: Time-aware and sample-level influence quantify \& track to enhance dataset quality
+          \vspace{0.5em}
+    \item \textbf{Machine Unlearning}: Efficient data influence removal to ensure privacy compliance \& system security
+          \vspace{0.5em}
+    \item \textbf{Parallel Data Processing}:  High-performance and scalable systems to accelerate large-scale dataset process
+  \end{itemize}
+\end{frame}
+
 \begin{frame}
   \frametitle{Selected Publications}
-  \footnotesize
   \begin{itemize}
-    \item Xu, Jie; Wu, Zihan; Wang, Cong; Jia, Xiaohua. "LiveVal: Time-aware Data Valuation via Adaptive Reference Points." In Proceedings of the 34th ACM International Conference on Information and Knowledge Management (CIKM 2025), 2025. (to appear)
-    \item \fullcite{xu2025LMEraserLargeModel}
-    \item \fullcite{wu2024ScalableCoClusteringLargeScale}
-    \item \fullcite{wu2025EllipseDetectionGlobal}
-    \item \fullcite{huang2024ConvexhullBasedMethod}
-    \item \fullcite{xu2025DynamicInfluenceTracker}
+    \item \textbf{Data Influence Analysis}
+          \begin{enumerate}
+            \item LiveVal: Time-aware Data Valuation via Adaptive Reference Points, \textit{CIKM 2025}
+            \item Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training, \textit{arXiv 2025}
+          \end{enumerate}
+          \vspace{0.5em}
+
+    \item \textbf{Machine Unlearning}
+          \begin{enumerate}
+            \item LMEraser: Large Model Unlearning via Adaptive Prompt Tuning, \textit{AISTATS 2025}
+            \item Machine Unlearning: Solutions and Challenges, \textit{IEEE TETCI 2024}
+          \end{enumerate}
+          \vspace{0.5em}
+
+    \item \textbf{Parallel Data Processing}
+          \begin{enumerate}
+            \item Ellipse Detection via Global Arc Compatibilities and Adaptive Co-Clustering, \textit{IEEE TIM 2024}
+            \item Scalable Co-Clustering for Large-Scale Data, \textit{IEEE SMC 2024}
+            \item X-shard: Optimistic Cross-shard Transaction Processing for Sharding-based Blockchains, \textit{IEEE TPDS 2024}
+          \end{enumerate}
   \end{itemize}
 \end{frame}
+
+
+\section{Research Work}
+\begin{frame}
+  \frametitle{TIM: Time-Varying Influence Measurement of Training Data }
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{tim.png}
+    \vspace{-0.7cm}
+    \caption{Overview of the TIM. }
+  \end{figure}
+  \vspace{-0.5cm}
+  \footnotesize {TIM's two-stage approach: \\
+    \textbf{1) Parameter Influence Measurement} uses recursive estimation with Influence Propagator $P_t = I - \eta_t H^{[t]}$ to track parameter deviations; \\
+    \textbf{2) Parameter Influence Projection} maps parameter changes to functional responses (e.g., test loss) via query vectors $q$. \\
+    By analyzing influence across different training windows, TIM enables fine-grained temporal influence analysis.}
+\end{frame}
+
 
 %LMEraser: Large Model Unlearning via Adaptive Prompt Tuning 
 \subsection{LMEraser: Large Model Unlearning via Adaptive Prompt Tuning}
@@ -241,9 +265,15 @@
   % insert lmeraser.png
   \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{lmeraser.png}
-    \caption{LMEraser: Large Model Unlearning via Adaptive Prompt Tuning}
+    \includegraphics[width=0.99\textwidth]{lmeraser.png}
+    \caption{Overview of LMEraser.}
   \end{figure}
+  \footnotesize { LMEraser's four-stage approach:   \\
+    \textbf{1) Partitioning} training data into public and private datasets and pre- training backbone on public data.  \\
+    \textbf{2) Clustering} private data based on diversity.\\
+    \textbf{3) Tuning}  prompts and classifier heads for each cluster.\\
+    \textbf{4) Re-Tuning}  prompt for affected cluster achieving efficient unlearning.\\
+  }
 \end{frame}
 
 %Scalable co-clustering for large-scale data through dynamic partitioning and hierarchical merging
@@ -296,74 +326,23 @@
   \end{figure}
 \end{frame}
 
-% Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training
-\subsection{Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training}
-% \begin{equation}
-%   \Delta \theta_{-j}^{[t_1,t_2]} = (\theta_{-j}^{[t_2]} - \theta_{-j}^{[t_1]}) - (\theta^{[t_2]} - \theta^{[t_1]}),
-% \end{equation}
-% \begin{align}
-%   \Delta \theta_{-j}^{[t_1,t_2]} \approx  \left(\prod_{k=t_1}^{t_2-1} Z_k - I\right)\left(\sum_{t=0}^{t_1-1} \left(\prod_{k=t+1}^{t_1-1} Z_k\right) \mathbf{\tilde{1}}_j^{[t]}\right) \nonumber + \sum_{t=t_1}^{t_2-1} \left(\prod_{k=t+1}^{t_2-1} Z_k\right) \mathbf{\tilde{1}}_j^{[t]}
-% \end{align}
+
 \begin{frame}
-  \frametitle{Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training}
-  % equations
-  \small
-  \begin{equation}
-    \Delta \theta_{-j}^{[t_1,t_2]} = (\theta_{-j}^{[t_2]} - \theta_{-j}^{[t_1]}) - (\theta^{[t_2]} - \theta^{[t_1]}),
-  \end{equation}
-  \begin{align}
-    \Delta \theta_{-j}^{[t_1,t_2]} & \approx  \left(\prod_{k=t_1}^{t_2-1} Z_k - I\right)\left(\sum_{t=0}^{t_1-1} \left(\prod_{k=t+1}^{t_1-1} Z_k\right) \mathbf{\tilde{1}}_j^{[t]}\right) \nonumber \\ &+ \sum_{t=t_1}^{t_2-1} \left(\prod_{k=t+1}^{t_2-1} Z_k\right) \mathbf{\tilde{1}}_j^{[t]}
-  \end{align}
-  % Z_t = I - \eta_{t} H^{[t]}
-  where
-  \begin{equation}
-    Z_t = I - \eta_{t} H^{[t]}
-  \end{equation}
-  % \mathbf{\tilde{1}}_j^{[t]} = \mathbf{1}_{j \in S_{t}}\frac{\eta_{t}}{|S_{t}|} g(z_j; \theta^{[t]})$ and recursively apply this relation over the interval $[t_1, t_2]
-  \begin{equation}
-    \mathbf{\tilde{1}}_j^{[t]} = \mathbf{1}_{j \in S_{t}}\frac{\eta_{t}}{|S_{t}|} g(z_j; \theta^{[t]})
-  \end{equation}
+  \frametitle{Publications}
+  \scriptsize
+  \begin{enumerate}
+    \item \textbf{Z. Wu}, Z. Huang, H. Yan, ``Ellipse Detection via Global Arc Compatibilities and Adaptive Co-Clustering for Real-World Measurement Systems,'' \textit{IEEE Transactions on Instrumentation and Measurement}, 2024.
+    \item \textbf{Z. Wu}, Z. Huang, H. Yan, ``Scalable Co-Clustering for Large-Scale Data through Dynamic Partitioning and Hierarchical Merging,'' in \textit{Proc. of IEEE SMC}, 2024.
+    \item J. Xu, \textbf{Z. Wu}, C. Wang, X. Jia, ``Machine Unlearning: Solutions and Challenges,'' \textit{IEEE Transactions on Emerging Topics in Computational Intelligence}, vol. 8, no. 3, pp. 130, 2024.
+    \item Z. Huang, \textbf{Z. Wu}, H. Yan, ``A Convex-hull Based Method with Manifold Projections for Detecting Cell Protrusions,'' \textit{Computers in Biology and Medicine}, vol. 173, p. 108350, 2024.
+    \item J. Xu, \textbf{Z. Wu}, C. Wang, X. Jia, ``LMEraser: Large Model Unlearning via Adaptive Prompt Tuning,'' in \textit{Proc. of AISTATS}, pp. 2026-2034, 2025.
+    \item J. Xu, \textbf{Z. Wu}, C. Wang, X. Jia, ``LiveVal: Time-aware Data Valuation via Adaptive Reference Points,'' in \textit{Proc. of CIKM}, 2025.
+    \item J. Xu, \textbf{Z. Wu}, ``Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training,'' \textit{arXiv preprint arXiv:2502.10793}, 2025.
+    \item J. Xu, Y. Ming, \textbf{Z. Wu}, C. Wang, X. Jia, ``X-shard: Optimistic Cross-shard Transaction Processing for Sharding-based Blockchains,'' \textit{IEEE Transactions on Parallel and Distributed Systems}, vol. 35, no. 4, pp. 548-559, 2024.
+  \end{enumerate}
 \end{frame}
 
-% LiveVal: Time-aware Data Valuation via Adaptive Reference Points
-\subsection{LiveVal: Time-aware Data Valuation via Adaptive Reference Points}
-\begin{frame}[allowframebreaks]
-  \frametitle{LiveVal: Time-aware Data Valuation via Adaptive Reference Points}
-  % insert liveval1.png, liveval2.png and liveval3.png
-
-
-  \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{liveval1.png}
-    \caption{Concept of LiveVal}
-  \end{figure}
-
-  \begin{figure}
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{liveval2.png}
-      \caption{}
-      \label{fig:liveval2}
-    \end{subfigure}
-    \hfill % 添加水平间距
-    \begin{subfigure}[b]{0.48\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{liveval3.png}
-      \caption{}
-      \label{fig:liveval3}
-    \end{subfigure}
-    % \footnotesize
-    \caption{Algorithm for LiveVal}
-  \end{figure}
-
-\end{frame}
-
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
-\end{frame}
+\section{Huawei Internship Experience}
 
 
 \end{document}
