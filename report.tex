@@ -1,33 +1,14 @@
-% arara: pdflatex: { options: ["--synctex=1"] }
-% arara: pdflatex: { options: ["--synctex=1"] }
+% arara: xelatex: { options: ["--synctex=1", "--interaction=nonstopmode", "--file-line-error", "--shell-escape"] }
+% arara: xelatex: { options: ["--synctex=1", "--interaction=nonstopmode", "--file-line-error", "--shell-escape"] }
 
 \documentclass[ratio=169]{beamer}
+\usepackage[UTF8]{ctex}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage{subcaption}
 \usefonttheme[onlymath]{serif}
-% biblatex with biber
-\usepackage[
-  backend=biber,
-  style=numeric,
-  sorting=none,
-  firstinits=true,
-  maxnames=999,         % 显示所有作者
-  minnames=999,         % 不使用"et al."缩写
-  maxbibnames=999,      % 在参考文献列表中显示所有作者
-  minbibnames=999       % 在参考文献列表中不使用"et al."缩写
-]{biblatex}
-
-\addbibresource{ref.bib}
-\usepackage{hyperref}
-
-% 颜色定义
 \usepackage{xcolor}
-\definecolor{authorcolor}{RGB}{0,0,255}        % 蓝色 - 作者
-\definecolor{titlecolor}{RGB}{0,0,0}           % 黑色 - 标题
-\definecolor{venuecolor}{RGB}{100,149,237}     % 浅蓝色 - 期刊/会议/地点/年份
-
-% BibLaTeX配置
+\usepackage{hyperref}
 \usepackage[
   backend=biber,
   style=numeric,
@@ -41,7 +22,10 @@
 
 \addbibresource{ref.bib}
 
-% 简化所有条目类型
+\definecolor{authorcolor}{RGB}{0,0,255}
+\definecolor{titlecolor}{RGB}{0,0,0}
+\definecolor{venuecolor}{RGB}{100,149,237}
+
 \AtEveryBibitem{
   \clearfield{month}
   \clearfield{day}
@@ -63,22 +47,14 @@
   \clearfield{edition}
 }
 
-% 作者名格式
 \DeclareNameAlias{author}{first-last}
-
-% 设置作者颜色
 \DeclareNameWrapperFormat{author}{\textcolor{authorcolor}{#1}}
-
-% 标题颜色
 \DeclareFieldFormat{title}{\textcolor{titlecolor}{#1}}
-
-% 期刊/会议/年份/地点颜色
 \DeclareFieldFormat{journaltitle}{\textcolor{venuecolor}{#1}}
 \DeclareFieldFormat{booktitle}{\textcolor{venuecolor}{#1}}
 \DeclareFieldFormat{year}{\textcolor{venuecolor}{#1}}
 \DeclareFieldFormat{location}{\textcolor{venuecolor}{#1}}
 
-% 自定义文章格式
 \DeclareBibliographyDriver{article}{%
   \usebibmacro{bibindex}%
   \usebibmacro{begentry}%
@@ -92,7 +68,6 @@
   \usebibmacro{finentry}%
 }
 
-% 自定义会议论文格式
 \DeclareBibliographyDriver{inproceedings}{%
   \usebibmacro{bibindex}%
   \usebibmacro{begentry}%
@@ -108,7 +83,6 @@
   \usebibmacro{finentry}%
 }
 
-% 添加对arXiv条目的支持
 \DeclareBibliographyDriver{online}{%
   \usebibmacro{bibindex}%
   \usebibmacro{begentry}%
@@ -122,227 +96,175 @@
   \usebibmacro{finentry}%
 }
 
-% % 确保@misc类型中的arXiv预印本也能被正确处理
-% \DeclareBibliographyDriver{misc}{%
-%   \usebibmacro{bibindex}%
-%   \usebibmacro{begentry}%
-%   \printnames[author]{author}%
-%   \setunit{, }%
-%   \printfield{title}%
-%   \setunit{, }%
-%   \iftoggle{bbx:arxiv}{
-%     \textcolor{venuecolor}{arXiv}%
-%   }{
-%     \textcolor{venuecolor}{Preprint}%
-%   }
-%   \setunit{, }%
-%   \printfield{year}%
-%   \usebibmacro{finentry}%
-% }
+\title{构建高质量的人工智能数据集}
+\author{吴子晗}
+\date{}
 
-% % 检测是否为arXiv条目
-% \newtoggle{bbx:arxiv}
-% \AtEveryCitekey{
-%   \iftoggle{bbx:arxiv}
-%     {}
-%     {\global\togglefalse{bbx:arxiv}}
-%   \iffieldundef{eprinttype}
-%     {}
-%     {\iffieldequalstr{eprinttype}{arxiv}
-%        {\global\toggletrue{bbx:arxiv}}
-%        {}}
-% }
-% \AtEveryBibitem{
-%   \iftoggle{bbx:arxiv}
-%     {}
-%     {\global\togglefalse{bbx:arxiv}}
-%   \iffieldundef{eprinttype}
-%     {}
-%     {\iffieldequalstr{eprinttype}{arxiv}
-%        {\global\toggletrue{bbx:arxiv}}
-%        {}}
-% }
-
-% \usetheme{Berlin}
-\title{Building High-Quality Datasets for AI}
-\author{WU Zihan}
-%\institute{PhD, Electrical Engineering\\City University of Hong Kong}
-\date{ }
 \begin{document}
 \maketitle
-\section{Outline}
+
+\section{报告概览}
 \begin{frame}
-  \frametitle{Outline}
-
+  \frametitle{报告概览}
   \begin{enumerate}
-    \item \textbf{Education Background}
-    \item \textbf{Research Work}
-    \item \textbf{Huawei Internship Experience}
+    \item \textbf{教育背景}
+    \item \textbf{科研工作}
+    \item \textbf{华为实习经历}
   \end{enumerate}
-
 \end{frame}
 
-
-\section{Self Introduction}
-
+\section{个人介绍}
 \begin{frame}
-  \frametitle{Wu Zihan}
-
-  \textbf{\large Education Background}
+  \frametitle{个人经历}
+  \textbf{\large 教育背景}
   \begin{itemize}
-    \item \textbf{Ph.D.}, Electrical Engineering\\
-          City University of Hong Kong \\
-          Supervisor: Prof. Hong Yan (IEEE Life Fellow, IAPR Fellow)
+    \item \textbf{博士}，电子工程\\
+          香港城市大学 \\
+          导师：严洪教授（IEEE Fellow，IAPR Fellow）
           \vspace{1em}
-    \item \textbf{B.Sc.} Mathematics and Applied Mathematics\\
-    \item \textbf{B.Sc.} Physics (Double Major)\\
-          School of Gifted Young\\  University of Science and Technology of China (USTC)
+    \item \textbf{学士}，物理学\\
+    \item \textbf{学士}，数学与应用数学（双学位）\\
+          中国科学技术大学少年班学院
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Research Interests}
-  \textbf{\large Data-Centric AI}\\
-  Building high-quality datasets for efficient and reliable AI systems
+  \frametitle{研究兴趣}
+  \textbf{\large 数据中心人工智能}\\
+  聚焦构建高质量数据集以支撑高效可靠的人工智能系统
   \vspace{1em}
   \begin{itemize}
-    \item \textbf{Data Influence Analysis}: Time-aware and sample-level influence quantify \& track to enhance dataset quality
+    \item \textbf{数据影响分析}：通过时间敏感与样本级影响度量追踪数据质量
           \vspace{0.5em}
-    \item \textbf{Machine Unlearning}: Efficient data influence removal to ensure privacy compliance \& system security
+    \item \textbf{机器遗忘}：高效消除敏感数据影响，满足隐私合规与系统安全
           \vspace{0.5em}
-    \item \textbf{Parallel Data Processing}:  High-performance and scalable systems to accelerate large-scale dataset process
+    \item \textbf{并行数据处理}：构建高性能可扩展系统，加速大规模数据集处理
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Selected Publications}
+  \frametitle{代表性成果}
   \begin{itemize}
-    \item \textbf{Data Influence Analysis}
+    \item \textbf{数据影响分析}
           \begin{enumerate}
-            \item LiveVal: Time-aware Data Valuation via Adaptive Reference Points, \textit{CIKM 2025}
-            \item Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training, \textit{arXiv 2025}
+            \item LiveVal：基于自适应参考点的时间感知数据估值，\textit{CIKM 2025}
+            \item Dynamic Influence Tracker：训练过程中时间变化的样本影响度量，\textit{arXiv 2025}
           \end{enumerate}
           \vspace{0.5em}
-
-    \item \textbf{Machine Unlearning}
+    \item \textbf{机器遗忘}
           \begin{enumerate}
-            \item LMEraser: Large Model Unlearning via Adaptive Prompt Tuning, \textit{AISTATS 2025}
-            \item Machine Unlearning: Solutions and Challenges, \textit{IEEE TETCI 2024}
+            \item LMEraser：通过自适应提示微调实现大模型遗忘，\textit{AISTATS 2025}
+            \item 机器遗忘：方法与挑战，\textit{IEEE TETCI 2024}
           \end{enumerate}
           \vspace{0.5em}
-
-    \item \textbf{Parallel Data Processing}
+    \item \textbf{并行数据处理}
           \begin{enumerate}
-            \item Ellipse Detection via Global Arc Compatibilities and Adaptive Co-Clustering, \textit{IEEE TIM 2024}
-            \item Scalable Co-Clustering for Large-Scale Data, \textit{IEEE SMC 2024}
-            \item X-shard: Optimistic Cross-shard Transaction Processing for Sharding-based Blockchains, \textit{IEEE TPDS 2024}
+            \item 基于全局弧兼容与自适应协同聚类的椭圆检测，\textit{IEEE TIM 2024}
+            \item 面向大规模数据的可扩展协同聚类，\textit{IEEE SMC 2024}
+            \item X-shard：跨分片交易的乐观执行框架，\textit{IEEE TPDS 2024}
           \end{enumerate}
   \end{itemize}
 \end{frame}
 
-
-\section{Research Work}
+\section{科研工作}
 \begin{frame}
-  \frametitle{TIM: Time-Varying Influence Measurement of Training Data }
+  \frametitle{TIM：训练数据影响的时间动态度量}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{tim.png}
     \vspace{-0.7cm}
-    \caption{Overview of the TIM. }
+    \caption{TIM 方法概览}
   \end{figure}
   \vspace{-0.5cm}
-  \footnotesize {TIM's two-stage approach: \\
-    \textbf{1) Parameter Influence Measurement} uses recursive estimation with Influence Propagator $P_t = I - \eta_t H^{[t]}$ to track parameter deviations; \\
-    \textbf{2) Parameter Influence Projection} maps parameter changes to functional responses (e.g., test loss) via query vectors $q$. \\
-    By analyzing influence across different training windows, TIM enables fine-grained temporal influence analysis.}
+  \footnotesize TIM 包含两个阶段：\\
+  \textbf{1）参数影响度量}：利用递归估计与影响传播算子 $P_t = I - \eta_t H^{[t]}$ 跟踪参数偏移；\\
+  \textbf{2）参数影响投影}：通过查询向量 $q$ 将参数变化映射到函数响应（如测试损失）。\\
+  结合不同训练窗口的影响分析，TIM 支持细粒度的时间序列洞察。
 \end{frame}
 
-
-%LMEraser: Large Model Unlearning via Adaptive Prompt Tuning 
-\subsection{LMEraser: Large Model Unlearning via Adaptive Prompt Tuning}
 \begin{frame}
-  \frametitle{LMEraser: Large Model Unlearning via Adaptive Prompt Tuning}
-  % insert lmeraser.png
+  \frametitle{LiveVal：利用自适应参考点的时间感知数据估值}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{liveval1.png}
+    \caption{LiveVal 方法概览}
+    \label{fig:liveval_overview}
+  \end{figure}
+  \footnotesize
+  \textbf{图1}：以最终参数为静态参考点，比较样本梯度更新后与目标参数的距离变化，用归一化分值 \(v_i^t\) 判断该样本是否让模型更接近最优。\\
+  \textbf{图2}：通过自适应窗口 \(\delta_t\) 选取近未来参数作为参考点，动态调整窗口大小以适应不同训练阶段，实现实时、低内存的数据价值评估。
+\end{frame}
+
+\subsection{LMEraser：基于自适应提示的大模型遗忘}
+\begin{frame}
+  \frametitle{LMEraser：基于自适应提示的大模型遗忘}
   \begin{figure}
     \centering
     \includegraphics[width=0.99\textwidth]{lmeraser.png}
-    \caption{Overview of LMEraser.}
+    \caption{LMEraser 框架示意}
   \end{figure}
-  \footnotesize { LMEraser's four-stage approach:   \\
-    \textbf{1) Partitioning} training data into public and private datasets and pre- training backbone on public data.  \\
-    \textbf{2) Clustering} private data based on diversity.\\
-    \textbf{3) Tuning}  prompts and classifier heads for each cluster.\\
-    \textbf{4) Re-Tuning}  prompt for affected cluster achieving efficient unlearning.\\
-  }
+  \footnotesize LMEraser 包含四个阶段：\\
+  \textbf{1）数据划分}：将训练数据拆分为公共与私有子集，并在公共数据上预训练骨干模型；\\
+  \textbf{2）聚类}：基于多样性对私有数据进行聚类；\\
+  \textbf{3）微调}：对每个聚类的提示与分类头进行定制化微调；\\
+  \textbf{4）再微调}：对受影响聚类的提示进行快速再训练，实现高效遗忘。
 \end{frame}
 
-%Scalable co-clustering for large-scale data through dynamic partitioning and hierarchical merging
-\subsection{Scalable Co-Clustering for Large-Scale Data through Dynamic Partitioning and Hierarchical Merging}
+\subsection{面向大规模数据的可扩展协同聚类}
 \begin{frame}
-  \frametitle{Scalable Co-Clustering for Large-Scale Data through Dynamic Partitioning and Hierarchical Merging}
-  % insert cocluster.png and scalable.png
-
+  \frametitle{可扩展协同聚类：动态划分与分层合并}
   \begin{figure}
     \centering
     \includegraphics[width=0.4\textwidth]{cocluster.png}
     \vspace{-0.3cm}
-    \caption{Co-Cluster}
+    \caption{协同聚类示意}
   \end{figure}
-  % \vspace{-1cm}
   \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{scalable.png}
     \vspace{-0.3cm}
-    \caption{Scalable Co-Clustering}
+    \caption{可扩展协同聚类流程}
   \end{figure}
-
 \end{frame}
 
-%Ellipse Detection via Global Arc Compatibilities and Adaptive  Co-Clustering for Real-World Measurement Systems
-\subsection{Ellipse Detection via Global Arc Compatibilities and Adaptive Co-Clustering for Real-World Measurement Systems}
+\subsection{面向测量系统的椭圆检测}
 \begin{frame}
-
-  \frametitle{Ellipse Detection via Global Arc Compatibilities and Adaptive Co-Clustering for Real-World Measurement Systems}
-  % insert ellipse1.png, ellipse2.png and // and insert ellipse3.png
+  \frametitle{基于全局弧兼容的椭圆检测方法}
   \begin{figure}
     \centering
-    % 上方两个子图并排
     \begin{subfigure}[b]{0.48\textwidth}
       \centering
       \includegraphics[width=\textwidth]{ellipse1.png}
       \caption{}
       \label{fig:ellipse1}
     \end{subfigure}
-    \hfill % 添加水平间距
+    \hfill
     \begin{subfigure}[b]{0.48\textwidth}
       \centering
       \includegraphics[width=\textwidth]{ellipse2.png}
       \caption{}
       \label{fig:ellipse2}
     \end{subfigure}
-
-    \caption{Algorithm for Ellipse Detection}
+    \caption{椭圆检测算法示意}
     \label{fig:ellipses}
   \end{figure}
 \end{frame}
 
-
 \begin{frame}
-  \frametitle{Publications}
+  \frametitle{发表论文}
   \scriptsize
   \begin{enumerate}
-    \item \textbf{Z. Wu}, Z. Huang, H. Yan, ``Ellipse Detection via Global Arc Compatibilities and Adaptive Co-Clustering for Real-World Measurement Systems,'' \textit{IEEE Transactions on Instrumentation and Measurement}, 2024.
-    \item \textbf{Z. Wu}, Z. Huang, H. Yan, ``Scalable Co-Clustering for Large-Scale Data through Dynamic Partitioning and Hierarchical Merging,'' in \textit{Proc. of IEEE SMC}, 2024.
-    \item J. Xu, \textbf{Z. Wu}, C. Wang, X. Jia, ``Machine Unlearning: Solutions and Challenges,'' \textit{IEEE Transactions on Emerging Topics in Computational Intelligence}, vol. 8, no. 3, pp. 130, 2024.
-    \item Z. Huang, \textbf{Z. Wu}, H. Yan, ``A Convex-hull Based Method with Manifold Projections for Detecting Cell Protrusions,'' \textit{Computers in Biology and Medicine}, vol. 173, p. 108350, 2024.
-    \item J. Xu, \textbf{Z. Wu}, C. Wang, X. Jia, ``LMEraser: Large Model Unlearning via Adaptive Prompt Tuning,'' in \textit{Proc. of AISTATS}, pp. 2026-2034, 2025.
-    \item J. Xu, \textbf{Z. Wu}, C. Wang, X. Jia, ``LiveVal: Time-aware Data Valuation via Adaptive Reference Points,'' in \textit{Proc. of CIKM}, 2025.
-    \item J. Xu, \textbf{Z. Wu}, ``Dynamic Influence Tracker: Measuring Time-Varying Sample Influence During Training,'' \textit{arXiv preprint arXiv:2502.10793}, 2025.
-    \item J. Xu, Y. Ming, \textbf{Z. Wu}, C. Wang, X. Jia, ``X-shard: Optimistic Cross-shard Transaction Processing for Sharding-based Blockchains,'' \textit{IEEE Transactions on Parallel and Distributed Systems}, vol. 35, no. 4, pp. 548-559, 2024.
+    \item \textbf{吴子晗}，黄兆可，严洪：“面向真实测量系统的基于全局弧兼容与自适应协同聚类的椭圆检测”，发表于 2024 年 \textit{IEEE Transactions on Instrumentation and Measurement}。
+    \item \textbf{吴子晗}，黄兆可，严洪：“通过动态划分与分层合并实现的大规模数据可扩展协同聚类”，发表于 2024 年 \textit{IEEE SMC} 会议。
+    \item 许婕，\textbf{吴子晗}，王聪，贾小华：“机器遗忘：解决方案与挑战”，发表于 2024 年 \textit{IEEE Transactions on Emerging Topics in Computational Intelligence}。
+    \item 黄兆可，\textbf{吴子晗}，严洪：“基于凸包与流形投影的细胞突起检测方法”，发表于 2024 年 \textit{Computers in Biology and Medicine}。
+    \item 许婕，\textbf{吴子晗}，王聪，贾小华：“LMEraser：基于自适应提示的大模型遗忘”，发表于 2025 年 \textit{AISTATS} 会议。
+    \item 许婕，\textbf{吴子晗}，王聪，贾小华：“LiveVal：利用自适应参考点的时间感知数据估值”，发表于 2025 年 \textit{CIKM} 会议。
+    \item 许婕，\textbf{吴子晗}：“Dynamic Influence Tracker：训练过程中时间变化的样本影响度量”，发表于 2025 年 \textit{arXiv} 预印本。
+    \item 许婕，明宇龙，\textbf{吴子晗}，王聪，贾小华：“X-shard：面向分片区块链的乐观交叉分片交易处理框架”，发表于 2024 年 \textit{IEEE Transactions on Parallel and Distributed Systems}。
   \end{enumerate}
 \end{frame}
 
-\section{Huawei Internship Experience}
-
+\section{华为实习经历}
 
 \end{document}
