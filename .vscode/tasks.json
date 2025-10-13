@@ -4,9 +4,9 @@
   "tasks": [
     // run make
     {
-      "label": "make",
+      "label": "arara build",
       "type": "shell",
-      "command": "make",
+      "command": "arara report",
       "group": {
         "kind": "build",
         "isDefault": true
