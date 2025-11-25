@@ -1,18 +1,36 @@
-% arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-% arara: biber
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+% arara: xelatex: { options: ["--synctex=1", "-interaction=nonstopmode", "-output-directory=build"] }
+% arara: biber: { options: ["--input-directory=build", "--output-directory=build"] }
+% arara: xelatex: { options: ["-synctex=1", "-interaction=nonstopmode", "-output-directory=build"] }
+% arara: xelatex: { options: ["-synctex=1", "-interaction=nonstopmode", "-output-directory=build"] }
 
-\documentclass{beamer}
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage[UTF8]{ctex}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
-\usefonttheme[onlymath]{serif}
-% biblatex with biber
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
-\addbibresource{ref.bib}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{siunitx}
+\sisetup{group-separator = {,}}
+\usepackage{array}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue}
 
-% 自定义参考文献样式
+\usetheme{Berlin}
+\usecolortheme{default}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\setbeamercolor{section in toc}{fg=black}
+\setbeamercolor{section in toc shaded}{fg=black!30}
+
+\usepackage[backend=biber,style=numeric,sorting=none,giveninits=true]{biblatex}
+\addbibresource{ref.bib}
+
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
@@ -24,31 +42,328 @@
   \printfield{year}%
 }
 
-% \usetheme{Berlin}
-\title{Weekly Report}
+\newcommand{\dataset}[1]{\textsf{\textbf{#1}}}
+\newcommand{\tick}{\(\checkmark\)}
+\newcommand{\cross}{\(\times\)}
+
+\title{本周进展：代码漏洞数据集初筛与架构度量}
 \author{WU Zihan}
+\date{\today}
+
+\AtBeginSection[]{
+  \begin{frame}[plain]
+    \frametitle{目录}
+    \tableofcontents[currentsection, hideothersubsections]
+  \end{frame}
+}
+
 \begin{document}
-\maketitle
 \begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
+  \titlepage
 \end{frame}
 
-\section{Introduction}
-\begin{frame}
-  \frametitle{Introduction}
+\begin{frame}{目录}
+  \tableofcontents[hideothersubsections]
+\end{frame}
+
+\section{总览}
+% \begin{frame}{本周目标}
+%   \begin{itemize}
+%     \item 完成四大类问题的初步数据收集与覆盖度评估：
+%     \begin{itemize}
+%       \item 类别 1 \& 2：输入校验、并发与并行（基于 CWE 对应最充分）
+%       \item 类别 3：代码风格（linter 能力边界 \& 替代方案）
+%       \item 类别 4：架构度量（Code Smells / 设计缺陷）
+%     \end{itemize}
+\begin{frame}{数据源与口径}
+  \begin{columns}[T]
+    \begin{column}{0.48\linewidth}
+      \begin{block}{类别}
+        \begin{enumerate}
+          \item 输入校验
+          \item 并发与并行
+          \item 代码风格
+          \item 架构度量
+        \end{enumerate}
+      \end{block}
+
+      \begin{block}{类别 1 \& 2（基于 CWE）的数据源}
+        \begin{itemize}
+          \item \dataset{crossvul}, \dataset{megavul}, \dataset{MSR}, \dataset{primevul}, \dataset{cvfixes}, \dataset{juliet}, \dataset{sven}, \dataset{devign}, \dataset{ReVeal}
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\linewidth}
+      \begin{block}{统计口径}
+        \begin{itemize}
+          \item 以二级分类为粒度统计样本数；汇总覆盖率（样本数 $>0$ 视为\emph{已覆盖}）
+          \item 类别 3 对“linter 无法检测”的规则列出原因与替代方案
+          \item 类别 4 使用 \dataset{codesmelly++}, \dataset{codesmellsdatasetoracle}, \dataset{smellycodedataset} 统计样本
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section{类别 1 \& 2：输入校验、并发与并行}
+\begin{frame}{整体覆盖情况}
+  \begin{columns}[T]
+  \begin{column}{0.58\linewidth}
+    \begin{block}{结论}
+      \begin{itemize}
+        \item 二级分类覆盖率：\textbf{50\%}
+        \item 覆盖度高：路径遍历、链接跟随、CSRF、SSRF、竞争条件、锁定不当等
+        \item 仍为空白：见右侧清单
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \begin{column}{0.38\linewidth}
+    \begin{block}{尚未覆盖的二级分类}
+      \footnotesize
+      \begin{itemize}
+        \item 依赖外部提供文件的文件名或扩展名
+        \item 验证框架使用不当
+        \item 路径等价解析不当
+        \item Hook 函数的入参验证不当
+        \item 输入的语法合法性验证不当
+        % \item 缺少同步
+      \end{itemize}
+    \end{block}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{样本分布}
+  \scriptsize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{0.9}
+
+  \begin{tabularx}{1.05\linewidth}{@{}%
+      >{\raggedright\arraybackslash}p{1.3cm}%
+      >{\raggedright\arraybackslash}p{4.8cm}%
+      *{8}{S[table-format=4.0]}@{}}
+    \toprule
+    一级分类 & 二级分类 & {total} & {crossvul} & {megavul} & {MSR} & {primevul} & {cvfixes} & {juliet} & {sven} \\
+    \midrule
+
+    \multirow{11}{*}{输入校验} &
+    文件名或路径外部可控 & 12 & 2 & 2 & 0 & 0 & 8 & 0 & 0 \\
+    & 依赖外部提供文件的文件名或扩展名 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    & 无限制上传具有危险类型的文件 & 151 & 36 & 12 & 0 & 2 & 101 & 0 & 0 \\
+    & 验证框架使用不当 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    & 路径遍历 & 1491 & 148 & 119 & 690 & 80 & 397 & 0 & 57 \\
+    & 路径等价解析不当 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    & 文件访问前链接解析不当（链接跟随） & 1272 & 47 & 72 & 1049 & 36 & 68 & 0 & 0 \\
+    & Hook 函数的入参验证不当 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    & 扩展请求伪造（CSRF） & 381 & 93 & 2 & 36 & 4 & 246 & 0 & 0 \\
+    & 服务器请求伪造（SSRF） & 221 & 27 & 9 & 38 & 4 & 143 & 0 & 0 \\
+    & 输入的语法合法性验证不当 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+
+    \midrule
+
+    \multirow{4}{*}{并发与并行} &
+    竞争条件 & 6849 & 95 & 386 & 6073 & 158 & 137 & 0 & 0 \\
+    & 锁定不当 & 80 & 1 & 56 & 0 & 4 & 19 & 0 & 0 \\
+    & 缺少同步 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+    & 同步不正确 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\section{类别 3：代码风格与 Linter 边界}
+\begin{frame}{整体覆盖情况}
   \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
+    \item 25 条 CWD 级规则，约 68\%（17 条）可由主流 Linter/格式化工具直接落地
+    \item 剩余约 32\% 涉及业务语义、架构意图或跨文件约束，需要人工评审与流程工具协同
+    % \item 所有规则均可映射到 MITRE CWE、CERT Secure Coding、语言/社区风格规范，便于在门禁中对齐
   \end{itemize}
 \end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
+\begin{frame}{Linter 可直接覆盖的规则（约 68\%）}
+  \scriptsize
+  \begin{tabularx}{\linewidth}{@{}%
+      >{\raggedright\arraybackslash}p{2.6cm}%
+      >{\raggedright\arraybackslash}p{2.8cm}%
+      >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \textbf{类别} & \textbf{典型 CWD} & \textbf{可用工具 / 规则} \\
+    \midrule
+    命名 \& 作用域 & 1554/1555/1557/1558 & Checkstyle、Detekt、ESLint 命名规则；clang-tidy 命名检查 \\
+    注释 \& License & 1559-1562/1564 & ESLint JSDoc；Apache RAT、reuse-lint；CodeQL TODO 检查 \\
+    格式 \& 结构 & 1565/1567/1568/1569-1573 & clang-format、Prettier、RuboCop、go fmt \\
+    表达式 \& 字面量 & 1575-1583 & ESLint 语法规则；clang-tidy；MISRA/CERT 规范 \\
+    文件扩展 \& 编码 & 1556/1566 & lint-staged、pre-commit、IDE 编码校验 \\
+    \bottomrule
+  \end{tabularx}
 \end{frame}
 
+\begin{frame}{需人工或流程加固的规则（约 32\%）}
+  \tiny
+  \begin{tabularx}{\linewidth}{@{}l X X X@{}}
+    \toprule
+    \textbf{CWD} & \textbf{规则描述} & \textbf{Linter 无法检测原因} & \textbf{建议替代方案} \\
+    \midrule
+    CWD-1563 & 注释不能准确表达代码行为 & 需要理解业务逻辑和代码语义，Linter 无法判断注释是否真实反映行为 & 人工 Code Review / 测试验证 \\
+    CWD-1561 & 文件头注释缺少必要内容（如作者、版权、版本） & Linter 可检查存在性，但无法判断内容是否正确或完整 & License 检查工具 / pre-commit hook \\
+    CWD-1585 & Domain 层级定义不合规（架构层次错误） & 需要理解系统分层逻辑，Linter 无法判断层级设计意图 & ArchUnit / Deptrac / 架构扫描 \\
+    CWD-1558 & 将同一变量用于多种用途 & 静态分析可检测重定义，但无法判定语义复用 & 类型分析 / 动态分析 / Code Review \\
+    CWD-1574 & 代码元素顺序不合规 & 无法判断是否符合团队的业务顺序约定 & 自定义 Linter / Checkstyle 模块 \\
+    CWD-1565 & 格式不合规范（特殊内部定义） & 格式化器无法判断非语法层面的规范 & 团队文档 / IDE 模板 \\
+    CWD-1575 & 表达式比较未遵循左/右倾向 & Linter 检查符号位置但无法理解业务语义 & Review 或 AST 模式匹配 \\
+    CWD-1584 & 属性绑定变量未合理使用缩写 & 框架相关语义难以静态推断 & 框架插件 / Review \\
+    CWD-1578 & 未显式指定语言链接 & Linter 检测语法缺失但无法验证 ABI 一致性 & 编译器警告 / 链接器验证 \\
+    CWD-1566 & 源代码编码格式不合规 & Linter 不读取实际文件编码 & CI 文件头检查 / git diff filter \\
+    CWD-1560 & 注释风格不合规（语言、语气） & 工具无法评估注释语言的语义质量 & 人工审查 \\
+    CWD-1557 & 命名与保留字冲突（跨语言） & Linter 仅识别当前语言作用域 & 跨语言扫描工具 \\
+    CWD-1577 & 数值字面量后缀不合理 & Linter 检测语法但无法判断合理性 & 编译器警告 / MISRA 规则 \\
+    CWD-1581 & 数字分隔符风格不合规 & 无法判断分组逻辑是否合理 & Review / 代码规范文档 \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\begin{frame}{标准映射与落地参考}
+  \begin{itemize}
+    \item \textbf{MITRE CWE}：1099（命名不一致）、546（Suspicious Comment）等，可用于安全视角的缺陷归档
+    \item \textbf{CERT Secure Coding}：DCL01-C/DCL04-C/EXP56-CPP 等覆盖变量、声明、语言链接
+    \item \textbf{行业/社区规范}：Google \& Oracle Java Style、PEP 8、MISRA、ESLint/Prettier/clang-format 规则库
+    \item \textbf{参考资料来源}：项目治理手册、静态分析规则库、标准化指南文档，支撑门禁规则配置
+  \end{itemize}
+\end{frame}
+
+\section{类别 4：架构度量与 Code Smells}
+\begin{frame}{覆盖率概览}
+  \begin{itemize}
+    \item 当前跟踪 14 个 CWD 架构异味条目，其中 6 条具备样本支撑，数据集覆盖率约 \textbf{43\%}
+    \item 已采集样本共 13,156 条，主要集中于 \emph{God Class}、\emph{Feature Envy}、\emph{Shotgun Surgery} 等高风险项
+    \item 未覆盖条目集中在依赖结构与分层设计问题（如循环依赖、SAP 破坏者、混乱继承层次等），需后续补齐
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CWD 架构异味清单}
+  \scriptsize
+  \begin{tabularx}{\linewidth}{@{}l l l r X@{}}
+    \toprule
+    \textbf{CWD-ID} & \textbf{中文名称} & \textbf{英文名称} & \textbf{Samples} & \textbf{Sample Files} \\
+    \midrule
+    CWD-1824 & 循环依赖 & Cyclic Dependencies & 0 & -- \\
+    CWD-1826 & 破坏稳定抽象原则 & SAP Breakers & 0 & -- \\
+    CWD-1827 & 拒绝父类馈赠 & Refused Parent Bequest & 7 & \texttt{refused-bequest.md} \\
+    CWD-1828 & 传统破坏者 & Tradition Breaker & 0 & -- \\
+    CWD-1829 & 继承层次混乱 & Distorted Hierarchy & 0 & \texttt{base-class-depends-on-subclass.md} \\
+    CWD-1830 & 上帝类 & God Class & 8832 & \texttt{large-class.md} \\
+    CWD-1831 & 上帝文件 & God File & 0 & -- \\
+    CWD-1832 & 复杂类 & Blob Class & 22 & \texttt{large-class.md} \\
+    CWD-1833 & 复杂文件 & Blob File & 0 & -- \\
+    CWD-1834 & 精神分裂类 & Schizophrenic Class & 0 & \texttt{csv(4)} \\
+    CWD-1835 & 精神分裂文件 & Schizophrenic File & 0 & -- \\
+    CWD-1838 & 霰弹式修改 & Shotgun Surgery & 85 & \texttt{shotgun-surgery.md} \\
+    CWD-1839 & 依恋特征 & Feature Envy & 4189 & \texttt{feature-envy.md} \\
+    CWD-1841 & 数据泥团 & Data Clumps & 21 & \texttt{data-clump.md} \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\begin{frame}{覆盖说明}
+  \begin{enumerate}
+    \item \textbf{数据集覆盖}：使用 \dataset{codesmelly++}、\dataset{codesmellsdatasetoracle} 等公开数据集统计样本量，识别已覆盖与缺口条目
+    \item \textbf{Smell 数据集佐证}：依据 `sample\_files` 列链接到异味说明文档，沉淀判定准则、特征提取脚本与可复现的标签示例
+    \item \textbf{文献与实仓映射}：在相关研究与工具文档中检索指定开源仓库的目标类/文件，实现条目到真实代码的可追溯映射
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{实仓映射示例}
+  \footnotesize
+  \begin{itemize}
+    \item ArgoUML 仓库中的 \texttt{Import}、\texttt{StylePanel} 类长期被标记为精神分裂类（CWD-1834），驱动我们沉淀判定脚本
+    \item JabRef 项目的 \texttt{Option} 类同样被研究工具标记，提供跨语言验证用例
+    \item muCommander 的 \texttt{LocalFile} 文件展示了 God Class 与 Shotgun Surgery 的复合特征，可用于标签一致性回溯
+  \end{itemize}
+\end{frame}
+
+\section{小结与下一步}
+\begin{frame}{结论}
+  \begin{itemize}
+    \item 类别 1 \& 2 覆盖率 \textbf{50\%}；高频点：\emph{路径遍历、链接跟随、竞争条件} 等
+    \item 类别 3 给出了 \textbf{linter 盲区清单} 与可落地替代方案（工具/流程）
+    \item 类别 4 明确了 \textbf{优先 smells（God Class/Feature Envy）} 与 \textbf{缺口项}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{下一步计划（下周）}
+  \begin{enumerate}
+    \item \textbf{补齐未覆盖二级分类}（收集可映射 CWE 的数据源；必要时合成样本）
+    \item \textbf{完善类别 3 流水线}：pre-commit、License/编码/格式校验落地
+    \item \textbf{建立类别 4 基准集}：先做 God Class / Feature Envy 的标签一致性与误报分析
+    \item 输出数据字典与标签规范，开始沉淀 \texttt{dataset\_schema.md}
+  \end{enumerate}
+\end{frame}
+
+\appendix
+\section{附录：完整明细}
+\begin{frame}[allowframebreaks]{类别 1 \& 2 全量明细表}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}l l
+      S[table-format=4.0]
+      S[table-format=4.0]
+      S[table-format=4.0]
+      S[table-format=4.0]
+      S[table-format=4.0]
+      S[table-format=4.0]
+      S[table-format=4.0]
+      S[table-format=4.0]
+      S[table-format=4.0]
+      S[table-format=4.0]@{}}
+\toprule
+一级分类 & 二级分类 & {total} & {cross} & {mega} & {MSR} & {prime} & {cvfix} & {juliet} & {sven} & {devign} & {ReVeal} \\
+\midrule
+输入校验 & 文件名或路径外部可控 & 12 & 2 & 2 & 0 & 0 & 8 & 0 & 0 & 0 & 0 \\
+输入校验 & 依赖外部提供文件的文件名或扩展名 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+输入校验 & 不限制危险类型上传 & 151 & 36 & 12 & 0 & 2 & 101 & 0 & 0 & 0 & 0 \\
+输入校验 & 验证框架使用不当 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+输入校验 & 路径遍历 & 1491 & 148 & 119 & 690 & 80 & 397 & 0 & 57 & 0 & 0 \\
+输入校验 & 路径等价解析不当 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+输入校验 & 链接解析不当（链接跟随） & 1272 & 47 & 72 & 1049 & 36 & 68 & 0 & 0 & 0 & 0 \\
+输入校验 & Hook 入参验证不当 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+输入校验 & CSRF & 381 & 93 & 2 & 36 & 4 & 246 & 0 & 0 & 0 & 0 \\
+输入校验 & SSRF & 221 & 27 & 9 & 38 & 4 & 143 & 0 & 0 & 0 & 0 \\
+输入校验 & 输入语法合法性验证不当 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+并发与并行 & 竞争条件 & 6849 & 95 & 386 & 6073 & 158 & 137 & 0 & 0 & 0 & 0 \\
+并发与并行 & 锁定不当 & 80 & 1 & 56 & 0 & 4 & 19 & 0 & 0 & 0 & 0 \\
+并发与并行 & 缺少同步 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+并发与并行 & 同步不正确 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+\bottomrule
+\end{tabularx}
+\framebreak
+\end{frame}
+
+\begin{frame}{附录：linter 盲区完整表}
+  \tiny
+  \begin{tabularx}{\linewidth}{@{}l X X X@{}}
+    \toprule
+    \textbf{CWD} & \textbf{规则描述} & \textbf{Linter 无法检测原因} & \textbf{建议替代方案} \\
+    \midrule
+    CWD-1563 & 注释不能准确表达代码行为 & 需要理解业务逻辑和代码语义，Linter 无法判断注释是否真实反映行为 & 人工 Code Review / 测试验证 \\
+    CWD-1561 & 文件头注释缺少必要内容（如作者、版权、版本） & Linter 可检查存在性，但无法判断内容是否正确或完整 & License 检查工具 / pre-commit hook \\
+    CWD-1585 & Domain 层级定义不合规（架构层次错误） & 需要理解系统分层逻辑，Linter 无法判断层级设计意图 & ArchUnit / Deptrac / 架构扫描 \\
+    CWD-1558 & 将同一变量用于多种用途 & 静态分析可检测重定义，但无法判定语义复用 & 类型分析 / 动态分析 / Code Review \\
+    CWD-1574 & 代码元素顺序不合规 & 无法判断是否符合团队的业务顺序约定 & 自定义 Linter / Checkstyle 模块 \\
+    CWD-1565 & 格式不合规范（特殊内部定义） & 格式化器无法判断非语法层面的规范 & 团队文档 / IDE 模板 \\
+    CWD-1575 & 表达式比较未遵循左/右倾向 & Linter 检查符号位置但无法理解业务语义 & Review 或 AST 模式匹配 \\
+    CWD-1584 & 属性绑定变量未合理使用缩写 & 框架相关语义难以静态推断 & 框架插件 / Review \\
+    CWD-1578 & 未显式指定语言链接 & Linter 检测语法缺失但无法验证 ABI 一致性 & 编译器警告 / 链接器验证 \\
+    CWD-1566 & 源代码编码格式不合规 & Linter 不读取实际文件编码 & CI 文件头检查 / git diff filter \\
+    CWD-1560 & 注释风格不合规（语言、语气） & 工具无法评估注释语言的语义质量 & 人工审查 \\
+    CWD-1557 & 命名与保留字冲突（跨语言） & Linter 仅识别当前语言作用域 & 跨语言扫描工具 \\
+    CWD-1577 & 数值字面量后缀不合理 & Linter 检测语法但无法判断合理性 & 编译器警告 / MISRA 规则 \\
+    CWD-1581 & 数字分隔符风格不合规 & 无法判断分组逻辑是否合理 & Review / 代码规范文档 \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{参考文献}
+  \printbibliography
+\end{frame}
 
 \end{document}

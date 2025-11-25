@@ -1,3 +1,5 @@
+build/*
+!build/.gitkeep
 report.aux
 report.fdb_latexmk
 report.log

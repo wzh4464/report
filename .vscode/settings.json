@@ -6,6 +6,7 @@
     "files.autoSave": "onWindowChange",
     "latex-workshop.latex.build.forceRecipeUsage": true,
     "latex-workshop.latex.autoBuild.run": "onFileChange",
+    "latex-workshop.latex.outDir": "build",
     "makefile.configureOnOpen": false,
     // pick first recipe
     "latex-workshop.latex.recipe.default": "first",
@@ -20,12 +21,12 @@
             ]
         },
         {
-            "name": "pdf-biber-pdf-pdf",
+            "name": "xe-biber-xe-xe",
             "tools": [
-                "pdflatex",
+                "xelatex",
                 "biber",
-                "pdflatex",
-                "pdflatex"
+                "xelatex",
+                "xelatex"
             ]
         }
     ],
@@ -42,17 +43,20 @@
             "name": "biber",
             "command": "biber",
             "args": [
+                "--input-directory=build",
+                "--output-directory=build",
                 "%DOCFILE%"
             ]
         },
         {
-            "name": "pdflatex",
-            "command": "pdflatex",
+            "name": "xelatex",
+            "command": "xelatex",
             "args": [
                 "-synctex=1",
                 "-interaction=nonstopmode",
                 "-file-line-error",
                 "-shell-escape",
+                "-output-directory=build",
                 "%DOCFILE%"
             ]
         },
@@ -61,6 +65,7 @@
             "command": "latexmk",
             "args": [
                 "-c",
+                "-outdir=build",
             ]
         },
     ],
