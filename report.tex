@@ -575,38 +575,37 @@
 \begin{frame}
   \frametitle{Agent Memory：A-Mem \cite{xu2025amem}}
 
-  \begin{block}{核心问题}
-    现有记忆系统结构固定，缺乏\textbf{动态自组织}能力
-  \end{block}
-
   \begin{columns}[T]
     \begin{column}{0.55\textwidth}
+      \begin{block}{核心问题}
+        现有记忆系统结构固定，缺乏\textbf{动态自组织}能力
+      \end{block}
+
       \begin{block}{Zettelkasten 方法}
+        \small
         \begin{enumerate}
-          \item 每个记忆单元生成结构化属性（关键词、标签、描述）
-          \item 分析历史记忆，建立语义关联链接
-          \item 新记忆可触发旧记忆的\textbf{属性更新}
+          \item 每个记忆单元生成结构化属性
+          \item 分析历史记忆，建立语义关联
+          \item 新记忆触发旧记忆\textbf{属性更新}
           \item 记忆网络持续演化
         \end{enumerate}
       \end{block}
 
       \begin{block}{实验结果（NeurIPS 2025）}
-        \begin{itemize}
-          \item 复杂推理任务性能\textbf{翻倍}
-          \item Token 消耗显著降低
-          \item 6 个基础模型上均优于 SOTA
-        \end{itemize}
+        \small
+        复杂推理性能\textbf{翻倍}，Token 消耗降低，6 个模型均优于 SOTA
       \end{block}
     \end{column}
 
     \begin{column}{0.42\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{a-mem.jpg}
+      \end{figure}
+
       \begin{alertblock}{关键创新}
-        \textbf{Agentic Memory}：
-        \begin{itemize}
-          \item 记忆系统本身具有"代理性"
-          \item 主动组织、链接、更新
-          \item 而非被动存储-检索
-        \end{itemize}
+        \small
+        \textbf{Agentic Memory}：记忆系统本身具有"代理性"，主动组织、链接、更新，而非被动存储-检索
       \end{alertblock}
     \end{column}
   \end{columns}
@@ -784,48 +783,68 @@
   \frametitle{主任务选择：Bug 修复（SWE-bench）}
 
   \begin{columns}[T]
-    \begin{column}{0.55\textwidth}
-      \begin{block}{为什么选择 Bug 修复？}
+    % 第一列：为什么选择
+    \begin{column}{0.32\textwidth}
+      \begin{block}{为什么选择？}
+        \footnotesize
         \begin{itemize}
-          \item 目前\textbf{最主流、最有挑战性}的 Coding Agent 任务
-          \item 有成熟的 benchmark (SWE-bench) 和 leaderboard
-          \item 与漏洞检测相关：很多 issue 本身就是 bug/vulnerability
+          \item 最主流的 Coding Agent 任务
+          \item 成熟的 benchmark 和 leaderboard
+          \item 与漏洞检测相关
         \end{itemize}
       \end{block}
 
-      \begin{block}{Context Graph 要提升的三个指标}
-        \begin{enumerate}
-          \item \textbf{成功率 (Resolved Rate)}
-          \begin{itemize}
-            \item 问题：Agent 经常在同类问题上重复失败
-            \item CG 作用：记录失败模式，避免重蹈覆辙
-          \end{itemize}
-          \item \textbf{效率 (Token/Cost)}
-          \begin{itemize}
-            \item 问题：解决一个 issue 需要大量 token
-            \item CG 作用：Trajectory Reduction，压缩历史
-          \end{itemize}
-          \item \textbf{持续学习 (Continual Learning)}
-          \begin{itemize}
-            \item 问题：每次任务从零开始，不会积累
-            \item CG 作用：跨任务知识迁移
-          \end{itemize}
-        \end{enumerate}
+      \begin{alertblock}{CG 能回答}
+        \footnotesize
+        \begin{itemize}
+          \item 为什么之前失败？
+          \item 正确流程是什么？
+          \item 哪条路径最可靠？
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+
+    % 第二列：要提升的指标
+    \begin{column}{0.32\textwidth}
+      \begin{block}{要提升的三个指标}
+        \footnotesize
+        \textbf{1. 成功率}
+        \begin{itemize}
+          \item 问题：重复失败
+          \item CG：记录失败模式
+        \end{itemize}
+
+        \textbf{2. 效率}
+        \begin{itemize}
+          \item 问题：token 消耗大
+          \item CG：轨迹压缩
+        \end{itemize}
+
+        \textbf{3. 持续学习}
+        \begin{itemize}
+          \item 问题：从零开始
+          \item CG：跨任务迁移
+        \end{itemize}
       \end{block}
     \end{column}
 
-    \begin{column}{0.42\textwidth}
-      \begin{alertblock}{关键问题}
-        现有 Agent 可以回答：
-        \begin{itemize}
-          \item 为什么之前失败？\\
-                \textcolor{gray}{\small 因为项目用 gradle 不用 maven}
-          \item 正确流程是什么？\\
-                \textcolor{gray}{\small 图上清晰展示}
-          \item 哪条路径最可靠？\\
-                \textcolor{gray}{\small 看边的成功率}
-        \end{itemize}
-      \end{alertblock}
+    % 第三列：具体例子
+    \begin{column}{0.32\textwidth}
+      \begin{block}{具体场景示例}
+        \footnotesize
+        \textbf{问}：为什么失败？\\
+        \textcolor{gray}{答：项目用 gradle 不用 maven}
+
+        \vspace{0.2cm}
+
+        \textbf{问}：正确流程？\\
+        \textcolor{gray}{答：图上路径清晰展示}
+
+        \vspace{0.2cm}
+
+        \textbf{问}：哪条路径可靠？\\
+        \textcolor{gray}{答：A→B 成功率 95\%}
+      \end{block}
     \end{column}
   \end{columns}
 \end{frame}
