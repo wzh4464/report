@@ -3,14 +3,21 @@
 % arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 % arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
-\documentclass{beamer}
+\documentclass[aspectratio=169,10pt]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage{xeCJK}
+\usepackage{tcolorbox}
 \setCJKmainfont{STSong}
 \setCJKsansfont{STHeiti}
 \setCJKmonofont{STFangsong}
 \usefonttheme[onlymath]{serif}
+
+% 自定义颜色
+\definecolor{highlightyellow}{RGB}{255, 242, 0}
+\definecolor{dotred}{RGB}{200, 30, 30}
+\definecolor{dotyellow}{RGB}{255, 200, 0}
+
 % biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
@@ -66,6 +73,17 @@
   \end{block}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Context Graph 示例：决策过程流程}
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.75\textheight,keepaspectratio]{context_graph_example.jpg}
+    \caption{Context Graph 如何捕获和组织决策过程}
+  \end{figure}
+
+\end{frame}
+
 \section{Foundation Capital：捕获决策轨迹的万亿美元机遇}
 \begin{frame}
   \frametitle{Foundation Capital：万亿美元机遇 \cite{foundationcapital2024context}}
@@ -96,47 +114,83 @@
 \begin{frame}
   \frametitle{CGR³：上下文图谱推理范式 \cite{xu2024cgr3}}
 
-  \begin{block}{核心定义}
-    对传统三元组知识图谱的扩展，融入\textbf{时间动态、地理位置和来源信息}，提供更精准的知识理解
-  \end{block}
+  \begin{columns}[T]
+    \begin{column}{0.38\textwidth}
+      \small
+      \begin{block}{核心定义}
+        扩展传统三元组KG，融入\textbf{时空、来源}信息
+      \end{block}
 
-  \begin{block}{CGR³范式：三阶段推理框架}
-    \begin{enumerate}
-      \item \textbf{检索 (Retrieve)}：候选实体和上下文
-      \item \textbf{排序 (Rank)}：候选实体
-      \item \textbf{推理 (Reason)}：判断信息是否充足
-    \end{enumerate}
-  \end{block}
+      \vspace{0.3cm}
 
-  \begin{block}{LLM的作用}
-    \begin{itemize}
-      \item LLM擅长处理情境图谱提供的\textbf{非结构化背景信息}
-      \item 显著提升知识图谱补全（KGC）和问答（KGQA）的准确性
-      \item 能够理解和推理复杂的上下文关系
-    \end{itemize}
-  \end{block}
+      \begin{block}{CGR³范式}
+        \begin{enumerate}
+          \item \textbf{检索}：候选实体和上下文
+          \item \textbf{排序}：候选实体
+          \item \textbf{推理}：判断信息充足性
+        \end{enumerate}
+      \end{block}
+
+      \vspace{0.3cm}
+
+      \begin{block}{LLM的作用}
+        \begin{itemize}
+          \item 处理非结构化背景
+          \item 提升KGC和KGQA准确性
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.58\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{cgr3.png}
+        \caption{传统三元组知识图谱的四个局限性}
+      \end{figure}
+      \tiny
+      (a) 上下文丢失导致矛盾 (b) 无法区分相同关系的不同事实 \\
+      (c) 规则推理忽略上下文 (d) 难以回答超出三元组范围的问题
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Atlan：主动基础设施的元数据2.0}
 \begin{frame}
   \frametitle{Atlan：元数据2.0 \cite{atlan2024context}}
 
-  \begin{block}{定义}
-    融合了\textbf{操作元数据、治理策略和决策追溯}的增强型知识图谱，揭示数据流动的完整"操作现实"
-  \end{block}
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \small
+      \begin{block}{定义}
+        融合\textbf{操作元数据、治理策略、决策追溯}的增强型KG
+      \end{block}
 
-  \begin{block}{关键组件}
-    \begin{enumerate}
-      \item 图数据库基础（RDF或属性图）
-      \item 元数据捕获层（查询解析、日志跟踪、API集成）
-      \item 语义富化层（技术元数据→业务上下文）
-      \item 上下文激活层（为AI提供决策支持）
-    \end{enumerate}
-  \end{block}
+      \vspace{0.3cm}
 
-  \begin{block}{与传统工具的差异}
-    传统线性血缘工具仅追踪"数据来自哪里"，而情境图谱支持\textbf{多跳遍历}，回答"为什么做出这个决定"和"哪些政策在当时生效"
-  \end{block}
+      \begin{block}{关键组件}
+        \begin{enumerate}
+          \item 图数据库基础
+          \item 元数据捕获层
+          \item 语义富化层
+          \item 上下文激活层
+        \end{enumerate}
+      \end{block}
+
+      \vspace{0.3cm}
+
+      \begin{block}{核心优势}
+        支持\textbf{多跳遍历}，回答"为什么"和"哪些政策生效"
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.54\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{atlan.jpg}
+        \caption{Atlan 元数据2.0 架构}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{FlexRule：对"决策考古学"的批判}
@@ -206,55 +260,88 @@
 \begin{frame}
   \frametitle{TrustGraph：标准与实现视角 \cite{trustgraph2024manifesto}}
 
-  \begin{block}{定义}
-    一种为AI使用而优化的三元组数据表示
-  \end{block}
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \small
+      \begin{block}{定义}
+        为AI优化的三元组数据表示
+      \end{block}
 
-  \begin{block}{技术选择：RDF vs. 属性图}
-    \begin{itemize}
-      \item \textbf{RDF栈}（RDF, RDFS, OWL）
-      \begin{itemize}
-        \item 复杂但功能强大
-        \item 支持形式化推理和互操作性
-        \item 适合监管环境和复杂本体
-      \end{itemize}
-      \item \textbf{属性图}（Neo4j等）
-      \begin{itemize}
-        \item 更易理解和开发
-        \item 查询性能优秀
-        \item 适合应用开发者
-      \end{itemize}
-    \end{itemize}
-  \end{block}
+      \vspace{0.3cm}
 
-  \begin{block}{范式转移：LLM时代的语义网}
-    LLM的出现使得我们可以处理\textbf{动态本体}，AI可以动态生成检索逻辑，实现语义网多年未竟的互操作性愿景
-  \end{block}
+      \begin{block}{技术选择}
+        \textbf{RDF栈}
+        \begin{itemize}
+          \item 形式化推理、互操作性
+          \item 适合监管环境
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{属性图}
+        \begin{itemize}
+          \item 易理解、查询性能优秀
+          \item 适合应用开发
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.3cm}
+
+      \begin{block}{范式转移}
+        LLM实现\textbf{动态本体}和语义网互操作性
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.54\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{TrustGraph.jpg}
+        \caption{TrustGraph 架构与标准}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Microsoft GraphRAG}
 \begin{frame}
   \frametitle{Microsoft GraphRAG：工程化路径 \cite{microsoft2024graphrag}}
 
-  \begin{block}{核心痛点：传统RAG的上下文碎片化}
-    向量检索只看语义相似度，却漏掉了逻辑关联
-  \end{block}
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \small
+      \begin{block}{核心痛点}
+        向量检索只看语义相似度，漏掉逻辑关联
+      \end{block}
 
-  \begin{block}{工程方法}
-    \begin{enumerate}
-      \item \textbf{实体提取与关系映射}：使用LLM分析文本单元
-      \item \textbf{层级聚类}：利用\textbf{Leiden或Louvain算法}进行社区检测
-      \item \textbf{全局感知摘要}：为每个社区生成摘要，实现宏观理解
-    \end{enumerate}
-  \end{block}
+      \vspace{0.3cm}
 
-  \begin{block}{专用框架}
-    \begin{itemize}
-      \item \textbf{HopRAG}：逻辑感知检索，支持多跳推理
-      \item \textbf{HippoRAG}：受大脑海马体启发的联想记忆
-      \item \textbf{GNN-RAG}：神经子图处理，结合图神经网络
-    \end{itemize}
-  \end{block}
+      \begin{block}{工程方法}
+        \begin{enumerate}
+          \item 实体提取与关系映射
+          \item Leiden/Louvain社区检测
+          \item 全局感知摘要
+        \end{enumerate}
+      \end{block}
+
+      \vspace{0.3cm}
+
+      \begin{block}{专用框架}
+        \begin{itemize}
+          \item \textbf{HopRAG}：多跳推理
+          \item \textbf{HippoRAG}：联想记忆
+          \item \textbf{GNN-RAG}：图神经网络
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.54\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{graphrag.jpg}
+        \caption{Microsoft GraphRAG 架构}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Graph of Records}
@@ -457,6 +544,102 @@
       \item 软件安全分析平台
     \end{itemize}
   \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\Large Context Graph 的 \colorbox{highlightyellow}{\textbf{Open Problems (Potential Directions)}}}
+
+  \vspace{0.2cm}
+
+  \begin{columns}[t]
+    % --- 第一栏：基础设计问题 ---
+    \begin{column}{0.32\textwidth}
+      \textbf{\textcolor{dotred}{\large $\bullet$} 基础设计问题}
+      \vspace{0.1cm}
+      \hrule height 1pt
+      \vspace{0.2cm}
+
+      \footnotesize
+      \textbf{Q1: 节点应该是什么？}
+      \begin{itemize}
+        \item Action? State? Observation? 抽象的 Strategy?
+      \end{itemize}
+
+      \vspace{0.15cm}
+
+      \textbf{Q2: 边应该表示什么？}
+      \begin{itemize}
+        \item 时序？因果？语义相似？多种混合？
+      \end{itemize}
+
+      \vspace{0.15cm}
+
+      \textbf{Q3: 图的粒度？}
+      \begin{itemize}
+        \item 每个action一个节点？还是抽象成高层策略？
+      \end{itemize}
+    \end{column}
+
+    % --- 第二栏：优化问题 ---
+    \begin{column}{0.32\textwidth}
+      \vspace{1.2cm}
+
+      \textbf{\textcolor{dotyellow}{\large $\bullet$} 优化问题}
+      \vspace{0.1cm}
+      \hrule height 1pt
+      \vspace{0.2cm}
+
+      \footnotesize
+      \textbf{Q4: 如何高效检索？}
+      \begin{itemize}
+        \item 图太大时如何快速找到相关子图？
+      \end{itemize}
+
+      \vspace{0.15cm}
+
+      \textbf{Q5: 如何更新权重？}
+      \begin{itemize}
+        \item 用RL？监督学习？启发式规则？
+      \end{itemize}
+
+      \vspace{0.15cm}
+
+      \textbf{Q6: 探索vs利用？}
+      \begin{itemize}
+        \item 过于依赖历史可能错过新方案
+      \end{itemize}
+    \end{column}
+
+    % --- 第三栏：应用问题 ---
+    \begin{column}{0.32\textwidth}
+      \vspace{2.4cm}
+
+      \textbf{\large $\circ$ 应用问题}
+      \vspace{0.1cm}
+      \hrule height 1pt
+      \vspace{0.2cm}
+
+      \footnotesize
+      \textbf{Q7: 如何迁移到新领域？}
+      \begin{itemize}
+        \item QA上的图能用于Coding吗？
+      \end{itemize}
+
+      \vspace{0.15cm}
+
+      \textbf{Q8: 如何与诊断结合？}
+      \begin{itemize}
+        \item 失败经验如何存入图？
+      \end{itemize}
+
+      \vspace{0.15cm}
+
+      \textbf{Q9: 安全场景应用？}
+      \begin{itemize}
+        \item 漏洞检测等完全空白！
+      \end{itemize}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{总结}
