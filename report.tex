@@ -59,33 +59,52 @@
   \frametitle{技术演进：从 LLM 到 Context Graph}
 
   \begin{center}
-  \small
-  \begin{tikzpicture}[node distance=0.8cm, every node/.style={align=center}]
+  \begin{tikzpicture}[node distance=0.5cm, every node/.style={align=center}]
+    % 顶会配色：蓝色渐变 + 强调色
+    \definecolor{stage1}{RGB}{227,242,253}  % 浅蓝
+    \definecolor{stage2}{RGB}{187,222,251}  % 淡蓝
+    \definecolor{stage3}{RGB}{144,202,249}  % 中蓝
+    \definecolor{stage4}{RGB}{66,165,245}   % 深蓝（强调）
+    \definecolor{accenttext}{RGB}{21,101,192} % 深蓝文字
+    \definecolor{graytext}{RGB}{117,117,117}  % 灰色说明
+
     % 节点样式
-    \tikzstyle{level} = [rectangle, rounded corners, minimum width=2.8cm, minimum height=1.2cm, draw=black, font=\small]
+    \tikzstyle{level} = [rectangle, rounded corners=3pt, minimum width=2.6cm, minimum height=1.8cm, draw=none, font=\small]
+    \tikzstyle{issue} = [font=\scriptsize, text=graytext, text width=2.4cm, align=center]
+    \tikzstyle{good} = [font=\scriptsize\bfseries, text=accenttext, text width=2.4cm, align=center]
 
     % LLM
-    \node[level, fill=gray!20] (llm) at (0, 0) {\textbf{LLM}\\理解语言、生成代码};
-    \node[right=0.3cm of llm, font=\scriptsize, text=red] {无法与外界交互\\无记忆、一次性输出};
+    \node[level, fill=stage1] (llm) at (0, 0) {\textbf{LLM}\\{\scriptsize 理解语言、生成代码}};
+    \node[issue, below=0.15cm of llm] {无法与外界交互\\无记忆};
 
     % Agent
-    \node[level, fill=blue!20, below=0.6cm of llm] (agent) {\textbf{Agent = LLM + Tools}\\读文件、执行命令};
-    \node[right=0.3cm of agent, font=\scriptsize, text=red] {没有记忆\\每次从零开始，重复犯错};
+    \node[level, fill=stage2, right=1.2cm of llm] (agent) {\textbf{Agent}\\{\scriptsize LLM + Tools}};
+    \node[issue, below=0.15cm of agent] {没有记忆\\重复犯错};
 
     % Agent + Memory
-    \node[level, fill=green!20, below=0.6cm of agent] (memory) {\textbf{Agent + Memory}\\存储和检索历史经验};
-    \node[right=0.3cm of memory, font=\scriptsize, text=red] {扁平存储，无法表达关系\\检索不精准，无法推理};
+    \node[level, fill=stage3, right=1.2cm of agent] (memory) {\textbf{Agent + Memory}\\{\scriptsize 存储历史经验}};
+    \node[issue, below=0.15cm of memory] {扁平存储\\检索不精准};
 
     % Agent + Context Graph
-    \node[level, fill=orange!30, below=0.6cm of memory] (cg) {\textbf{Agent + Context Graph}\\结构化存储、路径推理};
-    \node[right=0.3cm of cg, font=\scriptsize, text=darkgreen] {\textbf{我们要研究的方向}};
+    \node[level, fill=stage4, right=1.2cm of memory] (cg) {\color{white}\textbf{Agent + CG}\\{\scriptsize 结构化、可推理}};
+    \node[good, below=0.15cm of cg] {研究方向};
 
     % 箭头
-    \draw[->, thick] (llm) -- node[left, font=\scriptsize] {+工具} (agent);
-    \draw[->, thick] (agent) -- node[left, font=\scriptsize] {+记忆} (memory);
-    \draw[->, thick] (memory) -- node[left, font=\scriptsize] {+图结构} (cg);
+    \draw[->, thick, accenttext] (llm) -- node[above, font=\scriptsize, text=graytext] {+工具} (agent);
+    \draw[->, thick, accenttext] (agent) -- node[above, font=\scriptsize, text=graytext] {+记忆} (memory);
+    \draw[->, thick, accenttext] (memory) -- node[above, font=\scriptsize, text=graytext] {+图结构} (cg);
   \end{tikzpicture}
   \end{center}
+
+  \vspace{0.3cm}
+
+  \begin{block}{演进逻辑}
+    \small
+    \textbf{LLM}：强大但封闭 $\rightarrow$
+    \textbf{Agent}：能行动但健忘 $\rightarrow$
+    \textbf{+Memory}：能记忆但扁平 $\rightarrow$
+    \textbf{+Context Graph}：结构化、可推理、可解释
+  \end{block}
 \end{frame}
 
 \begin{frame}
