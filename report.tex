@@ -8,6 +8,9 @@
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage{xeCJK}
 \usepackage{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{pifont}
 \setCJKmainfont{STSong}
 \setCJKsansfont{STHeiti}
 \setCJKmonofont{STFangsong}
@@ -17,6 +20,7 @@
 \definecolor{highlightyellow}{RGB}{255, 242, 0}
 \definecolor{dotred}{RGB}{200, 30, 30}
 \definecolor{dotyellow}{RGB}{255, 200, 0}
+\definecolor{darkgreen}{RGB}{0, 128, 0}
 
 % biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
@@ -35,7 +39,7 @@
   \printfield{year}%
 }
 
-\title{情境图谱 (Context Graph) 简报}
+\title{Context Graph 与 Agent Memory\\{\large 面向 Coding Agent 的研究方向探索}}
 \author{WU Zihan}
 \date{\today}
 
@@ -43,101 +47,521 @@
 \maketitle
 
 \begin{frame}
-  \frametitle{目录}
+  \frametitle{报告结构}
   \tableofcontents
 \end{frame}
 
-\section{总体概述}
+%==============================================================================
+\section{问题背景}
+%==============================================================================
+
 \begin{frame}
-  \frametitle{情境图谱：AI时代的"元数据2.0"}
+  \frametitle{技术演进：从 LLM 到 Context Graph}
 
-  \begin{block}{核心定义}
-    情境图谱是对传统知识图谱的演进，将\textbf{多模态的非结构化决策过程}作为记忆，用图结构组织
-  \end{block}
+  \begin{center}
+  \small
+  \begin{tikzpicture}[node distance=0.8cm, every node/.style={align=center}]
+    % 节点样式
+    \tikzstyle{level} = [rectangle, rounded corners, minimum width=2.8cm, minimum height=1.2cm, draw=black, font=\small]
 
-  \begin{block}{与RAG/知识图谱的关键区别}
+    % LLM
+    \node[level, fill=gray!20] (llm) at (0, 0) {\textbf{LLM}\\理解语言、生成代码};
+    \node[right=0.3cm of llm, font=\scriptsize, text=red] {无法与外界交互\\无记忆、一次性输出};
+
+    % Agent
+    \node[level, fill=blue!20, below=0.6cm of llm] (agent) {\textbf{Agent = LLM + Tools}\\读文件、执行命令};
+    \node[right=0.3cm of agent, font=\scriptsize, text=red] {没有记忆\\每次从零开始，重复犯错};
+
+    % Agent + Memory
+    \node[level, fill=green!20, below=0.6cm of agent] (memory) {\textbf{Agent + Memory}\\存储和检索历史经验};
+    \node[right=0.3cm of memory, font=\scriptsize, text=red] {扁平存储，无法表达关系\\检索不精准，无法推理};
+
+    % Agent + Context Graph
+    \node[level, fill=orange!30, below=0.6cm of memory] (cg) {\textbf{Agent + Context Graph}\\结构化存储、路径推理};
+    \node[right=0.3cm of cg, font=\scriptsize, text=darkgreen] {\textbf{我们要研究的方向}};
+
+    % 箭头
+    \draw[->, thick] (llm) -- node[left, font=\scriptsize] {+工具} (agent);
+    \draw[->, thick] (agent) -- node[left, font=\scriptsize] {+记忆} (memory);
+    \draw[->, thick] (memory) -- node[left, font=\scriptsize] {+图结构} (cg);
+  \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Agent 的四大问题}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{1. 重复犯错}
+        同样的错误，换个任务又犯一遍\\
+        \textcolor{gray}{\small 例：每次都忘记先安装依赖}
+      \end{block}
+
+      \begin{block}{2. 不会积累经验}
+        每次任务都从零开始\\
+        \textcolor{gray}{\small 例：解决过的 Bug 类型不会复用}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{3. 上下文爆炸}
+        执行步骤多了，历史记录太长\\
+        \textcolor{gray}{\small 例：超出 token 限制，性能下降}
+      \end{block}
+
+      \begin{block}{4. 无法跨任务学习}
+        任务 A 学到的经验，任务 B 用不上\\
+        \textcolor{gray}{\small 例：auth 模块的经验无法迁移到 payment}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.4cm}
+
+  \begin{alertblock}{核心需求}
+    需要一种\textbf{结构化的记忆系统}，能够组织、关联、检索 Agent 的历史经验
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{从"存储数据"到"记录决策"}
+
+  \begin{block}{传统系统的局限}
+    CRM、ERP 等系统只记录\textbf{最终状态}：一笔订单以 40\% 折扣成交
     \begin{itemize}
-      \item \textbf{传统知识图谱}：结构化三元组 \texttt{(实体, 关系, 实体)}，仅捕获"是什么"
-      \item \textbf{传统RAG}：向量检索，关注语义相似度，缺乏逻辑关联
-      \item \textbf{情境图谱}：捕获决策轨迹、上下文背景、时间动态和多模态信息，回答"为什么"
+      \item 但不记录：VP \textbf{为什么}批准这个折扣？基于什么先例？
+      \item 决策过程散落在 Slack、会议记录、邮件中，随员工离职而消失
     \end{itemize}
   \end{block}
 
-  \begin{block}{关键特征}
+  \begin{block}{AI Agent 的记忆需求}
     \begin{itemize}
-      \item 记录非结构化决策过程（会议讨论、例外逻辑、审批链）
-      \item 整合多模态数据（文本、图表、表格、时间序列）
-      \item 图结构组织，支持多跳遍历和关系推理
-      \item 为AI提供可解释的决策上下文
+      \item Agent = LLM + 工具调用 + 循环执行
+      \item 复杂任务需要 Agent 记住：过去的尝试、失败原因、成功策略
+      \item \textbf{核心问题}：如何有效组织和检索 Agent 的历史经验？
     \end{itemize}
+  \end{block}
+
+  \begin{alertblock}{两个平行的需求}
+    \textbf{企业侧}：捕获人类决策过程 $\longleftrightarrow$ \textbf{Agent 侧}：组织 Agent 执行轨迹
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{现有方法的不足}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{传统 RAG}
+        \begin{itemize}
+          \item 基于向量相似度检索
+          \item \textcolor{darkgreen}{优点}：语义匹配能力强
+          \item \textcolor{red}{问题}：
+          \begin{itemize}
+            \item 丢失实体间的逻辑关联
+            \item 无法回答全局性问题
+            \item 多跳推理能力弱
+          \end{itemize}
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{传统知识图谱}
+        \begin{itemize}
+          \item 结构化三元组 \texttt{(S, P, O)}
+          \item \textcolor{darkgreen}{优点}：关系明确、可推理
+          \item \textcolor{red}{问题}：
+          \begin{itemize}
+            \item 缺乏时间、来源等上下文
+            \item 结构固定，难以适应新场景
+            \item 难以处理非结构化信息
+          \end{itemize}
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.5cm}
+
+  \begin{block}{需要什么？}
+    结合两者优势：\textbf{图结构的关系表达} + \textbf{上下文信息的丰富性} + \textbf{动态适应能力}
   \end{block}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Context Graph 示例：决策过程流程}
+  \frametitle{为什么用图？—— 五大优势}
+
+  \small
+  \begin{tabular}{p{2.2cm}|p{4.2cm}|p{5.5cm}}
+    \textbf{能力} & \textbf{问题示例} & \textbf{RAG vs Graph} \\
+    \hline
+    \textbf{关系建模} & "Action A 之后应该做什么？" &
+    RAG: 找相似文档 $\rightarrow$ 可能不相关\\
+    & & Graph: 出边直接指向下一步 $\rightarrow$ 精确 \\
+    \hline
+    \textbf{路径推理} & "如何从当前状态到达成功？" &
+    RAG: 无"路径"概念\\
+    & & Graph: 搜索最短/最优路径 \\
+    \hline
+    \textbf{失败诊断} & "为什么这次失败了？" &
+    RAG: 找类似失败案例，但不知差异\\
+    & & Graph: 比较成功/失败路径，找分叉点 \\
+    \hline
+    \textbf{动态更新} & "新经验如何融入？" &
+    Fine-tuning: 需重训，可能遗忘\\
+    & & Graph: 增量更新节点/边 \\
+    \hline
+    \textbf{可解释性} & "Agent 为什么这样决定？" &
+    Neural: 黑盒，无法解释\\
+    & & Graph: "因为 A$\rightarrow$B 成功率 95\%" \\
+  \end{tabular}
+\end{frame}
+
+%==============================================================================
+\section{Context Graph 概念框架}
+%==============================================================================
+
+\begin{frame}
+  \frametitle{Context Graph：定义与定位}
+
+  \begin{block}{核心定义 \cite{foundationcapital2024context}}
+    Context Graph 是由\textbf{决策痕迹}（decision traces）编织成的活体记录结构，
+    将实体、时间、先例连接成可查询的网络
+  \end{block}
+
+  \vspace{0.3cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{与传统 KG 的区别}
+        \small
+        \begin{tabular}{p{2cm}|p{3.5cm}}
+          \textbf{维度} & \textbf{Context Graph} \\
+          \hline
+          设计目标 & AI 模型消费 \\
+          核心要素 & 实体+关系+\textbf{决策事件} \\
+          时间处理 & 双时态（有效时间+事务时间） \\
+          溯源机制 & 核心组件 \\
+        \end{tabular}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{技术定位}
+        \begin{itemize}
+          \item \textbf{学术视角}：GraphRAG 的算法创新
+          \item \textbf{产业视角}：决策痕迹捕获平台
+          \item \textbf{Agent 视角}：结构化的经验记忆
+        \end{itemize}
+        \vspace{0.2cm}
+        \small
+        三个视角指向\textbf{同一技术栈}，切入点不同
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{GraphRAG vs Context Graph：概念辨析}
+
+  \begin{alertblock}{核心论点}
+    \textbf{GraphRAG 是检索技术，Context Graph 是企业架构愿景}。两者共享"图"结构，但解决的问题层次不同
+  \end{alertblock}
+
+  \vspace{0.2cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{GraphRAG（技术层）}
+        \small
+        \begin{itemize}
+          \item \textbf{目标}：改进 LLM 检索质量
+          \item \textbf{输入}：静态文档语料库
+          \item \textbf{输出}：增强的上下文
+          \item \textbf{局限}：
+          \begin{itemize}
+            \scriptsize
+            \item 离线批处理，非实时
+            \item 单一数据源
+            \item 不处理时态变化
+            \item 不捕获决策过程
+          \end{itemize}
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Context Graph（愿景层）}
+        \small
+        \begin{itemize}
+          \item \textbf{目标}：捕获跨系统决策上下文
+          \item \textbf{输入}：6-10 个业务系统实时状态
+          \item \textbf{输出}：决策依据链
+          \item \textbf{新增}：
+          \begin{itemize}
+            \scriptsize
+            \item 决策事件、政策节点
+            \item 双时态建模
+            \item 先例链接、溯源机制
+          \end{itemize}
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+
+  \begin{block}{关系类比}
+    GraphRAG 之于 Context Graph $\approx$ TCP/IP 之于互联网：\textbf{关键技术组件}，但完整实现需要更多系统工程
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{从 GraphRAG 到 Context Graph：五个关键 Gap}
+
+  \small
+  \begin{tabular}{p{0.8cm}|p{3.8cm}|p{4cm}|p{2.8cm}}
+    \textbf{Gap} & \textbf{GraphRAG 现状} & \textbf{Context Graph 需求} & \textbf{差距性质} \\
+    \hline
+    \textbf{1} & 批量索引，小时/天级延迟 & 实时同步，秒级延迟 & 架构性 \\
+    \hline
+    \textbf{2} & 实体 + 关系（知识事实） & + 决策事件 + 政策节点 & 本体论 \\
+    \hline
+    \textbf{3} & 单一文档库 & 6-10 个异构系统 & 集成复杂度 \\
+    \hline
+    \textbf{4} & 静态快照 & 双时态（T\_valid + T\_tx） & 时态建模 \\
+    \hline
+    \textbf{5} & 返回相关文档片段 & 返回决策依据链 & 解释性 \\
+  \end{tabular}
+
+  \vspace{0.3cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{alertblock}{关键判断}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{GraphRAG 已成熟}：2024-2025 学术界充分验证
+          \item \textbf{Context Graph 待解决}：需要架构层面重新设计
+          \item \textbf{真正瓶颈}：57\% 公司数据未准备好支持 AI
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{block}{研究机会}
+        \footnotesize
+        \begin{itemize}
+          \item 决策事件本体论
+          \item 双时态图高效实现
+          \item 跨系统实体解析
+          \item 决策链提取与生成
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Context Graph 示例}
 
   \begin{figure}
     \centering
-    \includegraphics[width=0.9\textwidth,height=0.75\textheight,keepaspectratio]{context_graph_example.jpg}
-    \caption{Context Graph 如何捕获和组织决策过程}
+    \includegraphics[width=0.85\textwidth,height=0.72\textheight,keepaspectratio]{context_graph_example.jpg}
+    \caption{Context Graph 如何组织决策过程与实体关系}
   \end{figure}
 
 \end{frame}
 
-\section{Foundation Capital：捕获决策轨迹的万亿美元机遇}
 \begin{frame}
-  \frametitle{Foundation Capital：万亿美元机遇 \cite{foundationcapital2024context}}
+  \frametitle{Context Graph 设计：节点与边}
 
-  \begin{block}{核心理念}
-    传统记录系统（CRM、ERP）仅捕获最终数据状态（"是什么"），\textbf{情境图谱捕获决策轨迹}（"为什么"）
-  \end{block}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{节点类型}
+        \footnotesize
+        \textbf{类型 1: Action Node（动作节点）}
+        \begin{itemize}
+          \item \texttt{action\_type}: read\_file | write\_file | run\_test
+          \item \texttt{parameters}: \{file: "auth.py", ...\}
+          \item \texttt{result}: success | failure | partial
+          \item \texttt{cost}: token 消耗
+        \end{itemize}
 
-  \begin{block}{决策轨迹包含什么？}
+        \vspace{0.2cm}
+
+        \textbf{类型 2: State Node（状态节点）}
+        \begin{itemize}
+          \item \texttt{description}: "发现 bug 在 line 42"
+          \item \texttt{context}: 相关文件、变量
+          \item \texttt{is\_terminal}: 是否终止状态
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{类型 3: Insight Node（洞察节点）}
+        \begin{itemize}
+          \item \texttt{insight}: "Django migration 问题需先检查 models"
+          \item \texttt{confidence}: 0.85
+          \item \texttt{source\_tasks}: [task\_1, task\_2, ...]
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{边类型}
+        \footnotesize
+        \textbf{类型 1: NEXT（时序/因果）}
+        \begin{itemize}
+          \item Action\_A $\xrightarrow{\text{NEXT}}$ Action\_B
+          \item 属性: success\_rate, avg\_reward, count
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{类型 2: CAUSES（因果）}
+        \begin{itemize}
+          \item Action\_X $\xrightarrow{\text{CAUSES}}$ Failure\_Y
+          \item "修改了 config 导致测试失败"
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{类型 3: SIMILAR\_TO（相似）}
+        \begin{itemize}
+          \item Task\_1 $\xrightarrow{\text{SIMILAR\_TO}}$ Task\_2
+          \item 用于检索相似任务的经验
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{类型 4: ABSTRACTS（抽象）}
+        \begin{itemize}
+          \item [Action\_1, Action\_2, ...] $\rightarrow$ Insight
+          \item 多个具体经验抽象成通用规则
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%==============================================================================
+\section{相关技术}
+%==============================================================================
+
+\begin{frame}
+  \frametitle{技术路线图}
+
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=0.9]
+      % 定义样式
+      \tikzstyle{box} = [rectangle, rounded corners, minimum width=2.5cm, minimum height=0.8cm, text centered, draw=black]
+
+      % 第一层：问题
+      \node[box, fill=red!20] (problem) at (0, 3) {Agent 需要记忆};
+
+      % 第二层：两条路线
+      \node[box, fill=blue!20] (graphrag) at (-3.5, 1.5) {图增强检索};
+      \node[box, fill=green!20] (memory) at (3.5, 1.5) {Agent Memory};
+
+      % 第三层：具体方法
+      \node[box, fill=blue!10, font=\small] (grag1) at (-5.5, 0) {GraphRAG};
+      \node[box, fill=blue!10, font=\small] (grag2) at (-3.5, 0) {CGR³};
+      \node[box, fill=blue!10, font=\small] (grag3) at (-1.5, 0) {GoR};
+
+      \node[box, fill=green!10, font=\small] (mem1) at (1.5, 0) {ExpeL};
+      \node[box, fill=green!10, font=\small] (mem2) at (3.5, 0) {A-Mem};
+      \node[box, fill=green!10, font=\small] (mem3) at (5.5, 0) {可训练图记忆};
+
+      % 连线
+      \draw[->, thick] (problem) -- (-1.75, 1.5) -- (graphrag);
+      \draw[->, thick] (problem) -- (1.75, 1.5) -- (memory);
+      \draw[->] (graphrag) -- (grag1);
+      \draw[->] (graphrag) -- (grag2);
+      \draw[->] (graphrag) -- (grag3);
+      \draw[->] (memory) -- (mem1);
+      \draw[->] (memory) -- (mem2);
+      \draw[->] (memory) -- (mem3);
+    \end{tikzpicture}
+  \end{figure}
+
+  \vspace{0.3cm}
+
+  \begin{block}{两条技术路线}
     \begin{itemize}
-      \item Slack讨论、会议记录中的\textbf{例外逻辑}
-      \item 过去案例的\textbf{先例和审批背景}
-      \item 跨系统的综合信息（Salesforce + Zendesk + Slack）
-      \item 系统外的\textbf{审批链}和决策理由
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{设计逻辑与商业价值}
-    \begin{itemize}
-      \item 坐落在\textbf{执行路径}中，实时记录输入数据、策略、异常路径和审批人
-      \item 积累成为\textbf{可查询的先例库}
-      \item 让AI能够参考过去案例处理复杂边界情况
+      \item \textbf{图增强检索}：用图结构改进 RAG 的检索质量（偏向信息检索）
+      \item \textbf{Agent Memory}：为 Agent 构建可学习的经验系统（偏向智能体）
     \end{itemize}
   \end{block}
 \end{frame}
 
-\section{CGR³：增强知识表示与推理范式}
 \begin{frame}
-  \frametitle{CGR³：上下文图谱推理范式 \cite{xu2024cgr3}}
+  \frametitle{图增强检索：Microsoft GraphRAG \cite{microsoft2024graphrag}}
+
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \small
+      \begin{block}{核心问题}
+        传统 RAG 无法回答全局性问题：\\
+        "这个语料库在讨论什么主题？"
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{解决方案}
+        \begin{enumerate}
+          \item LLM 提取实体和关系
+          \item Leiden 算法社区检测
+          \item 分层生成社区摘要
+          \item 检索时结合局部+全局
+        \end{enumerate}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{实证结果 \cite{xiang2025graphragbench}}
+        多跳推理和全局摘要 \textbf{显著优于} 向量 RAG\\
+        但简单事实检索可能\textbf{不如}传统 RAG
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.54\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{graphrag.jpg}
+        \caption{GraphRAG 分层索引架构}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{图增强检索：CGR³ \cite{xu2024cgr3}}
 
   \begin{columns}[T]
     \begin{column}{0.38\textwidth}
       \small
-      \begin{block}{核心定义}
-        扩展传统三元组KG，融入\textbf{时空、来源}信息
+      \begin{block}{核心贡献}
+        扩展三元组 KG，融入\textbf{时空、来源}等上下文信息
       \end{block}
 
-      \vspace{0.3cm}
+      \vspace{0.2cm}
 
-      \begin{block}{CGR³范式}
+      \begin{block}{CGR³ 范式}
         \begin{enumerate}
-          \item \textbf{检索}：候选实体和上下文
-          \item \textbf{排序}：候选实体
-          \item \textbf{推理}：判断信息充足性
+          \item \textbf{Retrieve}：候选实体和上下文
+          \item \textbf{Rank}：基于上下文排序
+          \item \textbf{Reason}：判断信息是否充足
         \end{enumerate}
       \end{block}
 
-      \vspace{0.3cm}
+      \vspace{0.2cm}
 
-      \begin{block}{LLM的作用}
-        \begin{itemize}
-          \item 处理非结构化背景
-          \item 提升KGC和KGQA准确性
-        \end{itemize}
+      \begin{block}{关键发现}
+        上下文信息对 KG 补全和问答任务\textbf{至关重要}
       \end{block}
     \end{column}
 
@@ -145,7 +569,7 @@
       \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{cgr3.png}
-        \caption{传统三元组知识图谱的四个局限性}
+        \caption{传统三元组 KG 的四个局限性}
       \end{figure}
       \tiny
       (a) 上下文丢失导致矛盾 (b) 无法区分相同关系的不同事实 \\
@@ -154,557 +578,620 @@
   \end{columns}
 \end{frame}
 
-\section{Atlan：主动基础设施的元数据2.0}
 \begin{frame}
-  \frametitle{Atlan：元数据2.0 \cite{atlan2024context}}
+  \frametitle{图增强检索：其他代表性工作}
 
   \begin{columns}[T]
-    \begin{column}{0.42\textwidth}
-      \small
-      \begin{block}{定义}
-        融合\textbf{操作元数据、治理策略、决策追溯}的增强型KG
-      \end{block}
-
-      \vspace{0.3cm}
-
-      \begin{block}{关键组件}
-        \begin{enumerate}
-          \item 图数据库基础
-          \item 元数据捕获层
-          \item 语义富化层
-          \item 上下文激活层
-        \end{enumerate}
-      \end{block}
-
-      \vspace{0.3cm}
-
-      \begin{block}{核心优势}
-        支持\textbf{多跳遍历}，回答"为什么"和"哪些政策生效"
+    \begin{column}{0.32\textwidth}
+      \begin{block}{RAPTOR \cite{sarthi2024raptor}}
+        \small
+        \textbf{递归抽象处理}
+        \begin{itemize}
+          \item 文本块聚类
+          \item 生成层次化摘要树
+          \item QuALITY 基准提升 20\%
+        \end{itemize}
+        \vspace{0.1cm}
+        \tiny ICLR 2024, Stanford
       \end{block}
     \end{column}
 
-    \begin{column}{0.54\textwidth}
-      \begin{figure}
-        \centering
-        \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{atlan.jpg}
-        \caption{Atlan 元数据2.0 架构}
-      \end{figure}
+    \begin{column}{0.32\textwidth}
+      \begin{block}{Think-on-Graph \cite{sun2024tog}}
+        \small
+        \textbf{LLM$\otimes$KG 范式}
+        \begin{itemize}
+          \item LLM 作为代理探索 KG
+          \item 束搜索交互式推理
+          \item 9 个 KGQA 中 6 个 SOTA
+        \end{itemize}
+        \vspace{0.1cm}
+        \tiny ICLR 2024, IDEA Research
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{HippoRAG \cite{gutierrez2024hipporag}}
+        \small
+        \textbf{海马体索引理论}
+        \begin{itemize}
+          \item LLM + KG + PPR
+          \item 模仿人类长期记忆
+          \item 多跳 QA 提升 20\%
+        \end{itemize}
+        \vspace{0.1cm}
+        \tiny NeurIPS 2024, Ohio State
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.4cm}
+
+  \begin{alertblock}{共同趋势}
+    图结构 + LLM 推理能力的结合，各有侧重：层次摘要、交互探索、联想记忆
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Agent Memory：ExpeL \cite{zhao2024expel}}
+
+  \begin{block}{核心问题}
+    LLM Agent 如何在\textbf{不更新参数}的情况下从经验中学习？
+  \end{block}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{方法}
+        \begin{enumerate}
+          \item \textbf{经验收集}：Agent 与环境交互，存储成功/失败轨迹
+          \item \textbf{洞察提取}：用 LLM 从轨迹中提取高层规则
+          \item \textbf{推理调用}：检索相关洞察和过去经验辅助决策
+        \end{enumerate}
+      \end{block}
+
+      \begin{block}{关键发现（AAAI 2024）}
+        \begin{itemize}
+          \item HotpotQA：洞察更重要（36\% vs 31\%）
+          \item ALFWorld：轨迹回忆更重要（50\% vs 55\%）
+          \item 不同任务需要不同的记忆形式
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{启示}
+        \textbf{两种记忆形式}：
+        \begin{itemize}
+          \item 具体轨迹（episodic）
+          \item 抽象洞察（semantic）
+        \end{itemize}
+        \vspace{0.2cm}
+        Context Graph 需要同时支持这两种形式
+      \end{alertblock}
     \end{column}
   \end{columns}
 \end{frame}
 
-\section{FlexRule：对"决策考古学"的批判}
 \begin{frame}
-  \frametitle{FlexRule：批判性思考 \cite{flexrule2024critique}}
+  \frametitle{Agent Memory：A-Mem \cite{xu2025amem}}
+
+  \begin{block}{核心问题}
+    现有记忆系统结构固定，缺乏\textbf{动态自组织}能力
+  \end{block}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{Zettelkasten 方法}
+        \begin{enumerate}
+          \item 每个记忆单元生成结构化属性（关键词、标签、描述）
+          \item 分析历史记忆，建立语义关联链接
+          \item 新记忆可触发旧记忆的\textbf{属性更新}
+          \item 记忆网络持续演化
+        \end{enumerate}
+      \end{block}
+
+      \begin{block}{实验结果（NeurIPS 2025）}
+        \begin{itemize}
+          \item 复杂推理任务性能\textbf{翻倍}
+          \item Token 消耗显著降低
+          \item 6 个基础模型上均优于 SOTA
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{关键创新}
+        \textbf{Agentic Memory}：
+        \begin{itemize}
+          \item 记忆系统本身具有"代理性"
+          \item 主动组织、链接、更新
+          \item 而非被动存储-检索
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Agent Memory：可训练图记忆 \cite{xia2025trainable}}
+
+  \begin{block}{核心问题}
+    如何结合\textbf{隐式记忆}（可适应但不可解释）和\textbf{显式记忆}（可解释但难优化）？
+  \end{block}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{多层图记忆框架}
+        \begin{enumerate}
+          \item \textbf{底层}：状态机抽象 Agent 轨迹
+          \item \textbf{高层}：元认知策略（人类可读）
+          \item \textbf{优化}：基于 RL 的权重调整
+        \end{enumerate}
+      \end{block}
+
+      \begin{block}{创新点}
+        \begin{itemize}
+          \item 从原始轨迹提取结构化决策路径
+          \item 进一步蒸馏为高层策略
+          \item 根据任务反馈动态调整策略权重
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{对 Context Graph 的启示}
+        图结构需要：
+        \begin{itemize}
+          \item \textbf{多层次}：从具体到抽象
+          \item \textbf{可训练}：根据反馈优化
+          \item \textbf{可解释}：人类可理解
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Agent Memory 方法对比}
+
+  \small
+  \begin{tabular}{p{2.2cm}|p{1.8cm}|p{3.5cm}|p{2cm}|p{1.2cm}|p{1.3cm}}
+    \textbf{论文} & \textbf{核心问题} & \textbf{核心方法} & \textbf{记忆结构} & \textbf{可训练} & \textbf{发表} \\
+    \hline
+    ExpeL & 跨任务学习 & 提取 insights + 检索 & 列表 & \textcolor{red}{\ding{55}} & AAAI 24 \\
+    \hline
+    A-MEM & 记忆组织 & Zettelkasten 笔记网络 & 图（动态链接） & \textcolor{red}{\ding{55}} & NeurIPS 25 \\
+    \hline
+    Trainable Graph & 策略学习 & Meta-cognition + RL & 图（可训练权重） & \textcolor{darkgreen}{\ding{51}} & arXiv 25 \\
+    \hline
+    AgentDebug & 失败诊断 & 错误分类 + 根因定位 & N/A（诊断框架） & \textcolor{red}{\ding{55}} & arXiv 25 \\
+    \hline
+    AgentDiet & 效率优化 & 运行时轨迹压缩 & N/A（压缩方法） & \textcolor{red}{\ding{55}} & arXiv 25 \\
+  \end{tabular}
+
+  \vspace{0.3cm}
+
+  \begin{alertblock}{研究空白}
+    \begin{itemize}
+      \item 现有工作主要在通用 QA 任务验证，\textbf{Coding 场景几乎未探索}
+      \item 只有 Trainable Graph Memory 支持可训练，但未应用于代码任务
+    \end{itemize}
+  \end{alertblock}
+\end{frame}
+
+%==============================================================================
+\section{批判与反思}
+%==============================================================================
+
+\begin{frame}
+  \frametitle{FlexRule 的批判：决策考古学陷阱 \cite{flexrule2024critique}}
 
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \begin{alertblock}{设计缺陷}
-        单纯依赖历史决策轨迹：将\textbf{"先例误认为政策"}
+      \begin{alertblock}{核心批评}
+        单纯依赖历史轨迹 = 将\textbf{"先例误认为政策"}
       \end{alertblock}
 
-      \begin{block}{"决策考古学"陷阱}
+      \begin{block}{"决策考古学"问题}
         \begin{itemize}
-          \item 从历史归纳规则，非明确意图
-          \item 无法区分有效与无效逻辑
-          \item "先例黑箱"：只能说"统计相似"
+          \item 从历史归纳规则，而非明确意图
+          \item 无法区分有效逻辑 vs 错误决策
+          \item 只能说"统计相似"，不能说"应该"
         \end{itemize}
+      \end{block}
+
+      \begin{block}{隐喻}
+        轨迹是\textbf{"收据"}，不是\textbf{"食谱"}\\
+        收据告诉你买了什么，不告诉你怎么做菜
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
       \begin{block}{替代方案：决策中心法}
         \small
-        轨迹是\textbf{"收据"}，非\textbf{"食谱"}
-
-        \textbf{五层架构：}
         \begin{enumerate}
-          \item \textbf{意图层}：DMN/DDG显式定义决策逻辑
-          \item \textbf{流程层}：CDM管理决策触发时机
-          \item \textbf{输入层}：LiveContext提供决策就绪数据
-          \item \textbf{痕迹层}：事后捕获，仅用于审计和学习
-          \item \textbf{学习层}：显式优化，避免决策漂移
-        \end{enumerate}
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\section{i-SCOOP：信息的"结缔组织"}
-\begin{frame}
-  \frametitle{i-SCOOP：连接信息的结缔组织 \cite{iscoop2024context}}
-
-  \begin{block}{核心隐喻}
-    情境图谱捕捉信息中的\textbf{"结缔组织"}，将零散的组织知识转化为AI可以导航的逻辑路径
-  \end{block}
-
-  \begin{block}{技术洞察}
-    向LLM提供\textbf{Cypher或RDF}等结构化格式的语境，比简单的CSV效果更好
-    \begin{itemize}
-      \item \textbf{原因}：结构本身就承载了语义价值
-      \item 图结构明确表达了实体间的关系和依赖
-      \item 支持推理和逻辑导航
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{未来前沿：时间关系}
-    \begin{itemize}
-      \item \textbf{时间维度}是真理判定的下一前沿
-      \item 通过捕捉时间关系，AI可以判断信息是新鲜的还是陈旧的
-      \item 区分经过反复证实的知识 vs. 孤立的说法
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\section{TrustGraph：上下文工程与互操作性}
-\begin{frame}
-  \frametitle{TrustGraph：标准与实现视角 \cite{trustgraph2024manifesto}}
-
-  \begin{columns}[T]
-    \begin{column}{0.42\textwidth}
-      \small
-      \begin{block}{定义}
-        为AI优化的三元组数据表示
-      \end{block}
-
-      \vspace{0.3cm}
-
-      \begin{block}{技术选择}
-        \textbf{RDF栈}
-        \begin{itemize}
-          \item 形式化推理、互操作性
-          \item 适合监管环境
-        \end{itemize}
-
-        \vspace{0.2cm}
-
-        \textbf{属性图}
-        \begin{itemize}
-          \item 易理解、查询性能优秀
-          \item 适合应用开发
-        \end{itemize}
-      \end{block}
-
-      \vspace{0.3cm}
-
-      \begin{block}{范式转移}
-        LLM实现\textbf{动态本体}和语义网互操作性
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.54\textwidth}
-      \begin{figure}
-        \centering
-        \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{TrustGraph.jpg}
-        \caption{TrustGraph 架构与标准}
-      \end{figure}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\section{Microsoft GraphRAG}
-\begin{frame}
-  \frametitle{Microsoft GraphRAG：工程化路径 \cite{microsoft2024graphrag}}
-
-  \begin{columns}[T]
-    \begin{column}{0.42\textwidth}
-      \small
-      \begin{block}{核心痛点}
-        向量检索只看语义相似度，漏掉逻辑关联
-      \end{block}
-
-      \vspace{0.3cm}
-
-      \begin{block}{工程方法}
-        \begin{enumerate}
-          \item 实体提取与关系映射
-          \item Leiden/Louvain社区检测
-          \item 全局感知摘要
+          \item \textbf{意图层}：显式定义决策逻辑
+          \item \textbf{流程层}：管理决策触发时机
+          \item \textbf{输入层}：提供决策就绪数据
+          \item \textbf{痕迹层}：事后捕获，仅用于审计
+          \item \textbf{学习层}：显式优化，避免漂移
         \end{enumerate}
       \end{block}
 
-      \vspace{0.3cm}
-
-      \begin{block}{专用框架}
-        \begin{itemize}
-          \item \textbf{HopRAG}：多跳推理
-          \item \textbf{HippoRAG}：联想记忆
-          \item \textbf{GNN-RAG}：图神经网络
-        \end{itemize}
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.54\textwidth}
-      \begin{figure}
-        \centering
-        \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{graphrag.jpg}
-        \caption{Microsoft GraphRAG 架构}
-      \end{figure}
+      \begin{alertblock}{对研究的启示}
+        Context Graph 不能\textbf{只}存储历史轨迹\\
+        需要区分：\textbf{描述性}知识 vs \textbf{规范性}知识
+      \end{alertblock}
     \end{column}
   \end{columns}
 \end{frame}
 
-\section{Graph of Records}
 \begin{frame}
-  \frametitle{Graph of Records：长文本处理 \cite{zhang2025gor}}
+  \frametitle{现有方法的关键 Gap}
 
-  \begin{block}{针对长文本处理的变体}
-    特别优化了对长文本的全局理解
-  \end{block}
-
-  \begin{block}{方法论}
+  \begin{block}{Gap 1：图结构设计缺乏共识}
     \begin{itemize}
-      \item 为文本块创建节点
-      \item 为LLM生成的\textbf{模拟查询响应}创建节点
-      \item 通过查询指定的索引连接节点
+      \item 节点是什么？Action / State / Observation / Strategy？
+      \item 边表示什么？时序 / 因果 / 语义相似？
+      \item 粒度如何选择？细粒度 vs 抽象
     \end{itemize}
   \end{block}
 
-  \begin{block}{优势}
+  \begin{block}{Gap 2：从"记录"到"学习"的鸿沟}
     \begin{itemize}
-      \item 捕获元素之间的\textbf{复杂相关性}
-      \item 比简单拼接提供更全面的表示
-      \item 支持长文本的\textbf{全局摘要}
-      \item 保留文档内部的逻辑结构
+      \item 大多数工作停留在"存储-检索"范式
+      \item 如何从失败经验中\textbf{主动学习}？
+      \item 如何避免重复相同错误？
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Gap 3：领域特定应用的空白}
+    \begin{itemize}
+      \item 现有工作主要在通用 QA 任务上验证
+      \item Coding Agent 场景的 Context Graph 研究\textbf{几乎空白}
+      \item Bug 修复、漏洞检测等任务有独特的图结构需求
     \end{itemize}
   \end{block}
 \end{frame}
 
-\section{研究方向与实践应用}
+%==============================================================================
+\section{研究方向探索}
+%==============================================================================
 
 \begin{frame}
-  \frametitle{轨迹与过程取证 (Trajectory \& Process Forensics)}
+  \frametitle{Coding Agent 任务全景}
 
-  \begin{block}{核心理念}
-    关注智能体\textbf{如何}到达解决方案，而不仅仅是\textbf{是否}到达。将智能体的执行路径（轨迹）作为主要研究对象
-  \end{block}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{1. 代码生成 (Code Generation)}
+        \begin{itemize}
+          \item 函数/类生成 (HumanEval, MBPP)
+          \item 仓库级生成 (CodeAgentBench)
+          \item 跨文件功能实现
+        \end{itemize}
+      \end{block}
 
-  \begin{block}{三个关键研究方向}
-    \begin{enumerate}
-      \item \textbf{思维-行动一致性}：研究智能体的内部推理轨迹（CoT）是否与外部工具使用相符
-      \begin{itemize}
-        \item 常见失败：计划"检查文件大小"，实际执行 \texttt{rm -rf} 命令
-      \end{itemize}
+      \begin{block}{2. Bug 修复 (Issue Resolution)}
+        \begin{itemize}
+          \item GitHub Issue 修复 (\textbf{SWE-bench})
+          \item 自动程序修复 (APR)
+          \item 回归修复
+        \end{itemize}
+      \end{block}
 
-      \item \textbf{循环检测与停滞分析}：检测"语义循环"，智能体反复运行相同失败测试或编辑同一文件而无进展
+      \begin{block}{3. 漏洞检测与修复}
+        \begin{itemize}
+          \item 安全漏洞发现 (CodeMender, Spark)
+          \item 漏洞根因分析
+          \item 补丁生成
+        \end{itemize}
+      \end{block}
+    \end{column}
 
-      \item \textbf{分步效率（轨迹评分）}：为每一步分配成本，计算"最小可行轨迹"——修复错误的理论最短路径
-    \end{enumerate}
-  \end{block}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{4. 测试生成 (Test Generation)}
+        \begin{itemize}
+          \item 单元测试生成 (SWT-Bench)
+          \item Fuzz 测试用例生成
+          \item 测试覆盖率提升
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{5. 代码审查 (Code Review)}
+        \begin{itemize}
+          \item PR 审查 (Qodo, CodeRabbit)
+          \item 代码质量检查
+          \item 风格一致性检查
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{6. 代码理解与导航}
+        \begin{itemize}
+          \item 代码库问答
+          \item 依赖分析
+          \item 文档生成
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Context Graph 的定位}
+  \frametitle{主任务选择：Bug 修复（SWE-bench）}
 
-  \begin{block}{Agent 的核心组成}
-    Agent = LLM + 工具调用能力 + 循环执行
-  \end{block}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{为什么选择 Bug 修复？}
+        \begin{itemize}
+          \item 目前\textbf{最主流、最有挑战性}的 Coding Agent 任务
+          \item 有成熟的 benchmark (SWE-bench) 和 leaderboard
+          \item 与漏洞检测相关：很多 issue 本身就是 bug/vulnerability
+        \end{itemize}
+      \end{block}
 
-  \begin{block}{为什么需要 Context Graph？}
-    \begin{itemize}
-      \item Agent 需要记住过去的经验 → 需要 \textbf{Memory}
-      \item Memory = 存储 Agent 的历史信息，在需要时检索出来
-      \item \textbf{Context Graph = 用图结构组织 Agent 的经验}
-    \end{itemize}
-  \end{block}
+      \begin{block}{Context Graph 要提升的三个指标}
+        \begin{enumerate}
+          \item \textbf{成功率 (Resolved Rate)}
+          \begin{itemize}
+            \item 问题：Agent 经常在同类问题上重复失败
+            \item CG 作用：记录失败模式，避免重蹈覆辙
+          \end{itemize}
+          \item \textbf{效率 (Token/Cost)}
+          \begin{itemize}
+            \item 问题：解决一个 issue 需要大量 token
+            \item CG 作用：Trajectory Reduction，压缩历史
+          \end{itemize}
+          \item \textbf{持续学习 (Continual Learning)}
+          \begin{itemize}
+            \item 问题：每次任务从零开始，不会积累
+            \item CG 作用：跨任务知识迁移
+          \end{itemize}
+        \end{enumerate}
+      \end{block}
+    \end{column}
 
-  \begin{block}{核心优势}
-    将多模态的非结构化决策过程（会议讨论、工具调用、失败尝试）转化为结构化的图记忆，支持复杂推理和经验学习
-  \end{block}
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{关键问题}
+        现有 Agent 可以回答：
+        \begin{itemize}
+          \item 为什么之前失败？\\
+                \textcolor{gray}{\small 因为项目用 gradle 不用 maven}
+          \item 正确流程是什么？\\
+                \textcolor{gray}{\small 图上清晰展示}
+          \item 哪条路径最可靠？\\
+                \textcolor{gray}{\small 看边的成功率}
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
-  \frametitle{相关工作 (1/2)}
+  \frametitle{方向 1：Bug 修复中的失败学习}
 
-  \begin{block}{ExpeL (AAAI 2024) \cite{zhao2024expel}}
-    \textbf{主要目的}：解决 LLM Agent 无法跨任务学习的问题
-    \begin{itemize}
-      \item 自主收集经验并使用自然语言提取知识
-      \item 推理时调用提取的洞察和过去经验
-    \end{itemize}
+  \begin{block}{问题设定}
+    Coding Agent 在修复 Bug 时经常陷入循环：反复尝试相同失败方案
   \end{block}
 
-  \begin{block}{A-Mem (NeurIPS 2025) \cite{xu2025amem}}
-    \textbf{主要目的}：解决现有 Memory 系统的组织结构问题
-    \begin{itemize}
-      \item 传统 RAG 只是简单的存储-检索，缺乏组织
-      \item 现有 graph 方案结构固定，适应性差
-      \item 需要能\textbf{动态自组织}的记忆系统
-      \item 采用 Zettelkasten 方法构建互联知识网络
-    \end{itemize}
-  \end{block}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{Context Graph 的作用}
+        \begin{enumerate}
+          \item 存储每次修复尝试（成功和失败）
+          \item 记录失败原因和错误类型
+          \item 建立 Bug 模式 $\rightarrow$ 修复策略的映射
+          \item 检索时优先排除已知失败路径
+        \end{enumerate}
+      \end{block}
+
+      \begin{block}{相关工作}
+        \cite{zhu2025fail} 提出 AgentErrorTaxonomy，\\
+        但未结合图结构进行经验组织
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{研究问题}
+        \begin{itemize}
+          \item 如何表示"失败原因"？
+          \item 如何判断两个 Bug 是否相似？
+          \item 如何从失败中提取可迁移的洞察？
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
-  \frametitle{相关工作 (2/2)}
+  \frametitle{方向 2：漏洞检测（备选）}
 
-  \begin{block}{可训练图记忆 (arXiv 2025) \cite{xia2025trainable}}
-    \textbf{主要目的}：解决现有经验学习方法的两个核心问题
-    \begin{enumerate}
-      \item \textbf{隐式记忆}（训练）：灾难性遗忘 + 不可解释
-      \item \textbf{显式记忆}（prompting）：缺乏适应性 + 无法评估策略好坏
-    \end{enumerate}
-    \textbf{目标}：构建可训练的图记忆，结合两者优点
-    \begin{itemize}
-      \item 多层图记忆框架：状态机 + 元认知策略
-      \item 基于强化学习的权重优化
-    \end{itemize}
+  \begin{block}{Bug 修复 vs 漏洞检测：关键差异}
+    \small
+    \begin{tabular}{p{2cm}|p{4.5cm}|p{4.5cm}}
+      \textbf{维度} & \textbf{Bug 修复 (SWE-bench)} & \textbf{漏洞检测} \\
+      \hline
+      任务起点 & 已知 Issue 描述 & 未知，需要主动发现 \\
+      \hline
+      目标 & 让测试通过 & 发现+定位+验证漏洞 \\
+      \hline
+      评估标准 & Resolved Rate & 检测率 + 误报率 + 定位精度 \\
+      \hline
+      知识依赖 & 项目代码逻辑 & 安全知识 (CWE/CVE/OWASP) \\
+      \hline
+      验证方式 & 单元测试通过 & PoC/Exploit 验证 \\
+      \hline
+      容错性 & 较高（可多次尝试） & 较低（误报代价高） \\
+      \hline
+      工具链 & 读/写文件、运行测试 & 静态分析、动态分析、Fuzzing \\
+    \end{tabular}
   \end{block}
 
-  \begin{block}{失败学习 (arXiv 2025) \cite{zhu2025fail}}
-    研究 LLM Agent 在哪里失败以及如何从失败中学习
+  \begin{alertblock}{为什么 Bug 修复优先？}
     \begin{itemize}
-      \item 提出 AgentErrorTaxonomy 错误分类体系
-      \item AgentErrorBench 失败轨迹数据集
-      \item AgentDebug 调试框架，24\%准确率提升
+      \item 评测基准成熟（SWE-bench），便于验证 Context Graph 效果
+      \item 漏洞检测相关研究\textbf{几乎空白}，可作为后续方向
     \end{itemize}
-  \end{block}
+  \end{alertblock}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Coding Agent 任务分类}
-
-  \begin{block}{Context Graph 在编程任务中的应用}
-    用 Context Graph 解决/优化 Coding Agent 的什么方面？
-  \end{block}
-
-  \begin{block}{主要任务类型}
-    \begin{enumerate}
-      \item \textbf{代码生成}：从自然语言描述生成代码
-      \item \textbf{Bug 修复}：识别和修复代码中的错误
-      \item \textbf{代码重构}：改进代码结构而不改变功能
-      \item \textbf{漏洞检测}：发现代码中的安全漏洞
-      \item \textbf{代码理解}：分析和解释现有代码
-    \end{enumerate}
-  \end{block}
-\end{frame}
+%==============================================================================
+\section{开放问题}
+%==============================================================================
 
 \begin{frame}
-  \frametitle{研究方向 1：Bug 修复}
-
-  \begin{block}{为什么选择 Bug 修复？}
-    Context Graph 的独特优势：
-    \begin{itemize}
-      \item \textbf{历史失败经验}：记录过去的失败尝试和原因
-      \item \textbf{调试轨迹}：追踪 Bug 修复过程中的思维链和工具调用
-      \item \textbf{相似问题模式}：通过图结构快速检索类似 Bug 的解决方案
-      \item \textbf{多步推理}：Bug 修复通常需要多轮迭代，Context Graph 支持复杂的多跳推理
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{如何使用 Context Graph}
-    \begin{enumerate}
-      \item 将每次修复尝试（成功和失败）存储为图节点
-      \item 建立节点间的关系：因果关系、时间序列、相似性
-      \item 从历史经验中学习最优修复策略
-      \item 避免重复失败的路径
-    \end{enumerate}
-  \end{block}
-\end{frame}
-
-\begin{frame}
-  \frametitle{研究方向 2：漏洞检测 (Vulnerability Detection)}
-
-  \begin{block}{Context Graph 在漏洞检测中的应用}
-    \begin{itemize}
-      \item \textbf{漏洞模式库}：构建已知漏洞的图结构表示
-      \item \textbf{代码依赖分析}：追踪数据流和控制流
-      \item \textbf{跨文件推理}：检测跨多个文件的复杂漏洞
-      \item \textbf{历史漏洞学习}：从过去的漏洞中提取模式
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{潜在研究问题}
-    \begin{itemize}
-      \item 如何有效表示代码中的安全模式？
-      \item 如何在图中编码时序和数据流信息？
-      \item 如何从历史漏洞中泛化到新的漏洞类型？
-      \item 如何减少误报率？
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}
-  \frametitle{开放问题与潜在方向}
-
-  \begin{block}{技术挑战}
-    \begin{enumerate}
-      \item \textbf{图结构设计}：如何设计最优的图模式来表示编程经验？
-      \item \textbf{动态更新}：如何高效地更新和维护大规模的 Context Graph？
-      \item \textbf{检索效率}：如何在大规模图中快速检索相关经验？
-      \item \textbf{知识泛化}：如何从特定任务的经验泛化到新任务？
-    \end{enumerate}
-  \end{block}
-
-  \begin{block}{应用方向}
-    \begin{itemize}
-      \item 自动化软件工程工具
-      \item 智能代码审查系统
-      \item 持续学习的编程助手
-      \item 软件安全分析平台
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}
-  \frametitle{\Large Context Graph 的 \colorbox{highlightyellow}{\textbf{Open Problems (Potential Directions)}}}
-
-  \vspace{0.2cm}
+  \frametitle{Open Problems}
 
   \begin{columns}[t]
     % --- 第一栏：基础设计问题 ---
     \begin{column}{0.32\textwidth}
-      \textbf{\textcolor{dotred}{\large $\bullet$} 基础设计问题}
+      \textbf{\textcolor{dotred}{\large $\bullet$} 图结构设计}
       \vspace{0.1cm}
       \hrule height 1pt
       \vspace{0.2cm}
 
       \footnotesize
-      \textbf{Q1: 节点应该是什么？}
+      \textbf{Q1: 节点粒度}
       \begin{itemize}
-        \item Action? State? Observation? 抽象的 Strategy?
+        \item 每个 action 一个节点？
+        \item 还是抽象成高层策略？
       \end{itemize}
 
       \vspace{0.15cm}
 
-      \textbf{Q2: 边应该表示什么？}
+      \textbf{Q2: 边的语义}
       \begin{itemize}
-        \item 时序？因果？语义相似？多种混合？
+        \item 时序？因果？语义相似？
+        \item 如何混合多种关系？
       \end{itemize}
 
       \vspace{0.15cm}
 
-      \textbf{Q3: 图的粒度？}
+      \textbf{Q3: 动态更新}
       \begin{itemize}
-        \item 每个action一个节点？还是抽象成高层策略？
+        \item 如何处理图的持续增长？
+        \item 如何遗忘过时信息？
       \end{itemize}
     \end{column}
 
     % --- 第二栏：优化问题 ---
     \begin{column}{0.32\textwidth}
-      \vspace{1.2cm}
-
-      \textbf{\textcolor{dotyellow}{\large $\bullet$} 优化问题}
+      \textbf{\textcolor{dotyellow}{\large $\bullet$} 学习与优化}
       \vspace{0.1cm}
       \hrule height 1pt
       \vspace{0.2cm}
 
       \footnotesize
-      \textbf{Q4: 如何高效检索？}
+      \textbf{Q4: 检索效率}
       \begin{itemize}
-        \item 图太大时如何快速找到相关子图？
+        \item 图太大时如何快速定位？
+        \item 子图检索 vs 全图遍历？
       \end{itemize}
 
       \vspace{0.15cm}
 
-      \textbf{Q5: 如何更新权重？}
+      \textbf{Q5: 权重学习}
       \begin{itemize}
-        \item 用RL？监督学习？启发式规则？
+        \item 用 RL？监督学习？
+        \item 如何定义奖励信号？
       \end{itemize}
 
       \vspace{0.15cm}
 
-      \textbf{Q6: 探索vs利用？}
+      \textbf{Q6: 探索 vs 利用}
       \begin{itemize}
-        \item 过于依赖历史可能错过新方案
+        \item 过于依赖历史会错过新方案
+        \item 如何平衡？
       \end{itemize}
     \end{column}
 
     % --- 第三栏：应用问题 ---
     \begin{column}{0.32\textwidth}
-      \vspace{2.4cm}
-
-      \textbf{\large $\circ$ 应用问题}
+      \textbf{\large $\circ$ Coding 场景}
       \vspace{0.1cm}
       \hrule height 1pt
       \vspace{0.2cm}
 
       \footnotesize
-      \textbf{Q7: 如何迁移到新领域？}
+      \textbf{Q7: Bug 表示}
       \begin{itemize}
-        \item QA上的图能用于Coding吗？
+        \item 如何编码 Bug 的语义特征？
+        \item 如何判断 Bug 相似性？
       \end{itemize}
 
       \vspace{0.15cm}
 
-      \textbf{Q8: 如何与诊断结合？}
+      \textbf{Q8: 代码变化}
       \begin{itemize}
-        \item 失败经验如何存入图？
+        \item 代码库更新后图如何同步？
+        \item 历史经验是否仍有效？
       \end{itemize}
 
       \vspace{0.15cm}
 
-      \textbf{Q9: 安全场景应用？}
+      \textbf{Q9: 评估指标}
       \begin{itemize}
-        \item 漏洞检测等完全空白！
+        \item 如何衡量 Context Graph 的价值？
+        \item 超越 pass@k 的指标？
       \end{itemize}
     \end{column}
   \end{columns}
 \end{frame}
 
+%==============================================================================
 \section{总结}
+%==============================================================================
+
 \begin{frame}
-  \frametitle{文献整理：12个来源分类}
+  \frametitle{文献分类}
 
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \begin{block}{专门研究 Context Graph (8篇)}
+      \begin{block}{图增强检索（GraphRAG 系列）}
         \small
-        \begin{enumerate}
-          \item \textbf{Foundation Capital} \cite{foundationcapital2024context}
-          \begin{itemize}
-            \item 万亿美元机遇
-            \item 捕获决策轨迹
-          \end{itemize}
+        \begin{itemize}
+          \item \textbf{GraphRAG} \cite{microsoft2024graphrag}：社区检测+分层摘要
+          \item \textbf{RAPTOR} \cite{sarthi2024raptor}：递归抽象摘要树
+          \item \textbf{Think-on-Graph} \cite{sun2024tog}：LLM$\otimes$KG 交互
+          \item \textbf{HippoRAG} \cite{gutierrez2024hipporag}：海马体索引
+          \item \textbf{CGR³} \cite{xu2024cgr3}：上下文增强 KG
+          \item \textbf{GoR} \cite{zhang2025gor}：长文本处理
+        \end{itemize}
+      \end{block}
 
-          \item \textbf{CGR³} \cite{xu2024cgr3}
-          \begin{itemize}
-            \item 推理范式
-            \item 融入时空上下文
-          \end{itemize}
-
-          \item \textbf{Atlan} \cite{atlan2024context}
-          \begin{itemize}
-            \item 元数据2.0
-            \item 架构指南
-          \end{itemize}
-
-          \item \textbf{FlexRule} \cite{flexrule2024critique}
-          \begin{itemize}
-            \item 批判视角
-            \item 决策中心法
-          \end{itemize}
-        \end{enumerate}
+      \begin{block}{产业视角与评测}
+        \small
+        \begin{itemize}
+          \item Foundation Capital \cite{foundationcapital2024context}：商业叙事
+          \item Atlan \cite{atlan2024context}：架构指南
+          \item FlexRule \cite{flexrule2024critique}：批判视角
+          \item GraphRAG-Bench \cite{xiang2025graphragbench}：评测基准
+        \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{\phantom{专门研究 Context Graph}}
+      \begin{block}{Agent Memory 系统}
         \small
         \begin{enumerate}
-          \setcounter{enumi}{4}
-          \item \textbf{i-SCOOP} \cite{iscoop2024context}
+          \item \textbf{ExpeL} \cite{zhao2024expel} (AAAI 2024)
           \begin{itemize}
-            \item 结缔组织隐喻
-            \item 结构即语义
+            \item 经验学习，洞察提取
           \end{itemize}
 
-          \item \textbf{TrustGraph} \cite{trustgraph2024manifesto}
+          \item \textbf{A-Mem} \cite{xu2025amem} (NeurIPS 2025)
           \begin{itemize}
-            \item 标准化
-            \item LLM时代语义网
+            \item Zettelkasten 动态自组织
           \end{itemize}
 
-          \item \textbf{Microsoft GraphRAG} \cite{microsoft2024graphrag}
+          \item \textbf{可训练图记忆} \cite{xia2025trainable}
           \begin{itemize}
-            \item 工程化实现
-            \item 分层聚类
+            \item 多层图 + RL 优化
           \end{itemize}
 
-          \item \textbf{Graph of Records} \cite{zhang2025gor}
+          \item \textbf{失败学习} \cite{zhu2025fail}
           \begin{itemize}
-            \item ACL 2025
-            \item 长文本处理
+            \item 错误分类与调试框架
           \end{itemize}
         \end{enumerate}
       \end{block}
@@ -713,83 +1200,30 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{文献整理：Agent Memory 相关工作 (4篇)}
+  \frametitle{总结与下一步}
 
-  \begin{block}{与 Context Graph 相关的研究}
+  \begin{block}{核心观点}
+    \begin{itemize}
+      \item Context Graph = 图结构 + 决策痕迹 + 动态学习
+      \item 学术（GraphRAG）和产业（决策追踪）是同一技术栈的不同视角
+      \item Coding Agent 是一个有价值但尚未充分探索的应用领域
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{潜在研究方向}
     \begin{enumerate}
-      \item \textbf{ExpeL (AAAI 2024)} \cite{zhao2024expel}
-      \begin{itemize}
-        \item 经验学习，跨任务知识迁移
-        \item 自主提取洞察和经验
-      \end{itemize}
-
-      \item \textbf{A-Mem (NeurIPS 2025)} \cite{xu2025amem}
-      \begin{itemize}
-        \item 动态自组织记忆系统
-        \item Zettelkasten 方法构建知识网络
-      \end{itemize}
-
-      \item \textbf{可训练图记忆} \cite{xia2025trainable}
-      \begin{itemize}
-        \item 多层图记忆框架：状态机 + 元认知
-        \item 强化学习优化，结合隐式和显式记忆
-      \end{itemize}
-
-      \item \textbf{失败学习} \cite{zhu2025fail}
-      \begin{itemize}
-        \item AgentErrorTaxonomy 错误分类
-        \item AgentDebug 框架，24\%准确率提升
-      \end{itemize}
+      \item \textbf{失败学习}：从 Bug 修复失败中构建可迁移的经验图
+      \item \textbf{代码理解}：融合代码结构与探索轨迹的 Context Graph
     \end{enumerate}
   \end{block}
-\end{frame}
 
-\begin{frame}
-  \frametitle{核心价值与未来方向}
-
-  \begin{block}{Context Graph 的核心价值}
-    将多模态非结构化决策过程转化为AI可理解、可推理的图结构记忆
-  \end{block}
-
-  \begin{block}{两类研究的关系}
+  \begin{alertblock}{需要进一步明确}
     \begin{itemize}
-      \item \textbf{Context Graph}：提供理论框架和技术基础
-      \item \textbf{Agent Memory}：探索具体实现和应用场景
-      \item \textbf{协同发展}：图结构 + 动态学习 + 失败恢复
+      \item 具体的研究问题和假设
+      \item 实验设计和评估方法
+      \item 与现有工作的差异化定位
     \end{itemize}
-  \end{block}
-
-  \begin{block}{未来研究方向}
-    \begin{itemize}
-      \item 图结构优化：动态更新、高效检索
-      \item 知识泛化：从特定任务到通用能力
-      \item 实际应用：Bug修复、漏洞检测、代码生成
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}
-  \frametitle{实践应用方向}
-
-  \begin{block}{轨迹与过程取证}
-    \begin{itemize}
-      \item 思维-行动一致性检验
-      \item 循环检测与停滞分析
-      \item 分步效率评估与优化
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{Coding Agent 应用}
-    \begin{itemize}
-      \item \textbf{Bug 修复}：利用历史经验和调试轨迹
-      \item \textbf{漏洞检测}：构建漏洞模式库和跨文件推理
-      \item \textbf{持续学习}：从失败中学习，避免重复错误
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{开放研究问题}
-    图结构设计、动态更新、检索效率、知识泛化
-  \end{block}
+  \end{alertblock}
 \end{frame}
 
 % biblatex bibliography
