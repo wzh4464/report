@@ -125,30 +125,6 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{从"存储数据"到"记录决策"}
-
-  \begin{block}{传统系统的局限}
-    CRM、ERP 等系统只记录\textbf{最终状态}：一笔订单以 40\% 折扣成交
-    \begin{itemize}
-      \item 但不记录：VP \textbf{为什么}批准这个折扣？基于什么先例？
-      \item 决策过程散落在 Slack、会议记录、邮件中，随员工离职而消失
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{AI Agent 的记忆需求}
-    \begin{itemize}
-      \item Agent = LLM + 工具调用 + 循环执行
-      \item 复杂任务需要 Agent 记住：过去的尝试、失败原因、成功策略
-      \item \textbf{核心问题}：如何有效组织和检索 Agent 的历史经验？
-    \end{itemize}
-  \end{block}
-
-  \begin{alertblock}{两个平行的需求}
-    \textbf{企业侧}：捕获人类决策过程 $\longleftrightarrow$ \textbf{Agent 侧}：组织 Agent 执行轨迹
-  \end{alertblock}
-\end{frame}
-
-\begin{frame}
   \frametitle{现有方法的不足}
 
   \begin{columns}[T]
@@ -233,135 +209,59 @@
 
   \vspace{0.3cm}
 
-  \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{与传统 KG 的区别}
-        \small
-        \begin{tabular}{p{2cm}|p{3.5cm}}
-          \textbf{维度} & \textbf{Context Graph} \\
-          \hline
-          设计目标 & AI 模型消费 \\
-          核心要素 & 实体+关系+\textbf{决策事件} \\
-          时间处理 & 双时态（有效时间+事务时间） \\
-          溯源机制 & 核心组件 \\
-        \end{tabular}
-      \end{block}
-    \end{column}
+  \begin{block}{与传统 KG 的区别}
+    \small
+    \begin{tabular}{p{2.2cm}|p{4cm}|p{4.5cm}}
+      \textbf{维度} & \textbf{传统 KG} & \textbf{Context Graph} \\
+      \hline
+      设计目标 & 人类专家查询 & AI 模型消费 \\
+      核心要素 & 实体 + 关系 & 实体 + 关系 + \textbf{决策事件} \\
+      时间处理 & 无或单时态 & 双时态（有效时间+事务时间） \\
+      溯源机制 & 可选 & \textbf{核心组件} \\
+      更新方式 & 批量导入 & 实时/增量更新 \\
+    \end{tabular}
+  \end{block}
 
-    \begin{column}{0.48\textwidth}
-      \begin{block}{技术定位}
-        \begin{itemize}
-          \item \textbf{学术视角}：GraphRAG 的算法创新
-          \item \textbf{产业视角}：决策痕迹捕获平台
-          \item \textbf{Agent 视角}：结构化的经验记忆
-        \end{itemize}
-        \vspace{0.2cm}
-        \small
-        三个视角指向\textbf{同一技术栈}，切入点不同
-      \end{block}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}
-  \frametitle{GraphRAG vs Context Graph：概念辨析}
-
-  \begin{alertblock}{核心论点}
-    \textbf{GraphRAG 是检索技术，Context Graph 是企业架构愿景}。两者共享"图"结构，但解决的问题层次不同
-  \end{alertblock}
-
-  \vspace{0.2cm}
-
-  \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{GraphRAG（技术层）}
-        \small
-        \begin{itemize}
-          \item \textbf{目标}：改进 LLM 检索质量
-          \item \textbf{输入}：静态文档语料库
-          \item \textbf{输出}：增强的上下文
-          \item \textbf{局限}：
-          \begin{itemize}
-            \scriptsize
-            \item 离线批处理，非实时
-            \item 单一数据源
-            \item 不处理时态变化
-            \item 不捕获决策过程
-          \end{itemize}
-        \end{itemize}
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.48\textwidth}
-      \begin{block}{Context Graph（愿景层）}
-        \small
-        \begin{itemize}
-          \item \textbf{目标}：捕获跨系统决策上下文
-          \item \textbf{输入}：6-10 个业务系统实时状态
-          \item \textbf{输出}：决策依据链
-          \item \textbf{新增}：
-          \begin{itemize}
-            \scriptsize
-            \item 决策事件、政策节点
-            \item 双时态建模
-            \item 先例链接、溯源机制
-          \end{itemize}
-        \end{itemize}
-      \end{block}
-    \end{column}
-  \end{columns}
-
-  \vspace{0.2cm}
-
-  \begin{block}{关系类比}
-    GraphRAG 之于 Context Graph $\approx$ TCP/IP 之于互联网：\textbf{关键技术组件}，但完整实现需要更多系统工程
+  \begin{block}{技术定位}
+    \small
+    \textbf{学术视角}：GraphRAG 算法创新 \quad
+    \textbf{产业视角}：决策痕迹捕获 \quad
+    \textbf{Agent 视角}：结构化经验记忆
   \end{block}
 \end{frame}
 
 \begin{frame}
-  \frametitle{从 GraphRAG 到 Context Graph：五个关键 Gap}
+  \frametitle{GraphRAG vs Context Graph}
 
-  \small
-  \begin{tabular}{p{0.8cm}|p{3.8cm}|p{4cm}|p{2.8cm}}
-    \textbf{Gap} & \textbf{GraphRAG 现状} & \textbf{Context Graph 需求} & \textbf{差距性质} \\
+  \begin{alertblock}{核心论点}
+    \textbf{GraphRAG 是检索技术，Context Graph 是架构愿景}。两者共享"图"结构，但解决不同层次的问题
+  \end{alertblock}
+
+  \vspace{0.1cm}
+
+  \footnotesize
+  \begin{tabular}{p{2.2cm}|p{4.5cm}|p{4.8cm}}
+    \textbf{维度} & \textbf{GraphRAG} & \textbf{Context Graph} \\
     \hline
-    \textbf{1} & 批量索引，小时/天级延迟 & 实时同步，秒级延迟 & 架构性 \\
+    定位 & 检索技术 & 架构愿景 \\
     \hline
-    \textbf{2} & 实体 + 关系（知识事实） & + 决策事件 + 政策节点 & 本体论 \\
+    目标 & 改进 LLM 检索质量 & 捕获决策上下文 \\
     \hline
-    \textbf{3} & 单一文档库 & 6-10 个异构系统 & 集成复杂度 \\
+    数据源 & 静态文档语料库 & 多系统实时状态 \\
     \hline
-    \textbf{4} & 静态快照 & 双时态（T\_valid + T\_tx） & 时态建模 \\
+    时态处理 & 静态快照 & 双时态（有效时间+事务时间） \\
     \hline
-    \textbf{5} & 返回相关文档片段 & 返回决策依据链 & 解释性 \\
+    输出 & 相关文档片段 & 决策依据链 \\
+    \hline
+    成熟度 & \textcolor{darkgreen}{2024-2025 学术验证充分} & \textcolor{red}{需要架构层面重新设计} \\
   \end{tabular}
 
-  \vspace{0.3cm}
+  \vspace{0.2cm}
 
-  \begin{columns}[T]
-    \begin{column}{0.55\textwidth}
-      \begin{alertblock}{关键判断}
-        \footnotesize
-        \begin{itemize}
-          \item \textbf{GraphRAG 已成熟}：2024-2025 学术界充分验证
-          \item \textbf{Context Graph 待解决}：需要架构层面重新设计
-          \item \textbf{真正瓶颈}：57\% 公司数据未准备好支持 AI
-        \end{itemize}
-      \end{alertblock}
-    \end{column}
-
-    \begin{column}{0.42\textwidth}
-      \begin{block}{研究机会}
-        \footnotesize
-        \begin{itemize}
-          \item 决策事件本体论
-          \item 双时态图高效实现
-          \item 跨系统实体解析
-          \item 决策链提取与生成
-        \end{itemize}
-      \end{block}
-    \end{column}
-  \end{columns}
+  \normalsize
+  \begin{block}{关系类比}
+    GraphRAG 之于 Context Graph $\approx$ TCP/IP 之于互联网：\textbf{关键技术组件}，完整实现需要更多系统工程
+  \end{block}
 \end{frame}
 
 \begin{frame}
@@ -779,79 +679,42 @@
   \end{alertblock}
 \end{frame}
 
-%==============================================================================
-\section{批判与反思}
-%==============================================================================
-
 \begin{frame}
-  \frametitle{FlexRule 的批判：决策考古学陷阱 \cite{flexrule2024critique}}
+  \frametitle{现有方法的关键 Gap 与批判}
 
   \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \begin{alertblock}{核心批评}
-        单纯依赖历史轨迹 = 将\textbf{"先例误认为政策"}
-      \end{alertblock}
-
-      \begin{block}{"决策考古学"问题}
-        \begin{itemize}
-          \item 从历史归纳规则，而非明确意图
-          \item 无法区分有效逻辑 vs 错误决策
-          \item 只能说"统计相似"，不能说"应该"
-        \end{itemize}
+    \begin{column}{0.58\textwidth}
+      \begin{block}{Gap 1：图结构设计缺乏共识}
+        \footnotesize
+        节点是什么？边表示什么？粒度如何选择？
       \end{block}
 
-      \begin{block}{隐喻}
-        轨迹是\textbf{"收据"}，不是\textbf{"食谱"}\\
-        收据告诉你买了什么，不告诉你怎么做菜
+      \begin{block}{Gap 2：从"记录"到"学习"的鸿沟}
+        \footnotesize
+        大多数工作停留在"存储-检索"范式，无法主动学习
+      \end{block}
+
+      \begin{block}{Gap 3：领域特定应用的空白}
+        \footnotesize
+        现有工作主要在通用 QA 验证，\textbf{Coding 场景几乎空白}
       \end{block}
     \end{column}
 
-    \begin{column}{0.48\textwidth}
-      \begin{block}{替代方案：决策中心法}
-        \small
-        \begin{enumerate}
-          \item \textbf{意图层}：显式定义决策逻辑
-          \item \textbf{流程层}：管理决策触发时机
-          \item \textbf{输入层}：提供决策就绪数据
-          \item \textbf{痕迹层}：事后捕获，仅用于审计
-          \item \textbf{学习层}：显式优化，避免漂移
-        \end{enumerate}
-      \end{block}
+    \begin{column}{0.38\textwidth}
+      \begin{alertblock}{FlexRule 批判 \cite{flexrule2024critique}}
+        \footnotesize
+        单纯依赖历史轨迹 = 将\textbf{"先例误认为政策"}
 
-      \begin{alertblock}{对研究的启示}
-        Context Graph 不能\textbf{只}存储历史轨迹\\
-        需要区分：\textbf{描述性}知识 vs \textbf{规范性}知识
+        \vspace{0.1cm}
+
+        轨迹是\textbf{"收据"}，不是\textbf{"食谱"}
+
+        \vspace{0.1cm}
+
+        \textbf{启示}：Context Graph 需区分\textbf{描述性} vs \textbf{规范性}知识
       \end{alertblock}
     \end{column}
   \end{columns}
-\end{frame}
-
-\begin{frame}
-  \frametitle{现有方法的关键 Gap}
-
-  \begin{block}{Gap 1：图结构设计缺乏共识}
-    \begin{itemize}
-      \item 节点是什么？Action / State / Observation / Strategy？
-      \item 边表示什么？时序 / 因果 / 语义相似？
-      \item 粒度如何选择？细粒度 vs 抽象
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{Gap 2：从"记录"到"学习"的鸿沟}
-    \begin{itemize}
-      \item 大多数工作停留在"存储-检索"范式
-      \item 如何从失败经验中\textbf{主动学习}？
-      \item 如何避免重复相同错误？
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{Gap 3：领域特定应用的空白}
-    \begin{itemize}
-      \item 现有工作主要在通用 QA 任务上验证
-      \item Coding Agent 场景的 Context Graph 研究\textbf{几乎空白}
-      \item Bug 修复、漏洞检测等任务有独特的图结构需求
-    \end{itemize}
-  \end{block}
 \end{frame}
 
 %==============================================================================
@@ -1004,35 +867,39 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{方向 2：漏洞检测（备选）}
+  \frametitle{备选方向：漏洞检测}
 
-  \begin{block}{Bug 修复 vs 漏洞检测：关键差异}
-    \small
-    \begin{tabular}{p{2cm}|p{4.5cm}|p{4.5cm}}
-      \textbf{维度} & \textbf{Bug 修复 (SWE-bench)} & \textbf{漏洞检测} \\
-      \hline
-      任务起点 & 已知 Issue 描述 & 未知，需要主动发现 \\
-      \hline
-      目标 & 让测试通过 & 发现+定位+验证漏洞 \\
-      \hline
-      评估标准 & Resolved Rate & 检测率 + 误报率 + 定位精度 \\
-      \hline
-      知识依赖 & 项目代码逻辑 & 安全知识 (CWE/CVE/OWASP) \\
-      \hline
-      验证方式 & 单元测试通过 & PoC/Exploit 验证 \\
-      \hline
-      容错性 & 较高（可多次尝试） & 较低（误报代价高） \\
-      \hline
-      工具链 & 读/写文件、运行测试 & 静态分析、动态分析、Fuzzing \\
-    \end{tabular}
-  \end{block}
+  \small
+  \begin{tabular}{p{2.2cm}|p{4cm}|p{4cm}}
+    \textbf{维度} & \textbf{Bug 修复} & \textbf{漏洞检测} \\
+    \hline
+    任务起点 & 已知 Issue 描述 & 未知，需主动发现 \\
+    评估标准 & Resolved Rate & 检测率 + 误报率 \\
+    知识依赖 & 项目代码逻辑 & 安全知识 (CWE/CVE) \\
+    容错性 & 高（可多次尝试） & 低（误报代价高） \\
+  \end{tabular}
 
-  \begin{alertblock}{为什么 Bug 修复优先？}
-    \begin{itemize}
-      \item 评测基准成熟（SWE-bench），便于验证 Context Graph 效果
-      \item 漏洞检测相关研究\textbf{几乎空白}，可作为后续方向
-    \end{itemize}
-  \end{alertblock}
+  \vspace{0.3cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{为什么 Bug 修复优先？}
+        \begin{itemize}
+          \item SWE-bench 基准成熟，便于验证效果
+          \item 漏洞检测研究\textbf{几乎空白}，可作为后续
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{漏洞检测的机会}
+        \begin{itemize}
+          \item 安全知识图谱 + Agent
+          \item CWE/CVE 模式学习
+          \item 跨项目漏洞经验迁移
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 %==============================================================================
