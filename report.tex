@@ -1,11 +1,15 @@
-% arara: pdflatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
+% arara: xelatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
 % arara: biber
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-% arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
 
 \documentclass{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
+\usepackage{xeCJK}
+\setCJKmainfont{STSong}
+\setCJKsansfont{STHeiti}
+\setCJKmonofont{STFangsong}
 \usefonttheme[onlymath]{serif}
 % biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
@@ -24,31 +28,272 @@
   \printfield{year}%
 }
 
-% \usetheme{Berlin}
-\title{Weekly Report}
+\title{情境图谱 (Context Graph) 简报}
 \author{WU Zihan}
+\date{\today}
+
 \begin{document}
 \maketitle
+
 \begin{frame}
-  \frametitle{Outline}
+  \frametitle{目录}
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{总体概述}
 \begin{frame}
-  \frametitle{Introduction}
-  \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
-  \end{itemize}
+  \frametitle{情境图谱：AI时代的"元数据2.0"}
+
+  \begin{block}{核心定义}
+    情境图谱是对传统知识图谱的演进，将\textbf{多模态的非结构化决策过程}作为记忆，用图结构组织
+  \end{block}
+
+  \begin{block}{与RAG/知识图谱的关键区别}
+    \begin{itemize}
+      \item \textbf{传统知识图谱}：结构化三元组 \texttt{(实体, 关系, 实体)}，仅捕获"是什么"
+      \item \textbf{传统RAG}：向量检索，关注语义相似度，缺乏逻辑关联
+      \item \textbf{情境图谱}：捕获决策轨迹、上下文背景、时间动态和多模态信息，回答"为什么"
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{关键特征}
+    \begin{itemize}
+      \item 记录非结构化决策过程（会议讨论、例外逻辑、审批链）
+      \item 整合多模态数据（文本、图表、表格、时间序列）
+      \item 图结构组织，支持多跳遍历和关系推理
+      \item 为AI提供可解释的决策上下文
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{Foundation Capital：捕获决策轨迹的万亿美元机遇}
+\begin{frame}
+  \frametitle{Foundation Capital：万亿美元机遇 \cite{foundationcapital2024context}}
+
+  \begin{block}{核心理念}
+    传统记录系统（CRM、ERP）仅捕获最终数据状态（"是什么"），\textbf{情境图谱捕获决策轨迹}（"为什么"）
+  \end{block}
+
+  \begin{block}{决策轨迹包含什么？}
+    \begin{itemize}
+      \item Slack讨论、会议记录中的\textbf{例外逻辑}
+      \item 过去案例的\textbf{先例和审批背景}
+      \item 跨系统的综合信息（Salesforce + Zendesk + Slack）
+      \item 系统外的\textbf{审批链}和决策理由
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{设计逻辑与商业价值}
+    \begin{itemize}
+      \item 坐落在\textbf{执行路径}中，实时记录输入数据、策略、异常路径和审批人
+      \item 积累成为\textbf{可查询的先例库}
+      \item 让AI能够参考过去案例处理复杂边界情况
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{arXiv：增强知识表示与CGR³范式}
+\begin{frame}
+  \frametitle{arXiv (Xu等人)：CGR³推理范式 \cite{xu2024context}}
+
+  \begin{block}{核心定义}
+    对传统三元组知识图谱的扩展，融入\textbf{时间动态、地理位置和来源信息}，提供更精准的知识理解
+  \end{block}
+
+  \begin{block}{CGR³范式：三阶段推理框架}
+    \begin{enumerate}
+      \item \textbf{检索 (Retrieve)}：候选实体和上下文
+      \item \textbf{排序 (Rank)}：候选实体
+      \item \textbf{推理 (Reason)}：判断信息是否充足
+    \end{enumerate}
+  \end{block}
+
+  \begin{block}{LLM的作用}
+    \begin{itemize}
+      \item LLM擅长处理情境图谱提供的\textbf{非结构化背景信息}
+      \item 显著提升知识图谱补全（KGC）和问答（KGQA）的准确性
+      \item 能够理解和推理复杂的上下文关系
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{Atlan：主动基础设施的元数据2.0}
+\begin{frame}
+  \frametitle{Atlan：元数据2.0 \cite{atlan2024context}}
+
+  \begin{block}{定义}
+    融合了\textbf{操作元数据、治理策略和决策追溯}的增强型知识图谱，揭示数据流动的完整"操作现实"
+  \end{block}
+
+  \begin{block}{关键组件}
+    \begin{enumerate}
+      \item 图数据库基础（RDF或属性图）
+      \item 元数据捕获层（查询解析、日志跟踪、API集成）
+      \item 语义富化层（技术元数据→业务上下文）
+      \item 上下文激活层（为AI提供决策支持）
+    \end{enumerate}
+  \end{block}
+
+  \begin{block}{与传统工具的差异}
+    传统线性血缘工具仅追踪"数据来自哪里"，而情境图谱支持\textbf{多跳遍历}，回答"为什么做出这个决定"和"哪些政策在当时生效"
+  \end{block}
+\end{frame}
+
+\section{FlexRule：对"决策考古学"的批判}
+\begin{frame}
+  \frametitle{FlexRule：批判性思考 \cite{flexrule2024critique}}
+
+  \begin{alertblock}{设计缺陷警示}
+    单纯依赖历史决策轨迹的危险：如果历史数据包含错误的例外或偏见，情境图谱会强化这些错误，将\textbf{"先例误认为政策"}
+  \end{alertblock}
+
+  \begin{block}{核心批判："决策考古学"陷阱}
+    \begin{itemize}
+      \item 从历史中归纳规则，而非基于明确定义的意图
+      \item 无法区分有效逻辑与无效逻辑、当前策略与过时规则
+      \item 创造"先例的黑箱"：只能说"统计上相似"，无法引用具体规则
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{替代方案：显式决策建模}
+    \begin{itemize}
+      \item 轨迹应该是\textbf{"收据"}（记录发生了什么），而不是\textbf{"食谱"}（决定应该做什么）
+      \item 使用DMN（决策模型和表示法）或动态决策图明确定义意图
+      \item AI应基于CDM（持续决策模型）和明确规则行动
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{i-SCOOP：信息的"结缔组织"}
+\begin{frame}
+  \frametitle{i-SCOOP：连接信息的结缔组织 \cite{iscoop2024context}}
+
+  \begin{block}{核心隐喻}
+    情境图谱捕捉信息中的\textbf{"结缔组织"}，将零散的组织知识转化为AI可以导航的逻辑路径
+  \end{block}
+
+  \begin{block}{技术洞察}
+    向LLM提供\textbf{Cypher或RDF}等结构化格式的语境，比简单的CSV效果更好
+    \begin{itemize}
+      \item \textbf{原因}：结构本身就承载了语义价值
+      \item 图结构明确表达了实体间的关系和依赖
+      \item 支持推理和逻辑导航
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{未来前沿：时间关系}
+    \begin{itemize}
+      \item \textbf{时间维度}是真理判定的下一前沿
+      \item 通过捕捉时间关系，AI可以判断信息是新鲜的还是陈旧的
+      \item 区分经过反复证实的知识 vs. 孤立的说法
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{TrustGraph：上下文工程与互操作性}
+\begin{frame}
+  \frametitle{TrustGraph：标准与实现视角 \cite{trustgraph2024manifesto}}
+
+  \begin{block}{定义}
+    一种为AI使用而优化的三元组数据表示
+  \end{block}
+
+  \begin{block}{技术选择：RDF vs. 属性图}
+    \begin{itemize}
+      \item \textbf{RDF栈}（RDF, RDFS, OWL）
+      \begin{itemize}
+        \item 复杂但功能强大
+        \item 支持形式化推理和互操作性
+        \item 适合监管环境和复杂本体
+      \end{itemize}
+      \item \textbf{属性图}（Neo4j等）
+      \begin{itemize}
+        \item 更易理解和开发
+        \item 查询性能优秀
+        \item 适合应用开发者
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{范式转移：LLM时代的语义网}
+    LLM的出现使得我们可以处理\textbf{动态本体}，AI可以动态生成检索逻辑，实现语义网多年未竟的互操作性愿景
+  \end{block}
+\end{frame}
+
+\section{Microsoft GraphRAG}
+\begin{frame}
+  \frametitle{Microsoft GraphRAG：工程化路径 \cite{microsoft2024graphrag}}
+
+  \begin{block}{核心痛点：传统RAG的上下文碎片化}
+    向量检索只看语义相似度，却漏掉了逻辑关联
+  \end{block}
+
+  \begin{block}{工程方法}
+    \begin{enumerate}
+      \item \textbf{实体提取与关系映射}：使用LLM分析文本单元
+      \item \textbf{层级聚类}：利用\textbf{Leiden或Louvain算法}进行社区检测
+      \item \textbf{全局感知摘要}：为每个社区生成摘要，实现宏观理解
+    \end{enumerate}
+  \end{block}
+
+  \begin{block}{专用框架}
+    \begin{itemize}
+      \item \textbf{HopRAG}：逻辑感知检索，支持多跳推理
+      \item \textbf{HippoRAG}：受大脑海马体启发的联想记忆
+      \item \textbf{GNN-RAG}：神经子图处理，结合图神经网络
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{Graph of Records}
+\begin{frame}
+  \frametitle{Graph of Records：长文本处理 \cite{zhang2024gor}}
+
+  \begin{block}{针对长文本处理的变体}
+    特别优化了对长文本的全局理解
+  \end{block}
+
+  \begin{block}{方法论}
+    \begin{itemize}
+      \item 为文本块创建节点
+      \item 为LLM生成的\textbf{模拟查询响应}创建节点
+      \item 通过查询指定的索引连接节点
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{优势}
+    \begin{itemize}
+      \item 捕获元素之间的\textbf{复杂相关性}
+      \item 比简单拼接提供更全面的表示
+      \item 支持长文本的\textbf{全局摘要}
+      \item 保留文档内部的逻辑结构
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{总结}
+\begin{frame}
+  \frametitle{总结：八个来源的核心观点}
+
+  \begin{enumerate}
+    \item \textbf{Foundation Capital}：捕获决策轨迹，构建可查询的先例库
+    \item \textbf{arXiv (Xu等人)}：CGR³范式，融入时间、地理、来源等上下文
+    \item \textbf{Atlan}：元数据2.0，融合操作元数据和治理策略
+    \item \textbf{FlexRule}：警示"决策考古学"陷阱，主张显式建模
+    \item \textbf{i-SCOOP}：信息的结缔组织，结构即语义
+    \item \textbf{TrustGraph}：标准化与互操作性，LLM时代的语义网
+    \item \textbf{Microsoft GraphRAG}：分层聚类与社区检测的工程化实现
+    \item \textbf{Graph of Records (Zhang等人)}：长文本摘要的图结构优化
+  \end{enumerate}
+
+  \vspace{0.5cm}
+  \textbf{核心价值}：将多模态非结构化决策过程转化为AI可理解、可推理的图结构记忆
 \end{frame}
 
 % biblatex bibliography
 \begin{frame}[allowframebreaks]
-  \frametitle{References}
+  \frametitle{参考文献}
   \printbibliography
 \end{frame}
-
 
 \end{document}
