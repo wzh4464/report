@@ -6,7 +6,11 @@
       "Bash(biber report:*)",
       "Bash(fi:*)",
       "Bash(done)",
-      "Bash(pdfinfo:*)"
+      "Bash(pdfinfo:*)",
+      "Bash(arara:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
