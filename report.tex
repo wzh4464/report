@@ -40,6 +40,31 @@
   \printfield{year}%
 }
 
+% Beamer 脚注引用设置
+\setbeamertemplate{footnote}{%
+  \parindent 0em\noindent%
+  \raggedright
+  \usebeamercolor{footnote}\hbox to 0.8em{\hfil\insertfootnotemark}\insertfootnotetext\par%
+}
+\setbeamerfont{footnote}{size=\tiny}
+\renewcommand{\footnotesize}{\tiny}
+
+% 定义简短脚注引用命令
+\DeclareCiteCommand{\footcitetext}[\mkbibfootnotetext]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \printnames[family-given]{labelname}%
+   \setunit{\addcomma\space}%
+   \printfield[citetitle]{labeltitle}%
+   \setunit{\addcomma\space}%
+   \printfield{year}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+% 重定义 \cite 为同时显示编号和脚注
+\let\oldcite\cite
+\renewcommand{\cite}[1]{\oldcite{#1}\footcitetext{#1}}
+
 \title{Context Graph 与 Agent Memory\\{\large 面向 Coding Agent 的研究方向探索}}
 \author{WU Zihan}
 \date{\today}
