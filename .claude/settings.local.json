@@ -3,7 +3,10 @@
     "allow": [
       "WebSearch",
       "Bash(xelatex:*)",
-      "Bash(biber report:*)"
+      "Bash(biber report:*)",
+      "Bash(fi:*)",
+      "Bash(done)",
+      "Bash(pdfinfo:*)"
     ]
   }
 }

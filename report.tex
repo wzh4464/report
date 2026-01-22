@@ -143,25 +143,37 @@
 \begin{frame}
   \frametitle{FlexRule：批判性思考 \cite{flexrule2024critique}}
 
-  \begin{alertblock}{设计缺陷警示}
-    单纯依赖历史决策轨迹的危险：如果历史数据包含错误的例外或偏见，情境图谱会强化这些错误，将\textbf{"先例误认为政策"}
-  \end{alertblock}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{设计缺陷}
+        单纯依赖历史决策轨迹：将\textbf{"先例误认为政策"}
+      \end{alertblock}
 
-  \begin{block}{核心批判："决策考古学"陷阱}
-    \begin{itemize}
-      \item 从历史中归纳规则，而非基于明确定义的意图
-      \item 无法区分有效逻辑与无效逻辑、当前策略与过时规则
-      \item 创造"先例的黑箱"：只能说"统计上相似"，无法引用具体规则
-    \end{itemize}
-  \end{block}
+      \begin{block}{"决策考古学"陷阱}
+        \begin{itemize}
+          \item 从历史归纳规则，非明确意图
+          \item 无法区分有效与无效逻辑
+          \item "先例黑箱"：只能说"统计相似"
+        \end{itemize}
+      \end{block}
+    \end{column}
 
-  \begin{block}{替代方案：显式决策建模}
-    \begin{itemize}
-      \item 轨迹应该是\textbf{"收据"}（记录发生了什么），而不是\textbf{"食谱"}（决定应该做什么）
-      \item 使用DMN（决策模型和表示法）或动态决策图明确定义意图
-      \item AI应基于CDM（持续决策模型）和明确规则行动
-    \end{itemize}
-  \end{block}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{替代方案：决策中心法}
+        \small
+        轨迹是\textbf{"收据"}，非\textbf{"食谱"}
+
+        \textbf{五层架构：}
+        \begin{enumerate}
+          \item \textbf{意图层}：DMN/DDG显式定义决策逻辑
+          \item \textbf{流程层}：CDM管理决策触发时机
+          \item \textbf{输入层}：LiveContext提供决策就绪数据
+          \item \textbf{痕迹层}：事后捕获，仅用于审计和学习
+          \item \textbf{学习层}：显式优化，避免决策漂移
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{i-SCOOP：信息的"结缔组织"}
@@ -271,23 +283,330 @@
   \end{block}
 \end{frame}
 
+\section{研究方向与实践应用}
+
+\begin{frame}
+  \frametitle{轨迹与过程取证 (Trajectory \& Process Forensics)}
+
+  \begin{block}{核心理念}
+    关注智能体\textbf{如何}到达解决方案，而不仅仅是\textbf{是否}到达。将智能体的执行路径（轨迹）作为主要研究对象
+  \end{block}
+
+  \begin{block}{三个关键研究方向}
+    \begin{enumerate}
+      \item \textbf{思维-行动一致性}：研究智能体的内部推理轨迹（CoT）是否与外部工具使用相符
+      \begin{itemize}
+        \item 常见失败：计划"检查文件大小"，实际执行 \texttt{rm -rf} 命令
+      \end{itemize}
+
+      \item \textbf{循环检测与停滞分析}：检测"语义循环"，智能体反复运行相同失败测试或编辑同一文件而无进展
+
+      \item \textbf{分步效率（轨迹评分）}：为每一步分配成本，计算"最小可行轨迹"——修复错误的理论最短路径
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Context Graph 的定位}
+
+  \begin{block}{Agent 的核心组成}
+    Agent = LLM + 工具调用能力 + 循环执行
+  \end{block}
+
+  \begin{block}{为什么需要 Context Graph？}
+    \begin{itemize}
+      \item Agent 需要记住过去的经验 → 需要 \textbf{Memory}
+      \item Memory = 存储 Agent 的历史信息，在需要时检索出来
+      \item \textbf{Context Graph = 用图结构组织 Agent 的经验}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{核心优势}
+    将多模态的非结构化决策过程（会议讨论、工具调用、失败尝试）转化为结构化的图记忆，支持复杂推理和经验学习
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{相关工作 (1/2)}
+
+  \begin{block}{ExpeL (AAAI 2024) \cite{zhao2024expel}}
+    \textbf{主要目的}：解决 LLM Agent 无法跨任务学习的问题
+    \begin{itemize}
+      \item 自主收集经验并使用自然语言提取知识
+      \item 推理时调用提取的洞察和过去经验
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{A-Mem (NeurIPS 2025) \cite{xu2025amem}}
+    \textbf{主要目的}：解决现有 Memory 系统的组织结构问题
+    \begin{itemize}
+      \item 传统 RAG 只是简单的存储-检索，缺乏组织
+      \item 现有 graph 方案结构固定，适应性差
+      \item 需要能\textbf{动态自组织}的记忆系统
+      \item 采用 Zettelkasten 方法构建互联知识网络
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{相关工作 (2/2)}
+
+  \begin{block}{可训练图记忆 (arXiv 2025) \cite{xia2025trainable}}
+    \textbf{主要目的}：解决现有经验学习方法的两个核心问题
+    \begin{enumerate}
+      \item \textbf{隐式记忆}（训练）：灾难性遗忘 + 不可解释
+      \item \textbf{显式记忆}（prompting）：缺乏适应性 + 无法评估策略好坏
+    \end{enumerate}
+    \textbf{目标}：构建可训练的图记忆，结合两者优点
+    \begin{itemize}
+      \item 多层图记忆框架：状态机 + 元认知策略
+      \item 基于强化学习的权重优化
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{失败学习 (arXiv 2025) \cite{zhu2025fail}}
+    研究 LLM Agent 在哪里失败以及如何从失败中学习
+    \begin{itemize}
+      \item 提出 AgentErrorTaxonomy 错误分类体系
+      \item AgentErrorBench 失败轨迹数据集
+      \item AgentDebug 调试框架，24\%准确率提升
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Coding Agent 任务分类}
+
+  \begin{block}{Context Graph 在编程任务中的应用}
+    用 Context Graph 解决/优化 Coding Agent 的什么方面？
+  \end{block}
+
+  \begin{block}{主要任务类型}
+    \begin{enumerate}
+      \item \textbf{代码生成}：从自然语言描述生成代码
+      \item \textbf{Bug 修复}：识别和修复代码中的错误
+      \item \textbf{代码重构}：改进代码结构而不改变功能
+      \item \textbf{漏洞检测}：发现代码中的安全漏洞
+      \item \textbf{代码理解}：分析和解释现有代码
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{研究方向 1：Bug 修复}
+
+  \begin{block}{为什么选择 Bug 修复？}
+    Context Graph 的独特优势：
+    \begin{itemize}
+      \item \textbf{历史失败经验}：记录过去的失败尝试和原因
+      \item \textbf{调试轨迹}：追踪 Bug 修复过程中的思维链和工具调用
+      \item \textbf{相似问题模式}：通过图结构快速检索类似 Bug 的解决方案
+      \item \textbf{多步推理}：Bug 修复通常需要多轮迭代，Context Graph 支持复杂的多跳推理
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{如何使用 Context Graph}
+    \begin{enumerate}
+      \item 将每次修复尝试（成功和失败）存储为图节点
+      \item 建立节点间的关系：因果关系、时间序列、相似性
+      \item 从历史经验中学习最优修复策略
+      \item 避免重复失败的路径
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{研究方向 2：漏洞检测 (Vulnerability Detection)}
+
+  \begin{block}{Context Graph 在漏洞检测中的应用}
+    \begin{itemize}
+      \item \textbf{漏洞模式库}：构建已知漏洞的图结构表示
+      \item \textbf{代码依赖分析}：追踪数据流和控制流
+      \item \textbf{跨文件推理}：检测跨多个文件的复杂漏洞
+      \item \textbf{历史漏洞学习}：从过去的漏洞中提取模式
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{潜在研究问题}
+    \begin{itemize}
+      \item 如何有效表示代码中的安全模式？
+      \item 如何在图中编码时序和数据流信息？
+      \item 如何从历史漏洞中泛化到新的漏洞类型？
+      \item 如何减少误报率？
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{开放问题与潜在方向}
+
+  \begin{block}{技术挑战}
+    \begin{enumerate}
+      \item \textbf{图结构设计}：如何设计最优的图模式来表示编程经验？
+      \item \textbf{动态更新}：如何高效地更新和维护大规模的 Context Graph？
+      \item \textbf{检索效率}：如何在大规模图中快速检索相关经验？
+      \item \textbf{知识泛化}：如何从特定任务的经验泛化到新任务？
+    \end{enumerate}
+  \end{block}
+
+  \begin{block}{应用方向}
+    \begin{itemize}
+      \item 自动化软件工程工具
+      \item 智能代码审查系统
+      \item 持续学习的编程助手
+      \item 软件安全分析平台
+    \end{itemize}
+  \end{block}
+\end{frame}
+
 \section{总结}
 \begin{frame}
-  \frametitle{总结：八个来源的核心观点}
+  \frametitle{文献整理：12个来源分类}
 
-  \begin{enumerate}
-    \item \textbf{Foundation Capital}：捕获决策轨迹，构建可查询的先例库
-    \item \textbf{CGR³}：上下文图谱推理范式，融入时间、地理、来源等上下文
-    \item \textbf{Atlan}：元数据2.0，融合操作元数据和治理策略
-    \item \textbf{FlexRule}：警示"决策考古学"陷阱，主张显式建模
-    \item \textbf{i-SCOOP}：信息的结缔组织，结构即语义
-    \item \textbf{TrustGraph}：标准化与互操作性，LLM时代的语义网
-    \item \textbf{Microsoft GraphRAG}：分层聚类与社区检测的工程化实现
-    \item \textbf{Graph of Records (ACL 2025)}：长文本摘要的图结构优化
-  \end{enumerate}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{专门研究 Context Graph (8篇)}
+        \small
+        \begin{enumerate}
+          \item \textbf{Foundation Capital} \cite{foundationcapital2024context}
+          \begin{itemize}
+            \item 万亿美元机遇
+            \item 捕获决策轨迹
+          \end{itemize}
 
-  \vspace{0.5cm}
-  \textbf{核心价值}：将多模态非结构化决策过程转化为AI可理解、可推理的图结构记忆
+          \item \textbf{CGR³} \cite{xu2024cgr3}
+          \begin{itemize}
+            \item 推理范式
+            \item 融入时空上下文
+          \end{itemize}
+
+          \item \textbf{Atlan} \cite{atlan2024context}
+          \begin{itemize}
+            \item 元数据2.0
+            \item 架构指南
+          \end{itemize}
+
+          \item \textbf{FlexRule} \cite{flexrule2024critique}
+          \begin{itemize}
+            \item 批判视角
+            \item 决策中心法
+          \end{itemize}
+        \end{enumerate}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\phantom{专门研究 Context Graph}}
+        \small
+        \begin{enumerate}
+          \setcounter{enumi}{4}
+          \item \textbf{i-SCOOP} \cite{iscoop2024context}
+          \begin{itemize}
+            \item 结缔组织隐喻
+            \item 结构即语义
+          \end{itemize}
+
+          \item \textbf{TrustGraph} \cite{trustgraph2024manifesto}
+          \begin{itemize}
+            \item 标准化
+            \item LLM时代语义网
+          \end{itemize}
+
+          \item \textbf{Microsoft GraphRAG} \cite{microsoft2024graphrag}
+          \begin{itemize}
+            \item 工程化实现
+            \item 分层聚类
+          \end{itemize}
+
+          \item \textbf{Graph of Records} \cite{zhang2025gor}
+          \begin{itemize}
+            \item ACL 2025
+            \item 长文本处理
+          \end{itemize}
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{文献整理：Agent Memory 相关工作 (4篇)}
+
+  \begin{block}{与 Context Graph 相关的研究}
+    \begin{enumerate}
+      \item \textbf{ExpeL (AAAI 2024)} \cite{zhao2024expel}
+      \begin{itemize}
+        \item 经验学习，跨任务知识迁移
+        \item 自主提取洞察和经验
+      \end{itemize}
+
+      \item \textbf{A-Mem (NeurIPS 2025)} \cite{xu2025amem}
+      \begin{itemize}
+        \item 动态自组织记忆系统
+        \item Zettelkasten 方法构建知识网络
+      \end{itemize}
+
+      \item \textbf{可训练图记忆} \cite{xia2025trainable}
+      \begin{itemize}
+        \item 多层图记忆框架：状态机 + 元认知
+        \item 强化学习优化，结合隐式和显式记忆
+      \end{itemize}
+
+      \item \textbf{失败学习} \cite{zhu2025fail}
+      \begin{itemize}
+        \item AgentErrorTaxonomy 错误分类
+        \item AgentDebug 框架，24\%准确率提升
+      \end{itemize}
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{核心价值与未来方向}
+
+  \begin{block}{Context Graph 的核心价值}
+    将多模态非结构化决策过程转化为AI可理解、可推理的图结构记忆
+  \end{block}
+
+  \begin{block}{两类研究的关系}
+    \begin{itemize}
+      \item \textbf{Context Graph}：提供理论框架和技术基础
+      \item \textbf{Agent Memory}：探索具体实现和应用场景
+      \item \textbf{协同发展}：图结构 + 动态学习 + 失败恢复
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{未来研究方向}
+    \begin{itemize}
+      \item 图结构优化：动态更新、高效检索
+      \item 知识泛化：从特定任务到通用能力
+      \item 实际应用：Bug修复、漏洞检测、代码生成
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{实践应用方向}
+
+  \begin{block}{轨迹与过程取证}
+    \begin{itemize}
+      \item 思维-行动一致性检验
+      \item 循环检测与停滞分析
+      \item 分步效率评估与优化
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Coding Agent 应用}
+    \begin{itemize}
+      \item \textbf{Bug 修复}：利用历史经验和调试轨迹
+      \item \textbf{漏洞检测}：构建漏洞模式库和跨文件推理
+      \item \textbf{持续学习}：从失败中学习，避免重复错误
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{开放研究问题}
+    图结构设计、动态更新、检索效率、知识泛化
+  \end{block}
 \end{frame}
 
 % biblatex bibliography
