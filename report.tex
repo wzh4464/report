@@ -6,6 +6,7 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
+\usepackage{array}
 \usepackage{xeCJK}
 \usepackage{tcolorbox}
 \usepackage{tikz}
@@ -189,28 +190,25 @@
   \frametitle{为什么用图？—— 五大优势}
 
   \small
-  \begin{tabular}{p{2.2cm}|p{4.2cm}|p{5.5cm}}
+  \renewcommand{\arraystretch}{1.4}
+  \centering
+  \begin{tabular}{>{\centering}p{1.8cm}|>{\centering}p{3.8cm}|>{\centering\arraybackslash}p{5.8cm}}
     \textbf{能力} & \textbf{问题示例} & \textbf{RAG vs Graph} \\
     \hline
-    \textbf{关系建模} & "Action A 之后应该做什么？" &
-    RAG: 找相似文档 $\rightarrow$ 可能不相关\\
-    & & Graph: 出边直接指向下一步 $\rightarrow$ 精确 \\
+    \textbf{关系建模} & Action A 之后应该做什么？ &
+    RAG: 找相似文档 $\rightarrow$ 可能不相关\newline Graph: 出边直接指向下一步 $\rightarrow$ 精确 \\
     \hline
-    \textbf{路径推理} & "如何从当前状态到达成功？" &
-    RAG: 无"路径"概念\\
-    & & Graph: 搜索最短/最优路径 \\
+    \textbf{路径推理} & 如何从当前状态到达成功？ &
+    RAG: 无"路径"概念\newline Graph: 搜索最短/最优路径 \\
     \hline
-    \textbf{失败诊断} & "为什么这次失败了？" &
-    RAG: 找类似失败案例，但不知差异\\
-    & & Graph: 比较成功/失败路径，找分叉点 \\
+    \textbf{失败诊断} & 为什么这次失败了？ &
+    RAG: 找类似案例，但不知差异\newline Graph: 比较成功/失败路径，找分叉点 \\
     \hline
-    \textbf{动态更新} & "新经验如何融入？" &
-    Fine-tuning: 需重训，可能遗忘\\
-    & & Graph: 增量更新节点/边 \\
+    \textbf{动态更新} & 新经验如何融入？ &
+    Fine-tuning: 需重训，可能遗忘\newline Graph: 增量更新节点/边 \\
     \hline
-    \textbf{可解释性} & "Agent 为什么这样决定？" &
-    Neural: 黑盒，无法解释\\
-    & & Graph: "因为 A$\rightarrow$B 成功率 95\%" \\
+    \textbf{可解释性} & Agent 为什么这样决定？ &
+    Neural: 黑盒，无法解释\newline Graph: "因为 A$\rightarrow$B 成功率 95\%" \\
   \end{tabular}
 \end{frame}
 
@@ -259,7 +257,9 @@
   \vspace{0.1cm}
 
   \footnotesize
-  \begin{tabular}{p{2.2cm}|p{4.5cm}|p{4.8cm}}
+  \renewcommand{\arraystretch}{1.3}
+  \centering
+  \begin{tabular}{>{\centering}p{2cm}|>{\centering}p{4.3cm}|>{\centering\arraybackslash}p{4.8cm}}
     \textbf{维度} & \textbf{GraphRAG} & \textbf{Context Graph} \\
     \hline
     定位 & 检索技术 & 架构愿景 \\
@@ -375,35 +375,44 @@
 
   \begin{figure}
     \centering
-    \begin{tikzpicture}[scale=0.9]
-      % 定义样式
-      \tikzstyle{box} = [rectangle, rounded corners, minimum width=2.5cm, minimum height=0.8cm, text centered, draw=black]
+    \begin{tikzpicture}[scale=0.85]
+      % 顶会配色：蓝色渐变
+      \definecolor{rootcolor}{RGB}{66,165,245}    % 深蓝（强调）
+      \definecolor{branch1}{RGB}{144,202,249}     % 中蓝
+      \definecolor{branch2}{RGB}{129,199,132}     % 绿色
+      \definecolor{leaf1}{RGB}{187,222,251}       % 淡蓝
+      \definecolor{leaf2}{RGB}{200,230,201}       % 淡绿
+      \definecolor{linecolor}{RGB}{21,101,192}    % 深蓝线条
+
+      % 定义样式 - 缩小叶节点宽度避免重叠
+      \tikzstyle{box} = [rectangle, rounded corners=3pt, minimum width=2.2cm, minimum height=0.8cm, text centered, draw=none]
+      \tikzstyle{leafbox} = [rectangle, rounded corners=3pt, minimum width=1.9cm, minimum height=0.7cm, text centered, draw=none, font=\small]
 
       % 第一层：问题
-      \node[box, fill=red!20] (problem) at (0, 3) {Agent 需要记忆};
+      \node[box, fill=rootcolor, text=white, font=\bfseries] (problem) at (0, 3) {Agent 需要记忆};
 
       % 第二层：两条路线
-      \node[box, fill=blue!20] (graphrag) at (-3.5, 1.5) {图增强检索};
-      \node[box, fill=green!20] (memory) at (3.5, 1.5) {Agent Memory};
+      \node[box, fill=branch1] (graphrag) at (-4, 1.5) {图增强检索};
+      \node[box, fill=branch2] (memory) at (4, 1.5) {Agent Memory};
 
-      % 第三层：具体方法
-      \node[box, fill=blue!10, font=\small] (grag1) at (-5.5, 0) {GraphRAG};
-      \node[box, fill=blue!10, font=\small] (grag2) at (-3.5, 0) {CGR³};
-      \node[box, fill=blue!10, font=\small] (grag3) at (-1.5, 0) {GoR};
+      % 第三层：具体方法 - 增大间距
+      \node[leafbox, fill=leaf1] (grag1) at (-6.2, 0) {GraphRAG};
+      \node[leafbox, fill=leaf1] (grag2) at (-4, 0) {CGR³};
+      \node[leafbox, fill=leaf1] (grag3) at (-1.8, 0) {GoR};
 
-      \node[box, fill=green!10, font=\small] (mem1) at (1.5, 0) {ExpeL};
-      \node[box, fill=green!10, font=\small] (mem2) at (3.5, 0) {A-Mem};
-      \node[box, fill=green!10, font=\small] (mem3) at (5.5, 0) {可训练图记忆};
+      \node[leafbox, fill=leaf2] (mem1) at (1.8, 0) {ExpeL};
+      \node[leafbox, fill=leaf2] (mem2) at (4, 0) {A-Mem};
+      \node[leafbox, fill=leaf2] (mem3) at (6.5, 0) {\scriptsize 可训练图记忆};
 
       % 连线
-      \draw[->, thick] (problem) -- (-1.75, 1.5) -- (graphrag);
-      \draw[->, thick] (problem) -- (1.75, 1.5) -- (memory);
-      \draw[->] (graphrag) -- (grag1);
-      \draw[->] (graphrag) -- (grag2);
-      \draw[->] (graphrag) -- (grag3);
-      \draw[->] (memory) -- (mem1);
-      \draw[->] (memory) -- (mem2);
-      \draw[->] (memory) -- (mem3);
+      \draw[->, thick, linecolor] (problem) -- (-2, 1.5) -- (graphrag);
+      \draw[->, thick, linecolor] (problem) -- (2, 1.5) -- (memory);
+      \draw[->, linecolor] (graphrag) -- (grag1);
+      \draw[->, linecolor] (graphrag) -- (grag2);
+      \draw[->, linecolor] (graphrag) -- (grag3);
+      \draw[->, linecolor] (memory) -- (mem1);
+      \draw[->, linecolor] (memory) -- (mem2);
+      \draw[->, linecolor] (memory) -- (mem3);
     \end{tikzpicture}
   \end{figure}
 
