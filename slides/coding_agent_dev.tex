@@ -291,51 +291,29 @@
 
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \begin{tcolorbox}[colback=layer1, title=\textbf{降本增效（Efficiency）}]
-        \small
-        \textbf{成本控制}
+      \begin{tcolorbox}[colback=layer1, title=\textbf{降本增效}]
+        \footnotesize
         \begin{itemize}
-          \item \textbf{Token 节约 30\%+}：通过图谱精准剪枝，无需将无关代码塞入 Context
-          \item \textbf{解决率提升 20-30\%}：避免 Agent 在错误路径上反复尝试（Loop），直接阻断已知错误分支
-        \end{itemize}
-
-        \vspace{0.2cm}
-
-        \textbf{人效提升}
-        \begin{itemize}
-          \item 减少重复试错时间
-          \item 新人上手速度加快
+          \item \textbf{Token 节约 30\%+}：精准剪枝
+          \item \textbf{解决率 +20-30\%}：阻断错误路径
+          \item 减少重复试错，新人快速上手
           \item 释放高级工程师精力
         \end{itemize}
       \end{tcolorbox}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{tcolorbox}[colback=layer2, title=\textbf{资产沉淀（Asset）}]
-        \small
-        \textbf{知识资产化}
+      \begin{tcolorbox}[colback=layer2, title=\textbf{资产沉淀}]
+        \footnotesize
         \begin{itemize}
-          \item \textbf{项目活文档}：图谱实时反映代码架构，替代过时的开发文档
-          \item \textbf{经验数字化}：将工程师的 Debug 经验结构化存储，新人/Agent 可直接复用
-        \end{itemize}
-
-        \vspace{0.2cm}
-
-        \textbf{技术壁垒}
-        \begin{itemize}
-          \item 图谱随项目成长，形成\textcolor{dotred}{不可复制的私有资产}
-          \item 数据飞轮效应：越用越聪明
+          \item \textbf{项目活文档}：实时反映架构
+          \item \textbf{经验数字化}：Debug经验复用
+          \item 形成\textcolor{dotred}{不可复制私有资产}
+          \item 数据飞轮：越用越聪明
         \end{itemize}
       \end{tcolorbox}
     \end{column}
   \end{columns}
-
-  \vspace{0.3cm}
-
-  \begin{center}
-    \Large
-    \textbf{最终目标：} 从"辅助写代码"进化为 \textcolor{accentblue}{\textbf{"懂业务、有记忆、能进化"}} 的智能研发伙伴
-  \end{center}
 \end{frame}
 
 \begin{frame}
@@ -353,7 +331,7 @@
           \item \texttt{cost}: token 消耗
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.15cm}
 
         \textbf{2. State Node（状态节点）}
         \begin{itemize}
@@ -362,17 +340,16 @@
           \item \texttt{is\_terminal}: 是否终止
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.15cm}
 
         \textbf{3. Experience Capsule（经验胶囊）}
         \begin{itemize}
-          \item \texttt{rule}: "遇到此类报错，通常需修改 A 配置"
-          \item \texttt{confidence}: 验证成功率（如 0.85）
-          \item \texttt{source\_tasks}: 来源任务，可追溯
+          \item \texttt{rule}: "遇到此类报错，需修改 A 配置"
+          \item \texttt{confidence}: 成功率（如 0.85）
+          \item \texttt{source\_tasks}: 来源任务
           \item \texttt{applicable\_context}: 适用场景
         \end{itemize}
-        \vspace{0.1cm}
-        \textcolor{darkgreen}{\textbf{业务价值}}：将"老司机经验"显式化
+        \textcolor{darkgreen}{\small \textbf{价值}}：显式化"老司机经验"
       \end{block}
     \end{column}
 
@@ -385,7 +362,7 @@
           \item 属性: success\_rate, count
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.15cm}
 
         \textbf{2. CAUSES（因果）}
         \begin{itemize}
@@ -393,20 +370,20 @@
           \item 失败原因追踪
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.15cm}
 
         \textbf{3. SIMILAR\_TO（相似）}
         \begin{itemize}
           \item Task\_1 $\leftrightarrow$ Task\_2
-          \item 相似任务经验检索
+          \item 相似任务检索
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.15cm}
 
         \textbf{4. ABSTRACTS（抽象）}
         \begin{itemize}
           \item [Actions] $\rightarrow$ Insight
-          \item 具体经验 $\rightarrow$ 通用规则
+          \item 具体 $\rightarrow$ 通用规则
         \end{itemize}
       \end{block}
     \end{column}
@@ -585,67 +562,63 @@ while not task_completed:
 \begin{frame}
   \frametitle{工作 5：实现学习与优化机制}
 
-  \begin{block}{学习目标}
-    让 Agent 从每次任务中学习，持续提升成功率和效率
-  \end{block}
-
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \begin{block}{方法 1：基于规则的学习}
+      \begin{block}{方法 1：基于规则}
         \footnotesize
-        \textbf{洞察提取}（ExpeL 方法）
+        \textbf{洞察提取}（ExpeL）
         \begin{enumerate}
-          \item 收集成功和失败轨迹
-          \item 用 LLM 提取共性规则
-          \item 存储为 Insight Node
+          \item 收集成功/失败轨迹
+          \item LLM 提取共性规则
+          \item 存储为经验胶囊
         \end{enumerate}
 
-        \vspace{0.2cm}
+        \vspace{0.1cm}
 
-        \textbf{优点}：可解释性强\\
-        \textbf{缺点}：依赖 LLM 质量
+        \textbf{优点}：可解释\\
+        \textbf{缺点}：依赖 LLM
       \end{block}
 
-      \vspace{0.2cm}
+      \vspace{0.15cm}
 
-      \begin{block}{方法 2：基于统计的学习}
+      \begin{block}{方法 2：基于统计}
         \footnotesize
         \textbf{边权重更新}
         \begin{itemize}
-          \item 记录每条边的成功次数/总次数
+          \item 记录成功次数/总次数
           \item 计算 success\_rate
-          \item 规划时优先选择高成功率路径
+          \item 优先选高成功率路径
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{方法 3：强化学习（进阶）}
+      \begin{block}{方法 3：强化学习}
         \footnotesize
-        \textbf{可训练图记忆}方法
+        \textbf{可训练图记忆}
         \begin{enumerate}
-          \item 定义奖励：任务成功 +1，失败 -1
-          \item 训练策略网络：state $\rightarrow$ action
-          \item 更新图中的策略权重
+          \item 定义奖励：成功 +1，失败 -1
+          \item 训练策略：state $\rightarrow$ action
+          \item 更新策略权重
         \end{enumerate}
 
-        \vspace{0.2cm}
+        \vspace{0.1cm}
 
         \textbf{挑战}：
         \begin{itemize}
-          \item 需要大量训练数据
-          \item 如何定义状态空间？
+          \item 需大量数据
+          \item 状态空间定义
           \item 探索-利用平衡
         \end{itemize}
       \end{block}
     \end{column}
   \end{columns}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
 
   \begin{alertblock}{推荐}
-    \small
-    初期：方法 1 + 方法 2 结合；长期：探索方法 3
+    \footnotesize
+    初期：方法 1 + 2 结合；长期：探索方法 3
   \end{alertblock}
 \end{frame}
 
@@ -662,28 +635,26 @@ while not task_completed:
           \item Pass@K (代码生成)
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.1cm}
 
         \textbf{2. 效率指标}
         \begin{itemize}
-          \item Token 消耗
-          \item 执行步数
-          \item 运行时间
+          \item Token 消耗、执行步数、运行时间
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.1cm}
 
         \textbf{3. 学习能力}
         \begin{itemize}
-          \item 首次尝试 vs 第 N 次尝试的成功率
+          \item 首次 vs 第 N 次尝试成功率
           \item 跨任务迁移效果
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.1cm}
 
         \textbf{4. 图质量}
         \begin{itemize}
-          \item 图的规模（节点数、边数）
+          \item 图规模（节点数、边数）
           \item 检索精度/召回率
         \end{itemize}
       \end{block}
@@ -1419,33 +1390,27 @@ while not task_completed:
     \begin{column}{0.48\textwidth}
       \begin{block}{关键论文}
         \footnotesize
-        \textbf{GraphRAG 系列}
+        \textbf{GraphRAG}
         \begin{itemize}
-          \item Microsoft GraphRAG
-          \item HippoRAG (NeurIPS 2024)
-          \item CGR³
+          \item Microsoft GraphRAG, HippoRAG, CGR³
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.1cm}
 
         \textbf{Agent Memory}
         \begin{itemize}
-          \item MemGPT (2023)
-          \item ExpeL (AAAI 2024)
-          \item A-Mem (NeurIPS 2025)
-          \item AgeMem (2026)
+          \item MemGPT, ExpeL (AAAI 2024)
+          \item A-Mem (NeurIPS 2025), AgeMem
         \end{itemize}
       \end{block}
 
-      \vspace{0.2cm}
+      \vspace{0.15cm}
 
       \begin{block}{开源框架}
         \footnotesize
         \begin{itemize}
-          \item Letta (MemGPT 官方)
-          \item LangChain/LangGraph
-          \item AutoGen (Microsoft)
-          \item CrewAI
+          \item Letta, LangChain/LangGraph
+          \item AutoGen (Microsoft), CrewAI
         \end{itemize}
       \end{block}
     \end{column}
@@ -1455,29 +1420,23 @@ while not task_completed:
         \footnotesize
         \textbf{图谱化记忆}
         \begin{itemize}
-          \item Zep/Graphiti (Neo4j)
-          \item Mem0 Graph
-          \item TrustGraph
+          \item Zep/Graphiti, Mem0 Graph, TrustGraph
         \end{itemize}
 
-        \vspace{0.2cm}
+        \vspace{0.1cm}
 
         \textbf{向量数据库}
         \begin{itemize}
-          \item Pinecone
-          \item Chroma
-          \item Weaviate
+          \item Pinecone, Chroma, Weaviate
         \end{itemize}
       \end{block}
 
-      \vspace{0.2cm}
+      \vspace{0.15cm}
 
       \begin{block}{Benchmark}
         \footnotesize
         \begin{itemize}
-          \item SWE-bench (Bug 修复)
-          \item HumanEval (代码生成)
-          \item LongMemEval (记忆评估)
+          \item SWE-bench, HumanEval, LongMemEval
         \end{itemize}
       \end{block}
     \end{column}
