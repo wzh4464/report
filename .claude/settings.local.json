@@ -15,7 +15,8 @@
       "Bash(python3:*)",
       "Bash(uv venv:*)",
       "Bash(source:*)",
-      "Bash(uv pip install:*)"
+      "Bash(uv pip install:*)",
+      "Bash(gh release create:*)"
     ]
   }
 }

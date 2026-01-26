@@ -1,16 +1,33 @@
-report.aux
-report.fdb_latexmk
-report.log
-report.nav
-report.synctex*
-report.xdv
-report.fls
-report.out
-report.snm
-report.toc
+# Build directory
+build/
+
+# LaTeX auxiliary files
+*.aux
+*.fdb_latexmk
+*.log
+*.nav
+*.synctex*
+*.xdv
+*.fls
+*.out
+*.snm
+*.toc
+*.run.xml
+*.blg
+*.bcf
+*.bbl
+*.vrb
+
+# macOS
 .DS_Store
-report.pdf
-report.run.xml
-report.blg
-report.bcf
-report.bbl
+
+# LaTeX temporary files
+*.lof
+*.lot
+*.tdo
+*.alg
+*.acr
+*.acn
+*.glo
+*.ist
+*.loa

@@ -1,0 +1,1399 @@
+% arara: xelatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
+% arara: biber
+% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+
+\documentclass[aspectratio=169,10pt]{beamer}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath}
+\usepackage{array}
+\usepackage{xeCJK}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,calc}
+\usepackage{pifont}
+\setCJKmainfont{STSong}
+\setCJKsansfont{STHeiti}
+\setCJKmonofont{STFangsong}
+\usefonttheme[onlymath]{serif}
+
+% 自定义颜色
+\definecolor{highlightyellow}{RGB}{255, 242, 0}
+\definecolor{dotred}{RGB}{200, 30, 30}
+\definecolor{dotyellow}{RGB}{255, 200, 0}
+\definecolor{darkgreen}{RGB}{0, 128, 0}
+\definecolor{accentblue}{RGB}{21,101,192}
+
+% biblatex with biber
+\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
+\addbibresource{ref.bib}
+\usepackage{hyperref}
+
+\title{开发 Coding Agent 的技术要点\\{\large 基于 Context Graph 的研究洞察}}
+\author{WU Zihan}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{frame}
+  \frametitle{目录}
+  \tableofcontents
+\end{frame}
+
+%==============================================================================
+\section{核心洞察总结}
+%==============================================================================
+
+\begin{frame}
+  \frametitle{核心洞察 1：Agent 的根本问题是"记忆"}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{技术演进路径}
+        \small
+        LLM $\xrightarrow{+工具}$ Agent $\xrightarrow{+记忆}$ Agent+Memory $\xrightarrow{+图结构}$ Agent+Context Graph
+      \end{block}
+
+      \vspace{0.3cm}
+
+      \begin{alertblock}{四大核心问题}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{重复犯错}：同样的错误反复出现
+          \item \textbf{无法积累经验}：每次从零开始
+          \item \textbf{上下文爆炸}：历史记录过长导致性能下降
+          \item \textbf{跨任务学习困难}：经验无法迁移
+        \end{enumerate}
+      \end{alertblock}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{block}{解决方案}
+        \textbf{Context Graph}：结构化记忆系统
+
+        \vspace{0.2cm}
+
+        \footnotesize
+        \begin{itemize}
+          \item \textcolor{darkgreen}{优于 RAG}：保留实体间关系，支持多跳推理
+          \item \textcolor{darkgreen}{优于传统 KG}：包含时间、来源等上下文信息
+          \item \textcolor{darkgreen}{可学习}：根据反馈动态优化
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{核心洞察 2：两条技术路线殊途同归}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{路线 1：图增强检索（GraphRAG）}
+        \footnotesize
+        \textbf{目标}：改进 LLM 检索质量
+
+        \vspace{0.2cm}
+
+        \textbf{代表工作}：
+        \begin{itemize}
+          \item GraphRAG (MS)：社区检测+分层摘要
+          \item HippoRAG：海马体索引理论
+          \item CGR³：上下文增强知识图谱
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textcolor{darkgreen}{成熟度高}：2024-2025 学术验证充分
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{路线 2：Agent Memory}
+        \footnotesize
+        \textbf{目标}：构建可学习的经验系统
+
+        \vspace{0.2cm}
+
+        \textbf{代表工作}：
+        \begin{itemize}
+          \item ExpeL：提取洞察+检索经验
+          \item A-Mem：动态自组织记忆网络
+          \item Trainable Graph：多层图+RL优化
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textcolor{red}{Coding 场景几乎空白}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3cm}
+
+  \begin{alertblock}{关键发现}
+    \textbf{GraphRAG 是检索技术，Context Graph 是架构愿景}——两者是同一技术栈的不同层次
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{核心洞察 3：图结构的五大优势}
+
+  \small
+  \renewcommand{\arraystretch}{1.4}
+  \centering
+  \begin{tabular}{>{\centering}p{2.2cm}|>{\centering}p{4.5cm}|>{\centering\arraybackslash}p{4.8cm}}
+    \textbf{能力} & \textbf{RAG 的局限} & \textbf{Graph 的优势} \\
+    \hline
+    关系建模 & 找相似文档，可能不相关 & 出边直接指向下一步，精确 \\
+    \hline
+    路径推理 & 无"路径"概念 & 搜索最短/最优路径 \\
+    \hline
+    失败诊断 & 找类似案例，不知差异 & 比较成功/失败路径，找分叉点 \\
+    \hline
+    动态更新 & Fine-tuning 需重训，可能遗忘 & 增量更新节点/边 \\
+    \hline
+    可解释性 & 神经网络黑盒 & "因为 A→B 成功率 95\%" \\
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \frametitle{核心洞察 4：Coding Agent 是理想应用场景}
+
+  \begin{columns}[T]
+    \begin{column}{0.58\textwidth}
+      \begin{block}{为什么 Coding 是理想场景？}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{反馈明确}：测试通过/失败、编译成功/失败
+          \item \textbf{结构化强}：代码有明确的依赖关系
+          \item \textbf{可重复}：相同输入可多次测试
+          \item \textbf{经验可迁移}：Bug 模式、修复策略有共性
+          \item \textbf{成本高昂}：token 消耗大，需要优化
+        \end{enumerate}
+      \end{block}
+
+      \begin{alertblock}{研究空白}
+        \small
+        现有工作主要在通用 QA 任务验证，\\
+        \textbf{Coding 场景几乎未探索}
+      \end{alertblock}
+    \end{column}
+
+    \begin{column}{0.38\textwidth}
+      \begin{block}{主要任务类型}
+        \footnotesize
+        \begin{itemize}
+          \item 代码生成
+          \item \textbf{Bug 修复 (SWE-bench)}
+          \item 漏洞检测
+          \item 测试生成
+          \item 代码审查
+          \item 代码理解
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{推荐起点}
+        \footnotesize
+        \textbf{Bug 修复}：
+        \begin{itemize}
+          \item 成熟的 benchmark
+          \item 明确的评估标准
+          \item 与漏洞检测相关
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%==============================================================================
+\section{开发 Coding Agent 的技术要点}
+%==============================================================================
+
+\begin{frame}
+  \frametitle{技术架构全景}
+
+  \begin{center}
+  \begin{tikzpicture}[scale=0.9, every node/.style={font=\small}]
+    % 定义颜色
+    \definecolor{layer1}{RGB}{227,242,253}
+    \definecolor{layer2}{RGB}{187,222,251}
+    \definecolor{layer3}{RGB}{144,202,249}
+    \definecolor{layer4}{RGB}{66,165,245}
+
+    % 基础层
+    \draw[fill=layer1, rounded corners] (-6, -1) rectangle (6, 0);
+    \node at (0, -0.5) {\textbf{基础层}：LLM (GPT-4, Claude, DeepSeek)};
+
+    % 工具层
+    \draw[fill=layer2, rounded corners] (-6, 0.2) rectangle (6, 1.2);
+    \node at (0, 0.7) {\textbf{工具层}：代码执行、测试运行、文件操作、搜索};
+
+    % 记忆层
+    \draw[fill=layer3, rounded corners] (-6, 1.4) rectangle (6, 2.4);
+    \node at (0, 1.9) {\textbf{记忆层}：Context Graph（本报告重点）};
+
+    % 任务层
+    \draw[fill=layer4, rounded corners] (-6, 2.6) rectangle (6, 3.6);
+    \node[text=white] at (0, 3.1) {\textbf{任务层}：Bug 修复、代码生成、测试、审查};
+
+    % 箭头
+    \draw[->, thick] (0, 0) -- (0, 0.2);
+    \draw[->, thick] (0, 1.2) -- (0, 1.4);
+    \draw[->, thick] (0, 2.4) -- (0, 2.6);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.3cm}
+
+  \begin{alertblock}{关键点}
+    \textbf{记忆层是差异化的核心}——基础层和工具层都是通用技术，记忆层决定了 Agent 的学习能力
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{工作 1：设计 Context Graph 数据结构}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{节点类型设计}
+        \footnotesize
+        \textbf{1. Action Node（动作节点）}
+        \begin{itemize}
+          \item \texttt{action\_type}: read\_file, write\_file, run\_test
+          \item \texttt{parameters}: 参数
+          \item \texttt{result}: success/failure
+          \item \texttt{cost}: token 消耗
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{2. State Node（状态节点）}
+        \begin{itemize}
+          \item \texttt{description}: "发现 bug 在 line 42"
+          \item \texttt{context}: 相关文件、变量
+          \item \texttt{is\_terminal}: 是否终止
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{3. Insight Node（洞察节点）}
+        \begin{itemize}
+          \item \texttt{insight}: 提取的经验规则
+          \item \texttt{confidence}: 置信度
+          \item \texttt{source\_tasks}: 来源任务
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{边类型设计}
+        \footnotesize
+        \textbf{1. NEXT（时序/因果）}
+        \begin{itemize}
+          \item Action\_A $\rightarrow$ Action\_B
+          \item 属性: success\_rate, count
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{2. CAUSES（因果）}
+        \begin{itemize}
+          \item Action\_X $\rightarrow$ Failure\_Y
+          \item 失败原因追踪
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{3. SIMILAR\_TO（相似）}
+        \begin{itemize}
+          \item Task\_1 $\leftrightarrow$ Task\_2
+          \item 相似任务经验检索
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{4. ABSTRACTS（抽象）}
+        \begin{itemize}
+          \item [Actions] $\rightarrow$ Insight
+          \item 具体经验 $\rightarrow$ 通用规则
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{工作 2：实现图的构建与更新机制}
+
+  \begin{block}{图构建流程}
+    \small
+    \begin{enumerate}
+      \item \textbf{轨迹记录}：Agent 每次执行任务时，记录所有 action 和状态转换
+      \item \textbf{节点创建}：将 action/state 转化为图节点，提取关键属性
+      \item \textbf{边连接}：建立节点间的关系（时序、因果、相似）
+      \item \textbf{洞察提取}：用 LLM 从成功/失败轨迹中提取高层规则
+      \item \textbf{图整合}：将新子图合并到全局图中
+    \end{enumerate}
+  \end{block}
+
+  \vspace{0.2cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{技术挑战 1：动态更新}
+        \footnotesize
+        \begin{itemize}
+          \item 如何增量更新而非重建？
+          \item 如何处理冲突信息？
+          \item 如何遗忘过时信息？
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{技术挑战 2：存储效率}
+        \footnotesize
+        \begin{itemize}
+          \item 图数据库选择（Neo4j, NetworkX）
+          \item 大规模图的索引优化
+          \item 分布式存储策略
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{工作 3：实现检索与推理算法}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{检索策略}
+        \footnotesize
+        \textbf{1. 相似任务检索}
+        \begin{itemize}
+          \item 输入：当前 Bug 描述
+          \item 算法：embedding 相似度 + 图结构相似度
+          \item 输出：Top-K 相似任务的成功路径
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{2. 相关洞察检索}
+        \begin{itemize}
+          \item 输入：当前状态、已执行动作
+          \item 算法：基于关键词 + 图遍历
+          \item 输出：适用的经验规则
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{3. 失败路径过滤}
+        \begin{itemize}
+          \item 排除已知失败的 action 序列
+          \item 避免重复犯错
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{block}{推理算法}
+        \footnotesize
+        \textbf{路径规划}
+        \begin{itemize}
+          \item 从当前状态到目标状态
+          \item 考虑成功率和 cost
+          \item A* / Dijkstra 变体
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{失败诊断}
+        \begin{itemize}
+          \item 比较成功/失败路径
+          \item 找到关键分叉点
+          \item 定位失败原因
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{alertblock}{核心}
+        \tiny
+        \textbf{图+LLM 协同}：图提供结构化检索，LLM 负责语义理解
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{工作 4：构建任务执行主循环}
+
+  \begin{columns}[T]
+    \begin{column}{0.58\textwidth}
+      \begin{block}{主循环伪代码}
+        \footnotesize
+        \begin{verbatim}
+while not task_completed:
+  # 1. 检索相关经验
+  similar_tasks = graph.retrieve_similar(task)
+  insights = graph.retrieve_insights(current_state)
+
+  # 2. 规划下一步动作
+  action = planner.decide(
+      current_state,
+      similar_tasks,
+      insights
+  )
+
+  # 3. 执行动作
+  result = executor.run(action)
+
+  # 4. 更新图
+  graph.add_node(action, result)
+  graph.add_edge(prev_action, action)
+
+  # 5. 检查终止条件
+  if result.is_terminal:
+    break
+        \end{verbatim}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.38\textwidth}
+      \begin{block}{关键组件}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{Planner}：决策模块
+          \begin{itemize}
+            \item 输入：状态+经验
+            \item 输出：下一步 action
+          \end{itemize}
+
+          \vspace{0.2cm}
+
+          \item \textbf{Executor}：执行模块
+          \begin{itemize}
+            \item 调用工具（测试、编译）
+            \item 解析结果
+          \end{itemize}
+
+          \vspace{0.2cm}
+
+          \item \textbf{Graph Manager}
+          \begin{itemize}
+            \item 图的增删改查
+            \item 洞察提取
+          \end{itemize}
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{工作 5：实现学习与优化机制}
+
+  \begin{block}{学习目标}
+    让 Agent 从每次任务中学习，持续提升成功率和效率
+  \end{block}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{方法 1：基于规则的学习}
+        \footnotesize
+        \textbf{洞察提取}（ExpeL 方法）
+        \begin{enumerate}
+          \item 收集成功和失败轨迹
+          \item 用 LLM 提取共性规则
+          \item 存储为 Insight Node
+        \end{enumerate}
+
+        \vspace{0.2cm}
+
+        \textbf{优点}：可解释性强\\
+        \textbf{缺点}：依赖 LLM 质量
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{方法 2：基于统计的学习}
+        \footnotesize
+        \textbf{边权重更新}
+        \begin{itemize}
+          \item 记录每条边的成功次数/总次数
+          \item 计算 success\_rate
+          \item 规划时优先选择高成功率路径
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{方法 3：强化学习（进阶）}
+        \footnotesize
+        \textbf{可训练图记忆}方法
+        \begin{enumerate}
+          \item 定义奖励：任务成功 +1，失败 -1
+          \item 训练策略网络：state $\rightarrow$ action
+          \item 更新图中的策略权重
+        \end{enumerate}
+
+        \vspace{0.2cm}
+
+        \textbf{挑战}：
+        \begin{itemize}
+          \item 需要大量训练数据
+          \item 如何定义状态空间？
+          \item 探索-利用平衡
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+
+  \begin{alertblock}{推荐}
+    \small
+    初期：方法 1 + 方法 2 结合；长期：探索方法 3
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{工作 6：设计评估与基准测试}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{评估指标体系}
+        \footnotesize
+        \textbf{1. 任务成功率}
+        \begin{itemize}
+          \item Resolved Rate (SWE-bench)
+          \item Pass@K (代码生成)
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{2. 效率指标}
+        \begin{itemize}
+          \item Token 消耗
+          \item 执行步数
+          \item 运行时间
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{3. 学习能力}
+        \begin{itemize}
+          \item 首次尝试 vs 第 N 次尝试的成功率
+          \item 跨任务迁移效果
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{4. 图质量}
+        \begin{itemize}
+          \item 图的规模（节点数、边数）
+          \item 检索精度/召回率
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{block}{基准数据集}
+        \footnotesize
+        \textbf{Bug 修复}
+        \begin{itemize}
+          \item SWE-bench
+          \item SWE-bench Lite
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{代码生成}
+        \begin{itemize}
+          \item HumanEval
+          \item MBPP
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{漏洞检测}
+        \begin{itemize}
+          \item CodeMender
+          \item Spark
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{alertblock}{对比基线}
+        \tiny
+        \begin{itemize}
+          \item 无记忆 Agent
+          \item RAG Agent
+          \item ExpeL / A-Mem
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{工作 7：处理 Coding 场景的特殊挑战}
+
+  \begin{block}{挑战 1：代码库动态变化}
+    \small
+    \textbf{问题}：代码更新后，历史经验可能失效\\
+    \textbf{解决}：
+    \begin{itemize}
+      \item 为每个经验记录代码版本/commit hash
+      \item 检索时检查代码是否仍然有效
+      \item 定期清理过时经验
+    \end{itemize}
+  \end{block}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{挑战 2：Bug 相似度判断}
+        \footnotesize
+        \textbf{问题}：如何判断两个 Bug 是否相似？
+
+        \vspace{0.1cm}
+
+        \textbf{特征}：
+        \begin{itemize}
+          \item 错误类型（语法/逻辑/性能）
+          \item 涉及的代码模块
+          \item 错误堆栈相似度
+          \item Issue 描述 embedding
+        \end{itemize}
+
+        \vspace{0.1cm}
+
+        \textbf{算法}：混合相似度计算
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{挑战 3：代码结构理解}
+        \footnotesize
+        \textbf{问题}：需要理解项目依赖关系
+
+        \vspace{0.1cm}
+
+        \textbf{方法}：
+        \begin{itemize}
+          \item 构建代码依赖图（AST 分析）
+          \item 与 Context Graph 融合
+          \item 检索时考虑代码结构
+        \end{itemize}
+
+        \vspace{0.1cm}
+
+        \textbf{参考}：Think-on-Graph 的交互式探索
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%==============================================================================
+\section{业界实践与趋势}
+%==============================================================================
+
+\begin{frame}
+  \frametitle{主流 AI 产品的记忆机制对比}
+
+  \tiny
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{>{\centering}p{1.5cm}|>{\centering}p{2.2cm}|>{\centering}p{2.2cm}|>{\centering}p{2.2cm}|>{\centering\arraybackslash}p{2cm}}
+    \textbf{产品} & \textbf{短期记忆} & \textbf{长期记忆} & \textbf{存储机制} & \textbf{图谱化} \\
+    \hline
+    ChatGPT & 32K tokens 窗口 & 全历史检索 (2025) & 向量索引 + 用户档案 & 否 \\
+    \hline
+    Claude & 200K tokens 窗口 & 项目级知识库 (Markdown) & RAG + 文件系统 & 部分（关系推理） \\
+    \hline
+    Gemini & 2M tokens 窗口 & Personal Intelligence 跨应用 & 动态上下文打包 + 多源检索 & 是（个人知识图谱） \\
+    \hline
+    Pi & 数千 tokens & 持久用户画像 + 情感记忆 & 云端数据库 + embedding & 否（但有关系上下文） \\
+  \end{tabular}
+
+  \vspace{0.3cm}
+
+  \begin{block}{关键趋势}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{上下文窗口竞赛}：从 4K → 200K → 2M tokens
+      \item \textbf{跨会话记忆}：从隔离对话到持续学习
+      \item \textbf{个性化深化}：从通用助手到私人伴侣
+      \item \textbf{图谱化萌芽}：Gemini 率先整合个人知识图谱
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{开源框架的记忆实践}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{MemGPT/Letta}
+        \footnotesize
+        \textbf{核心理念}："LLM 作为操作系统"
+
+        \vspace{0.2cm}
+
+        \textbf{创新点}：
+        \begin{itemize}
+          \item 虚拟内存管理（paging）
+          \item 自主编辑核心记忆
+          \item Token 减少 85-93\%
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textcolor{darkgreen}{影响力最大}：启发了后续所有框架
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{LangChain/LangGraph}
+        \footnotesize
+        \textbf{记忆模块}：
+        \begin{itemize}
+          \item 会话缓冲 + 持久化 Store
+          \item 命名空间层级组织
+          \item 向量检索 + 元数据过滤
+        \end{itemize}
+
+        \textcolor{darkgreen}{最广泛采用}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{AutoGen (Microsoft)}
+        \footnotesize
+        \textbf{多智能体记忆共享}：
+        \begin{itemize}
+          \item 深度集成 MemGPT
+          \item Actor 模式架构
+          \item 异步事件驱动
+        \end{itemize}
+
+        \textcolor{darkgreen}{企业级首选}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{CrewAI}
+        \footnotesize
+        \textbf{极简记忆接口}：
+        \begin{itemize}
+          \item 一键开启：\texttt{memory=True}
+          \item 4 种记忆类型自动管理
+          \item 支持 Mem0 集成
+        \end{itemize}
+
+        \textcolor{darkgreen}{最易上手}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{新兴趋势：图谱化记忆系统}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{为什么需要图谱？}
+        \footnotesize
+        \textbf{向量数据库的局限}：
+        \begin{itemize}
+          \item 只能找"相似"内容
+          \item 丢失实体间关系
+          \item 无法多跳推理
+          \item 不支持时间演变
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{图谱的优势}：
+        \begin{itemize}
+          \item 保留显式关系链接
+          \item 支持路径遍历查询
+          \item 追踪知识时间演变
+          \item 可解释性强
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{block}{代表性工具}
+        \footnotesize
+        \textbf{Zep/Graphiti}
+        \begin{itemize}
+          \item 基于 Neo4j
+          \item 双时态模型
+          \item 94.8\% 准确率
+          \item 90\% 延迟降低
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{Mem0 Graph}
+        \begin{itemize}
+          \item 向量 + 图混合检索
+          \item 91\% 延迟降低
+          \item 90\%+ token 节省
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{alertblock}{最佳实践}
+        \tiny
+        \textbf{混合架构}：向量检索定位候选 + 图遍历返回关系
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{学术前沿：2024-2025 突破}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{A-MEM (2025)}
+        \footnotesize
+        \textbf{Zettelkasten 笔记网络}
+        \begin{itemize}
+          \item 动态链接记忆卡片
+          \item 性能翻倍
+          \item Token 减少 85-93\%
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{HippoRAG (NeurIPS 2024)}
+        \footnotesize
+        \textbf{海马体索引理论}
+        \begin{itemize}
+          \item KG 作为联想索引
+          \item 多跳 QA 提升 20\%
+          \item 成本降低 10-20×
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{AgeMem (2026)}
+        \footnotesize
+        \textbf{强化学习驱动记忆管理}
+        \begin{itemize}
+          \item 记忆操作作为工具
+          \item 三阶段渐进训练
+          \item Agent 自主决策记忆
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{alertblock}{未来方向}
+        \footnotesize
+        \begin{itemize}
+          \item 多模态记忆（图像、视频）
+          \item 多智能体记忆共享
+          \item RL 驱动的自主记忆管理
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{业界共识：记忆是 Agent 的核心能力}
+
+  \begin{columns}[T]
+    \begin{column}{0.58\textwidth}
+      \begin{block}{五种记忆类型（认知科学启发）}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{短期/工作记忆}：当前上下文窗口
+          \item \textbf{长期记忆}：跨会话持久化存储
+          \item \textbf{情景记忆}：具体事件 + 时间戳
+          \item \textbf{语义记忆}：事实和知识
+          \item \textbf{程序记忆}：技能和规则
+        \end{enumerate}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{混合存储成为标准}
+        \footnotesize
+        \begin{itemize}
+          \item 向量数据库：语义相似检索
+          \item 知识图谱：关系推理
+          \item SQL/NoSQL：结构化数据
+          \item 文件系统：原始文档
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.38\textwidth}
+      \begin{alertblock}{关键洞察}
+        \footnotesize
+        \textbf{记忆架构 > 模型能力}
+
+        \vspace{0.2cm}
+
+        再强大的 LLM，没有记忆系统也：
+        \begin{itemize}
+          \item 无法积累经验
+          \item 无法个性化
+          \item 无法持续改进
+        \end{itemize}
+      \end{alertblock}
+
+      \vspace{0.2cm}
+
+      \begin{block}{对 Coding Agent 启示}
+        \tiny
+        \begin{itemize}
+          \item 必须设计记忆层
+          \item 优先考虑图谱存储
+          \item 参考 MemGPT 架构
+          \item 混合多种存储机制
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%==============================================================================
+\section{实施路线图}
+%==============================================================================
+
+\begin{frame}
+  \frametitle{分阶段实施路线}
+
+  \begin{block}{阶段 1：MVP（最小可行产品）}
+    \footnotesize
+    \textbf{目标}：验证 Context Graph 的基本价值
+
+    \begin{itemize}
+      \item 实现简单的图结构（Action + State 节点，NEXT 边）
+      \item 基于 SWE-bench Lite 测试（300+ 样本）
+      \item 对比基线：无记忆 Agent
+      \item \textbf{预期}：成功率提升 10-15\%
+    \end{itemize}
+
+    \textbf{工作量}：2-3 个月
+  \end{block}
+
+  \begin{block}{阶段 2：完整系统}
+    \footnotesize
+    \textbf{目标}：实现完整的学习与优化机制
+
+    \begin{itemize}
+      \item 加入 Insight 节点，实现洞察提取
+      \item 实现多种边类型（CAUSES, SIMILAR\_TO, ABSTRACTS）
+      \item 在完整 SWE-bench 上测试（2000+ 样本）
+      \item 对比 ExpeL、A-Mem 等方法
+      \item \textbf{预期}：成功率提升 20-30\%，token 消耗降低 30\%
+    \end{itemize}
+
+    \textbf{工作量}：4-6 个月
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{分阶段实施路线（续）}
+
+  \begin{block}{阶段 3：进阶优化}
+    \footnotesize
+    \textbf{目标}：探索可训练图记忆
+
+    \begin{itemize}
+      \item 实现基于 RL 的策略学习
+      \item 探索多层图结构（具体→抽象）
+      \item 跨项目迁移学习实验
+      \item \textbf{预期}：在新项目上零样本/少样本表现优于基线
+    \end{itemize}
+
+    \textbf{工作量}：6-9 个月
+  \end{block}
+
+  \vspace{0.3cm}
+
+  \begin{block}{阶段 4：扩展应用}
+    \footnotesize
+    \textbf{目标}：扩展到其他 Coding 任务
+
+    \begin{itemize}
+      \item 漏洞检测：结合安全知识图谱（CWE/CVE）
+      \item 代码审查：学习项目特定的代码风格和最佳实践
+      \item 测试生成：记录有效的测试策略
+    \end{itemize}
+
+    \textbf{工作量}：根据具体任务而定
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{技术栈建议}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{核心技术选型}
+        \footnotesize
+        \textbf{基础 LLM}
+        \begin{itemize}
+          \item OpenAI GPT-4
+          \item Anthropic Claude
+          \item DeepSeek Coder
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{图数据库}
+        \begin{itemize}
+          \item Neo4j（生产级）
+          \item NetworkX（原型开发）
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{向量数据库}
+        \begin{itemize}
+          \item FAISS
+          \item Qdrant
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{代码分析}
+        \begin{itemize}
+          \item Tree-sitter（AST 解析）
+          \item Understand（依赖分析）
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{开发框架}
+        \footnotesize
+        \textbf{Agent 框架}
+        \begin{itemize}
+          \item LangChain / LangGraph
+          \item AutoGPT（参考）
+          \item 自研（更灵活）
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{实验管理}
+        \begin{itemize}
+          \item Weights \& Biases
+          \item MLflow
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{代码执行环境}
+        \begin{itemize}
+          \item Docker（隔离环境）
+          \item SWE-bench 官方工具链
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{alertblock}{建议}
+        \tiny
+        初期用 NetworkX + LangChain 快速验证，成熟后迁移到 Neo4j
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%==============================================================================
+\section{开放问题与挑战}
+%==============================================================================
+
+\begin{frame}
+  \frametitle{需要解决的核心问题}
+
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{block}{图设计问题}
+        \footnotesize
+        \textbf{Q1}：节点粒度如何选择？
+        \begin{itemize}
+          \item 每个 action？
+          \item 还是抽象成高层策略？
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{Q2}：如何混合多种边关系？
+        \begin{itemize}
+          \item 时序 vs 因果 vs 相似
+          \item 权重如何设置？
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{Q3}：图增长如何控制？
+        \begin{itemize}
+          \item 如何避免无限膨胀？
+          \item 遗忘机制设计
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{学习问题}
+        \footnotesize
+        \textbf{Q4}：检索效率优化
+        \begin{itemize}
+          \item 大图如何快速检索？
+          \item 索引策略
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{Q5}：如何定义奖励信号？
+        \begin{itemize}
+          \item 任务成功/失败
+          \item 步数、token 消耗
+          \item 如何权衡？
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{Q6}：探索-利用平衡
+        \begin{itemize}
+          \item 过度依赖历史
+          \item 错过新方案
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{Coding 特定}
+        \footnotesize
+        \textbf{Q7}：Bug 表示与相似度
+        \begin{itemize}
+          \item 语义特征提取
+          \item 相似度计算
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{Q8}：代码版本管理
+        \begin{itemize}
+          \item 经验失效检测
+          \item 版本兼容性
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{Q9}：评估指标
+        \begin{itemize}
+          \item 如何衡量图的价值？
+          \item 超越 pass@k
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{风险与应对}
+
+  \begin{block}{风险 1：图构建成本过高}
+    \small
+    \textbf{问题}：每次任务都要更新图，LLM 调用成本高
+
+    \textbf{应对}：
+    \begin{itemize}
+      \item 使用小模型（如 GPT-3.5）做初步提取
+      \item 批量处理，定期而非实时更新
+      \item 只对重要任务提取 insights
+    \end{itemize}
+  \end{block}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{风险 2：效果不明显}
+        \footnotesize
+        \textbf{问题}：图的帮助可能不如预期
+
+        \textbf{应对}：
+        \begin{itemize}
+          \item 从简单任务开始验证
+          \item 分析具体案例，找出失败原因
+          \item 对比不同检索策略
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{风险 3：过拟合历史经验}
+        \footnotesize
+        \textbf{问题}：过度依赖历史，僵化
+
+        \textbf{应对}：
+        \begin{itemize}
+          \item 设置探索概率
+          \item 定期清理低置信度经验
+          \item 引入随机性
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%==============================================================================
+\section{总结}
+%==============================================================================
+
+\begin{frame}
+  \frametitle{总结：开发 Coding Agent 的关键要素}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{必须做的工作}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{数据结构}：设计节点和边类型
+          \item \textbf{图构建}：轨迹记录 + 洞察提取
+          \item \textbf{检索推理}：相似任务 + 路径规划
+          \item \textbf{主循环}：决策-执行-更新
+          \item \textbf{学习机制}：规则提取 + 统计更新
+          \item \textbf{评估体系}：成功率 + 效率 + 学习能力
+          \item \textbf{特殊处理}：代码变化 + Bug 相似度
+        \end{enumerate}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{差异化优势来源}
+        \footnotesize
+        \begin{itemize}
+          \item \textcolor{darkgreen}{\textbf{记忆层设计}}：图结构 > RAG
+          \item \textcolor{darkgreen}{\textbf{失败学习}}：避免重复犯错
+          \item \textcolor{darkgreen}{\textbf{跨任务迁移}}：经验复用
+          \item \textcolor{darkgreen}{\textbf{可解释性}}：路径可视化
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{推荐起点}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{任务}：Bug 修复 (SWE-bench)
+          \item \textbf{MVP}：简单图 + 基本检索
+          \item \textbf{对比}：无记忆 baseline
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{alertblock}{核心洞察}
+        \tiny
+        \textbf{记忆是 Agent 的核心能力}——图结构化记忆比扁平 RAG 更适合 Coding 任务
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{参考资源}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{关键论文}
+        \footnotesize
+        \textbf{GraphRAG 系列}
+        \begin{itemize}
+          \item Microsoft GraphRAG
+          \item HippoRAG (NeurIPS 2024)
+          \item CGR³
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{Agent Memory}
+        \begin{itemize}
+          \item MemGPT (2023)
+          \item ExpeL (AAAI 2024)
+          \item A-Mem (NeurIPS 2025)
+          \item AgeMem (2026)
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{开源框架}
+        \footnotesize
+        \begin{itemize}
+          \item Letta (MemGPT 官方)
+          \item LangChain/LangGraph
+          \item AutoGen (Microsoft)
+          \item CrewAI
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{记忆工具}
+        \footnotesize
+        \textbf{图谱化记忆}
+        \begin{itemize}
+          \item Zep/Graphiti (Neo4j)
+          \item Mem0 Graph
+          \item TrustGraph
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{向量数据库}
+        \begin{itemize}
+          \item Pinecone
+          \item Chroma
+          \item Weaviate
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{Benchmark}
+        \footnotesize
+        \begin{itemize}
+          \item SWE-bench (Bug 修复)
+          \item HumanEval (代码生成)
+          \item LongMemEval (记忆评估)
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3cm}
+
+  \begin{center}
+    \textbf{详细文献列表请参考 report.tex}
+  \end{center}
+\end{frame}
+
+% biblatex bibliography
+\begin{frame}[allowframebreaks]
+  \frametitle{参考文献}
+  \printbibliography
+\end{frame}
+
+\end{document}
