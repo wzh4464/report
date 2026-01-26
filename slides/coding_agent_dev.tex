@@ -23,13 +23,17 @@
 \definecolor{dotyellow}{RGB}{255, 200, 0}
 \definecolor{darkgreen}{RGB}{0, 128, 0}
 \definecolor{accentblue}{RGB}{21,101,192}
+\definecolor{layer1}{RGB}{227,242,253}
+\definecolor{layer2}{RGB}{187,222,251}
+\definecolor{layer3}{RGB}{144,202,249}
+\definecolor{layer4}{RGB}{66,165,245}
 
 % biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
-\title{开发 Coding Agent 的技术要点\\{\large 基于 Context Graph 的研究洞察}}
+\title{突破 Coding Agent 能力天花板\\{\large 基于 Context Graph 的记忆架构演进}}
 \author{WU Zihan}
 \date{\today}
 
@@ -42,43 +46,52 @@
 \end{frame}
 
 %==============================================================================
-\section{核心洞察总结}
+\section{战略判断与业务价值}
 %==============================================================================
 
 \begin{frame}
-  \frametitle{核心洞察 1：Agent 的根本问题是"记忆"}
+  \frametitle{战略判断：记忆架构决定了智能体的上限}
 
   \begin{columns}[T]
     \begin{column}{0.55\textwidth}
-      \begin{block}{技术演进路径}
-        \small
-        LLM $\xrightarrow{+工具}$ Agent $\xrightarrow{+记忆}$ Agent+Memory $\xrightarrow{+图结构}$ Agent+Context Graph
-      \end{block}
-
-      \vspace{0.3cm}
-
-      \begin{alertblock}{四大核心问题}
+      \begin{block}{当前 Coding Agent 的核心痛点}
         \footnotesize
         \begin{enumerate}
-          \item \textbf{重复犯错}：同样的错误反复出现
-          \item \textbf{无法积累经验}：每次从零开始
-          \item \textbf{上下文爆炸}：历史记录过长导致性能下降
-          \item \textbf{跨任务学习困难}：经验无法迁移
+          \item \textbf{Token 成本黑洞}：每次重读数千行代码，成本指数级上升
+          \item \textbf{重复犯错}：同一 Bug 修复了又犯，无法积累"踩坑"经验
+          \item \textbf{上下文爆炸}：复杂任务超出窗口限制，性能急剧下降
+          \item \textbf{无法理解存量代码}：跨文件依赖、业务逻辑割裂
         \end{enumerate}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{alertblock}{核心矛盾}
+        \small
+        \textbf{资深工程师的价值 = "见过这个坑"}\\
+        Agent 必须具备\textcolor{dotred}{"经验复用"}能力
       \end{alertblock}
     \end{column}
 
     \begin{column}{0.42\textwidth}
-      \begin{block}{解决方案}
-        \textbf{Context Graph}：结构化记忆系统
+      \begin{block}{技术演进路径}
+        \small
+        LLM $\xrightarrow{+工具}$ Agent $\xrightarrow{+记忆}$ Agent+Memory $\xrightarrow{+图结构}$ \textbf{Autonomous Engineer}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{Context Graph 的本质}
+        \footnotesize
+        不是"数据结构"，而是：
 
         \vspace{0.2cm}
 
-        \footnotesize
+        \textbf{可生长的代码记忆体}
         \begin{itemize}
-          \item \textcolor{darkgreen}{优于 RAG}：保留实体间关系，支持多跳推理
-          \item \textcolor{darkgreen}{优于传统 KG}：包含时间、来源等上下文信息
-          \item \textcolor{darkgreen}{可学习}：根据反馈动态优化
+          \item 记录试错经验与成功路径
+          \item 追踪依赖关系与业务逻辑
+          \item 沉淀为\textcolor{darkgreen}{企业私有资产}
         \end{itemize}
       \end{block}
     \end{column}
@@ -138,24 +151,31 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{核心洞察 3：图结构的五大优势}
+  \frametitle{技术路径对比：为何 Graph 是企业级代码库的唯一解？}
 
   \small
-  \renewcommand{\arraystretch}{1.4}
+  \renewcommand{\arraystretch}{1.5}
   \centering
-  \begin{tabular}{>{\centering}p{2.2cm}|>{\centering}p{4.5cm}|>{\centering\arraybackslash}p{4.8cm}}
-    \textbf{能力} & \textbf{RAG 的局限} & \textbf{Graph 的优势} \\
+  \begin{tabular}{|>{\centering}p{2.0cm}|>{\centering}p{4.8cm}|>{\centering\arraybackslash}p{4.8cm}|}
     \hline
-    关系建模 & 找相似文档，可能不相关 & 出边直接指向下一步，精确 \\
+    \textbf{维度} & \textbf{传统 RAG（概率检索）} & \textbf{Context Graph（结构化记忆）} \\
     \hline
-    路径推理 & 无"路径"概念 & 搜索最短/最优路径 \\
+    \textbf{代码理解} & 仅基于文本相似度\newline \textcolor{red}{割裂代码逻辑与依赖} & 基于 AST 和调用图\newline \textcolor{darkgreen}{精准定位跨文件/跨模块依赖} \\
     \hline
-    失败诊断 & 找类似案例，不知差异 & 比较成功/失败路径，找分叉点 \\
+    \textbf{排错能力} & 搜索类似文档\newline \textcolor{red}{容易产生幻觉} & 追溯因果链路\newline \textcolor{darkgreen}{定位 Root Cause（根因分析）} \\
     \hline
-    动态更新 & Fine-tuning 需重训，可能遗忘 & 增量更新节点/边 \\
+    \textbf{知识沉淀} & 数据是散乱的\newline \textcolor{red}{无法形成资产} & 形成知识图谱\newline \textcolor{darkgreen}{随项目迭代自动积累企业资产} \\
     \hline
-    可解释性 & 神经网络黑盒 & "因为 A→B 成功率 95\%" \\
+    \textbf{推理方式} & 单步检索，缺乏规划 & \textcolor{darkgreen}{多跳推理（Multi-hop）}\newline 模拟资深专家的排查路径 \\
+    \hline
+    \textbf{确定性} & 概率匹配，不可控 & \textcolor{darkgreen}{确定性推理 + 全链路追溯} \\
+    \hline
   \end{tabular}
+
+  \vspace{0.3cm}
+  \begin{alertblock}{核心结论}
+    面对百万行级的复杂代码库（如华为存量系统），\textbf{结构化（Graph）是实现"精确控制"与"零幻觉"的唯一路径}
+  \end{alertblock}
 \end{frame}
 
 \begin{frame}
@@ -252,6 +272,70 @@
   \begin{alertblock}{关键点}
     \textbf{记忆层是差异化的核心}——基础层和工具层都是通用技术，记忆层决定了 Agent 的学习能力
   \end{alertblock}
+
+  \vspace{0.2cm}
+
+  \begin{block}{数据飞轮效应（Data Flywheel）}
+    \footnotesize
+    \begin{center}
+    \textbf{越用越聪明}：随着 Agent 解决的任务增多 \\
+    → 图谱中的节点和边越丰富 \\
+    → 后续任务的成功率越高 \\
+    → \textcolor{darkgreen}{形成不可复制的竞争优势}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Context Graph 的业务价值与护城河}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{tcolorbox}[colback=layer1, title=\textbf{降本增效（Efficiency）}]
+        \small
+        \textbf{成本控制}
+        \begin{itemize}
+          \item \textbf{Token 节约 30\%+}：通过图谱精准剪枝，无需将无关代码塞入 Context
+          \item \textbf{解决率提升 20-30\%}：避免 Agent 在错误路径上反复尝试（Loop），直接阻断已知错误分支
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{人效提升}
+        \begin{itemize}
+          \item 减少重复试错时间
+          \item 新人上手速度加快
+          \item 释放高级工程师精力
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{tcolorbox}[colback=layer2, title=\textbf{资产沉淀（Asset）}]
+        \small
+        \textbf{知识资产化}
+        \begin{itemize}
+          \item \textbf{项目活文档}：图谱实时反映代码架构，替代过时的开发文档
+          \item \textbf{经验数字化}：将工程师的 Debug 经验结构化存储，新人/Agent 可直接复用
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        \textbf{技术壁垒}
+        \begin{itemize}
+          \item 图谱随项目成长，形成\textcolor{dotred}{不可复制的私有资产}
+          \item 数据飞轮效应：越用越聪明
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3cm}
+
+  \begin{center}
+    \Large
+    \textbf{最终目标：} 从"辅助写代码"进化为 \textcolor{accentblue}{\textbf{"懂业务、有记忆、能进化"}} 的智能研发伙伴
+  \end{center}
 \end{frame}
 
 \begin{frame}
@@ -280,12 +364,15 @@
 
         \vspace{0.2cm}
 
-        \textbf{3. Insight Node（洞察节点）}
+        \textbf{3. Experience Capsule（经验胶囊）}
         \begin{itemize}
-          \item \texttt{insight}: 提取的经验规则
-          \item \texttt{confidence}: 置信度
-          \item \texttt{source\_tasks}: 来源任务
+          \item \texttt{rule}: "遇到此类报错，通常需修改 A 配置"
+          \item \texttt{confidence}: 验证成功率（如 0.85）
+          \item \texttt{source\_tasks}: 来源任务，可追溯
+          \item \texttt{applicable\_context}: 适用场景
         \end{itemize}
+        \vspace{0.1cm}
+        \textcolor{darkgreen}{\textbf{业务价值}}：将"老司机经验"显式化
       \end{block}
     \end{column}
 
@@ -979,51 +1066,53 @@ while not task_completed:
 \begin{frame}
   \frametitle{分阶段实施路线}
 
-  \begin{block}{阶段 1：MVP（最小可行产品）}
+  \begin{block}{阶段 1：MVP —— 跑通闭环}
     \footnotesize
-    \textbf{目标}：验证 Context Graph 的基本价值
+    \textbf{目标}：\textcolor{dotred}{证明"记忆-推理-执行"闭环可行}
 
     \begin{itemize}
-      \item 实现简单的图结构（Action + State 节点，NEXT 边）
+      \item 实现简单图结构（Action + State + 经验胶囊）
       \item 基于 SWE-bench Lite 测试（300+ 样本）
       \item 对比基线：无记忆 Agent
-      \item \textbf{预期}：成功率提升 10-15\%
+      \item \textbf{预期}：成功率 +10-15\%，重复错误率 -50\%
+      \item \textbf{关键验证点}：Agent 能否从失败中学习
     \end{itemize}
 
-    \textbf{工作量}：2-3 个月
+    \textbf{工作量}：2-3 个月 \quad \textcolor{darkgreen}{【低风险】}
   \end{block}
 
-  \begin{block}{阶段 2：完整系统}
+  \begin{block}{阶段 2：企业级适配}
     \footnotesize
-    \textbf{目标}：实现完整的学习与优化机制
+    \textbf{目标}：\textcolor{dotred}{针对华为存量代码库构建图谱}
 
     \begin{itemize}
-      \item 加入 Insight 节点，实现洞察提取
-      \item 实现多种边类型（CAUSES, SIMILAR\_TO, ABSTRACTS）
+      \item 加入多种边类型（依赖关系、因果链路、相似任务）
+      \item \textbf{针对华为内部项目}：C/C++ 大型代码库的图谱构建
+      \item 集成代码依赖分析（AST + 调用图）
       \item 在完整 SWE-bench 上测试（2000+ 样本）
-      \item 对比 ExpeL、A-Mem 等方法
-      \item \textbf{预期}：成功率提升 20-30\%，token 消耗降低 30\%
+      \item \textbf{预期}：成功率 +20-30\%，token 消耗 -30\%
     \end{itemize}
 
-    \textbf{工作量}：4-6 个月
+    \textbf{工作量}：4-6 个月 \quad \textcolor{darkgreen}{【中风险】}
   \end{block}
 \end{frame}
 
 \begin{frame}
   \frametitle{分阶段实施路线（续）}
 
-  \begin{block}{阶段 3：进阶优化}
+  \begin{block}{阶段 3：人机协同进化}
     \footnotesize
-    \textbf{目标}：探索可训练图记忆
+    \textbf{目标}：\textcolor{dotred}{沉淀工程师经验 + AI 自主学习}
 
     \begin{itemize}
-      \item 实现基于 RL 的策略学习
-      \item 探索多层图结构（具体→抽象）
-      \item 跨项目迁移学习实验
-      \item \textbf{预期}：在新项目上零样本/少样本表现优于基线
+      \item \textbf{人类经验注入}：工程师修复 Bug 时，自动记录决策路径到图谱
+      \item \textbf{跨项目迁移}：将成熟项目的图谱迁移到新项目（零样本学习）
+      \item 实现基于 RL 的策略优化（可选）
+      \item 探索多层图结构（具体经验 → 抽象规则）
+      \item \textbf{预期}：新项目冷启动时间 -60\%，经验复用率 +80\%
     \end{itemize}
 
-    \textbf{工作量}：6-9 个月
+    \textbf{工作量}：6-9 个月 \quad \textcolor{dotyellow}{【探索性】}
   \end{block}
 
   \vspace{0.3cm}
@@ -1288,6 +1377,17 @@ while not task_completed:
           \item \textcolor{darkgreen}{\textbf{失败学习}}：避免重复犯错
           \item \textcolor{darkgreen}{\textbf{跨任务迁移}}：经验复用
           \item \textcolor{darkgreen}{\textbf{可解释性}}：路径可视化
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.2cm}
+
+      \begin{block}{华为场景的三大保障}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{确定性}：图结构 + LLM = 灵活性 + 可控性
+          \item \textbf{安全合规}：私有化部署，数据不出域
+          \item \textbf{自主可控}：中间件自研，不依赖特定基座模型
         \end{itemize}
       \end{block}
 
