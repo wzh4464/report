@@ -53,8 +53,11 @@
 
       \vspace{0.2cm}
 
-      \begin{alertblock}{关键痛点：资深工程师的价值}
-        LLM 有"智商"无"经验"。面对复杂代码，\textbf{单纯的文本检索（RAG）无法处理跨文件依赖和因果逻辑}。
+      \begin{alertblock}{关键痛点：被动检索 vs 主动总结}
+        \footnotesize
+        传统 RAG \textbf{被动挖掘}已有知识，无法\textbf{主动抽象}经验规律。
+        \newline 资深工程师的价值 = "踩过这个坑" + "总结了通用解法"。
+        \newline \textcolor{dotred}{LLM 需要主动记忆机制，而非每次重新检索}。
       \end{alertblock}
     \end{column}
 
@@ -95,7 +98,7 @@
         \textbf{1. 节点 (Nodes) - 沉淀痕迹}
         \begin{itemize}
             \item \texttt{Action/State}: 执行与反馈（类似 LangGraph 状态）。
-            \item \texttt{Insight}: \textbf{经验胶囊}（从 Zep/Mem0 概念深化，抽象出的通用规则）。
+            \item \texttt{Insight}: \textbf{经验胶囊}（\textcolor{darkgreen}{主动抽象}的通用规则，如"遇到X错误 $\to$ 修改Y配置"）。
         \end{itemize}
 
         \vspace{0.1cm}
@@ -104,7 +107,7 @@
         \begin{itemize}
             \item \texttt{NEXT} (时序): 记录操作流，复用成功路径。
             \item \texttt{CAUSES} (因果): 根因分析，\textbf{解决 Vector RAG 无法推理因果的缺陷}。
-            \item \texttt{DEPENDS_ON}: 代码静态依赖（AST）。
+            \item \texttt{DEPENDS\_ON}: 代码静态依赖（AST）。
         \end{itemize}
       \end{block}
     \end{column}
@@ -113,10 +116,14 @@
       \begin{block}{差异化优势 (The Graph Advantage)}
         \footnotesize
         \begin{itemize}
-            \item \textbf{确定性推理 (Deterministic)}：
-            \newline 相比向量检索的"猜你喜欢"，图谱能沿依赖链精准定位 Bug 根因。
-            \item \textbf{数据飞轮 (Flywheel)}：
-            \newline 类似人类专家，任务做得越多，图谱（经验库）越丰富，解决新问题越快。
+            \item \textbf{主动学习 vs 被动检索}：
+            \newline \textcolor{darkgreen}{主动总结}成功/失败模式，形成可复用规则。被动RAG只能"找相似案例"。
+
+            \item \textbf{知识迁移能力 (Zero-Shot)}：
+            \newline 图谱足够丰富时，能通过\textbf{路径推理}解决\textcolor{darkgreen}{未见过的问题}（如组合已知模式）。
+
+            \item \textbf{数据飞轮}：
+            \newline 任务越多 $\to$ 经验越丰富 $\to$ 解决新问题越快。
         \end{itemize}
       \end{block}
     \end{column}
@@ -131,21 +138,22 @@
       \begin{block}{落地路线图 (Roadmap)}
         \small
         \begin{enumerate}
-            \item \textbf{Phase 1: MVP (2-3个月) —— 跑通闭环}
+            \item \textbf{Phase 1: MVP (2-3个月) —— 主动学习闭环}
             \begin{itemize}
                 \item 场景：SWE-bench Lite。
-                \item 目标：验证 Agent 能从失败中学习，不再重复犯错。
+                \item 目标：Agent \textcolor{darkgreen}{主动总结}失败模式，抽象为Insight节点，不再重复犯错。
             \end{itemize}
-            
+
             \item \textbf{Phase 2: 企业级适配 (4-6个月) —— 存量攻坚}
             \begin{itemize}
                 \item 场景：C/C++ 大型遗留系统。
                 \item 技术：引入 AST 代码依赖分析，构建项目级图谱。
             \end{itemize}
-            
-            \item \textbf{Phase 3: 人机协同 (长期) —— 资产沉淀}
+
+            \item \textbf{Phase 3: 人机协同 (长期) —— 知识迁移}
             \begin{itemize}
-                \item 目标：吸纳人类工程师调试路径，形成"专家知识库"。
+                \item \textcolor{darkgreen}{跨项目迁移}：成熟图谱迁移到新项目，\textbf{零样本解决未见过的问题}。
+                \item 吸纳人类工程师调试路径，持续丰富图谱。
             \end{itemize}
         \end{enumerate}
       \end{block}
@@ -169,6 +177,65 @@
   \vspace{0.3cm}
   \centering
   \textbf{\small 我们构建的不是工具，而是具备"经验记忆"的 Autonomous Engineer。}
+\end{frame}
+
+% Page 4
+\begin{frame}
+  \frametitle{4. 业界实践与趋势：从向量到图谱的演进}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{主流产品记忆机制现状}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{ChatGPT}: 跨会话向量检索（2025）。
+          \textcolor{dotred}{局限：丢失关系链。}
+
+          \item \textbf{Claude}: 100K 超长上下文 + 知识库。
+
+          \item \textbf{Gemini}: 1M tokens + Personal Intelligence（整合 Gmail/Photos）。
+
+          \item \textbf{开源 (LangChain/Auto-GPT)}: 向量数据库。
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.1cm}
+
+      \begin{alertblock}{核心痛点}
+        \footnotesize
+        向量 RAG 找"相似内容"，但\textbf{不知因果关系}，无法多跳推理。
+      \end{alertblock}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Context Graph 新趋势}
+        \footnotesize
+        \textbf{业界转向 Graph-Enhanced Memory：}
+
+        \begin{itemize}
+          \item \textbf{Zep/Graphiti}: 时序知识图谱，记录事实演变。准确率 94.8\%，延迟 -90\%。
+
+          \item \textbf{LangGraph}: 控制流图（StateGraph）。
+
+          \item \textbf{GraphRAG}: 社区检测 + 层级摘要。
+
+          \item \textbf{Mem0}: 向量+图混合，速度 +91\%。
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.1cm}
+
+      \begin{tcolorbox}[colback=layer1, title=\textbf{趋势判断}]
+        \footnotesize
+        \textbf{被动检索} $\to$ \textbf{主动学习}
+        \begin{itemize}
+          \item \textcolor{darkgreen}{主动总结}经验 vs 被动挖掘知识
+          \item 确定性推理 vs 概率匹配
+          \item 知识迁移：解决未见过的问题
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \end{document}
