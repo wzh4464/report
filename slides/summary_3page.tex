@@ -1,4 +1,5 @@
-% arara: xelatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
+% arara: xelatex: { options: ["--synctex=1", "-interaction=nonstopmode", "-output-directory=../build"] }
+% arara: move: { files: ["../build/summary_3page.pdf"], target: "../pdf/" }
 
 \documentclass[aspectratio=169,10pt]{beamer}
 \usepackage{graphicx}

@@ -1,7 +1,8 @@
-% arara: xelatex: { options: ["--synctex=1", "-interaction=nonstopmode"] }
-% arara: biber
-% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
-% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode'] }
+% arara: xelatex: { options: ["--synctex=1", "-interaction=nonstopmode", "-output-directory=../build"] }
+% arara: biber: { options: ["--output-directory=../build", "../build/report"] }
+% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode', '-output-directory=../build'] }
+% arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode', '-output-directory=../build'] }
+% arara: move: { files: ["../build/report.pdf"], target: "../pdf/" }
 
 \documentclass[aspectratio=169,10pt]{beamer}
 \usepackage{graphicx}
