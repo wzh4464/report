@@ -33,49 +33,75 @@
 
 % Page 1
 \begin{frame}
-  \frametitle{1. 业界现状：从"长窗口"到"结构化记忆"的演进}
+  \frametitle{1. 技术演进：从向量检索到 Context Graph}
 
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \begin{block}{主流模型记忆机制 (State of the Art)}
-        \footnotesize
+      \begin{block}{行业演进路线}
+        \scriptsize
+        \textbf{第一代 (2020-2022): 向量 RAG}
         \begin{itemize}
-            \item \textbf{超长上下文 (Brute Force)}:
-            \newline Gemini (1M+), Claude (200K)。
-            \newline \textit{局限：被动且昂贵，无法跨会话累积。}
-            \item \textbf{向量 RAG (Vector Database)}:
-            \newline ChatGPT, Auto-GPT。基于语义相似度检索。
-            \newline \textit{局限：\textcolor{dotred}{丢失结构与关系}}（知道"A"和"B"相似，但不知"A导致B"）。
-            \item \textbf{混合/隐式图谱}:
-            \newline Gemini "Personal Intelligence" (隐式关联用户数据)。
+            \item 向量检索 + 文档切片
+            \item \textcolor{dotred}{痛点：无结构、无时序、无关系}
+        \end{itemize}
+
+        \vspace{0.05cm}
+        \textbf{第二代 (2023): GraphRAG (Microsoft)}
+        \begin{itemize}
+            \item 静态知识图谱 + 社区摘要
+            \item \textcolor{dotred}{痛点：批量构建、无法增量更新}
+        \end{itemize}
+
+        \vspace{0.05cm}
+        \textbf{第三代 (2024-): Context Graph}
+        \begin{itemize}
+            \item \textcolor{darkgreen}{时序感知 + Schema-free + 增量更新}
+            \item 专为 Agent Memory 设计
         \end{itemize}
       \end{block}
 
-      \vspace{0.2cm}
+      \vspace{0.05cm}
 
-      \begin{alertblock}{关键痛点：被动检索 vs 主动总结}
-        \footnotesize
-        传统 RAG \textbf{被动挖掘}已有知识，无法\textbf{主动抽象}经验规律。
-        \newline 资深工程师的价值 = "踩过这个坑" + "总结了通用解法"。
-        \newline \textcolor{dotred}{LLM 需要主动记忆机制，而非每次重新检索}。
+      \begin{alertblock}{核心定位}
+        \scriptsize
+        Context Graph ≠ 通用知识图谱
+        \newline 而是\textbf{为 LLM Agent 设计的记忆层架构}
+        \newline 本质：存储"AI 应该记住什么"，而非"世界是什么样"
       \end{alertblock}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{技术新趋势：向有向图 (Directed Graph) 转化}
-        \footnotesize
-        \textbf{趋势：Unstructured Vectors $\to$ Structured Graphs}
-        \begin{itemize}
-            \item \textbf{Microsoft GraphRAG}: 利用社区检测（Community Detection）解决全局性问题。
-            \item \textbf{Zep (Temporal KG)}: 引入"时序知识图谱"，记忆事实的演变。
-            \item \textbf{LangGraph}: 用图（StateGraph）规划 Agent 的思考流/控制流。
-        \end{itemize}
-
-        \vspace{0.2cm}
-
-        \textbf{核心判断}：
-        Coding 场景必须结合 \textbf{AST（依赖图）} + \textbf{执行流（因果图）}，结构化记忆是唯一解。
+      \begin{block}{关键技术差异}
+        \scriptsize
+        \begin{tabular}{lll}
+        \toprule
+        \textbf{维度} & \textbf{传统 KG} & \textbf{Context Graph} \\
+        \midrule
+        Schema & 预定义 & \textcolor{darkgreen}{运行时自适应} \\
+        更新 & 批量 ETL & \textcolor{darkgreen}{毫秒级增量} \\
+        时间 & 单时间戳 & \textcolor{darkgreen}{双时序追溯} \\
+        输出 & 结构化数据 & \textcolor{darkgreen}{Token-aware} \\
+        \bottomrule
+        \end{tabular}
       \end{block}
+
+      \vspace{0.05cm}
+
+      \begin{block}{性能数据 (Zep Benchmark)}
+        \scriptsize
+        \begin{itemize}
+            \item DMR 准确率：\textbf{94.8\%} (vs RAG 35.3\%)
+            \item LongMemEval 提升：\textbf{+18.5\%}
+            \item 检索延迟：\textbf{~300ms P95} (vs RAG ~1s)
+            \item Token 消耗：\textbf{降低 85-93\%}
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.05cm}
+      \begin{tcolorbox}[colback=layer1]
+        \scriptsize
+        \textbf{核心优势}：Schema-free 降低本体工程成本，双时序支持决策追溯，增量更新适配研发迭代。
+      \end{tcolorbox}
     \end{column}
   \end{columns}
 \end{frame}
@@ -84,154 +110,222 @@
 \begin{frame}
   \frametitle{2. 核心方案：Context Graph 可生长记忆架构}
 
-  \begin{tcolorbox}[colback=layer1, title=\textbf{方案本质：融合"数据图谱"与"控制流"的专用记忆体}]
-    \small
-    借鉴 \textbf{Zep (记忆存储)} 与 \textbf{LangGraph (流程控制)} 理念，构建专用于 Coding 的 \textbf{有向图谱}。
+  \begin{tcolorbox}[colback=layer1, title=\textbf{方案本质：为 LLM Agent 设计的工作记忆层}]
+    \footnotesize
+    借鉴 \textbf{Zep/Graphiti (记忆存储)} 与 \textbf{LangGraph (流程控制)}，构建 Coding 专用的 \textbf{Schema-free 时序图谱}。
   \end{tcolorbox}
 
-  \vspace{0.2cm}
+  \vspace{0.1cm}
 
   \begin{columns}[T]
     \begin{column}{0.55\textwidth}
       \begin{block}{架构设计：显式化"经验路径"}
-        \footnotesize
+        \scriptsize
         \textbf{1. 节点 (Nodes) - 沉淀痕迹}
         \begin{itemize}
-            \item \texttt{Action/State}: 执行与反馈（类似 LangGraph 状态）。
-            \item \texttt{Insight}: \textbf{经验胶囊}（\textcolor{darkgreen}{主动抽象}的通用规则，如"遇到X错误 $\to$ 修改Y配置"）。
+            \item \texttt{Episode}: 对话/操作流（时序有效期）
+            \item \texttt{Entity}: 代码实体（运行时推断类型）
+            \item \texttt{Insight}: \textbf{经验胶囊}（\textcolor{darkgreen}{主动抽象}规则，如"X错误 $\to$ Y解法"）
         \end{itemize}
 
-        \vspace{0.1cm}
+        \vspace{0.05cm}
 
         \textbf{2. 有向边 (Directed Edges) - 锁定逻辑}
         \begin{itemize}
-            \item \texttt{NEXT} (时序): 记录操作流，复用成功路径。
-            \item \texttt{CAUSES} (因果): 根因分析，\textbf{解决 Vector RAG 无法推理因果的缺陷}。
-            \item \texttt{DEPENDS\_ON}: 代码静态依赖（AST）。
+            \item \texttt{NEXT} (时序): 记录操作流，复用成功路径
+            \item \texttt{CAUSES} (因果): 根因分析，多跳推理
+            \item \texttt{DEPENDS\_ON}: 代码静态依赖（AST）
         \end{itemize}
+
+        \vspace{0.05cm}
+        \textbf{3. 双时序建模}：事实有效期 + 系统记录时间，支持"当时为什么这样决策"的追溯。
       \end{block}
     \end{column}
 
     \begin{column}{0.42\textwidth}
-      \begin{block}{差异化优势 (The Graph Advantage)}
-        \footnotesize
-        \begin{itemize}
-            \item \textbf{主动学习 vs 被动检索}：
-            \newline \textcolor{darkgreen}{主动总结}成功/失败模式，形成可复用规则。被动RAG只能"找相似案例"。
-
-            \item \textbf{知识迁移能力 (Zero-Shot)}：
-            \newline 图谱足够丰富时，能通过\textbf{路径推理}解决\textcolor{darkgreen}{未见过的问题}（如组合已知模式）。
-
-            \item \textbf{数据飞轮}：
-            \newline 任务越多 $\to$ 经验越丰富 $\to$ 解决新问题越快。
-        \end{itemize}
+      \begin{block}{研发场景适配}
+        \scriptsize
+        \begin{tabular}{ll}
+        \toprule
+        \textbf{场景} & \textbf{Context Graph 解法} \\
+        \midrule
+        需求变更 & Schema-free 自适应 \\
+        决策追溯 & 双时序可查历史 \\
+        多人协作 & 跨 session 共享 \\
+        代码+文档 & Episode $\to$ Entity 统一 \\
+        \bottomrule
+        \end{tabular}
       \end{block}
+
+      \vspace{0.05cm}
+
+      \begin{alertblock}{差异化竞争力}
+        \scriptsize
+        \textbf{Code KG (静态) + Context Graph (动态)}
+        \begin{itemize}
+            \item Code KG: "代码结构是什么"（AST、调用关系）
+            \item Context Graph: "为什么这样写"（决策历史、需求演变）
+        \end{itemize}
+        同时理解\textcolor{darkgreen}{代码 + 背后决策}，形成壁垒。
+      \end{alertblock}
     \end{column}
   \end{columns}
 \end{frame}
 % Page 3
 \begin{frame}
-  \frametitle{3. 实施路线与业务价值}
+  \frametitle{3. 竞争格局与战略价值}
 
   \begin{columns}[T]
-    \begin{column}{0.58\textwidth}
-      \begin{block}{落地路线图 (Roadmap)}
-        \small
-        \begin{enumerate}
-            \item \textbf{Phase 1: MVP (2-3个月) —— 主动学习闭环}
-            \begin{itemize}
-                \item 场景：SWE-bench Lite。
-                \item 目标：Agent \textcolor{darkgreen}{主动总结}失败模式，抽象为Insight节点，不再重复犯错。
-            \end{itemize}
-
-            \item \textbf{Phase 2: 企业级适配 (4-6个月) —— 存量攻坚}
-            \begin{itemize}
-                \item 场景：C/C++ 大型遗留系统。
-                \item 技术：引入 AST 代码依赖分析，构建项目级图谱。
-            \end{itemize}
-
-            \item \textbf{Phase 3: 人机协同 (长期) —— 知识迁移}
-            \begin{itemize}
-                \item \textcolor{darkgreen}{跨项目迁移}：成熟图谱迁移到新项目，\textbf{零样本解决未见过的问题}。
-                \item 吸纳人类工程师调试路径，持续丰富图谱。
-            \end{itemize}
-        \end{enumerate}
-      \end{block}
-    \end{column}
-
-    \begin{column}{0.38\textwidth}
-      \begin{alertblock}{业务价值 (Value)}
-        \small
+    \begin{column}{0.48\textwidth}
+      \begin{block}{技术路线选择}
+        \scriptsize
+        \textbf{传统动态 KG 路线 \textcolor{dotred}{(不推荐)}}
         \begin{itemize}
-            \item \textbf{降本}：
-            精准剪枝无效路径，\textbf{Token 节约 30\%}
-            \item \textbf{增效}：
-            阻断错误尝试，复杂 Bug \textbf{解决率 +20-30\%}
-            \item \textbf{资产化}：
-            消耗的算力转化为永久的\textbf{企业私有资产}（可复用的项目活文档）。
+            \item 需预定义本体，Schema 变更代价高
+            \item 批量 ETL，无法适配快速迭代
+            \item 定位模糊："又一个知识图谱应用"
+        \end{itemize}
+
+        \vspace{0.05cm}
+        \textbf{Context Graph 路线 \textcolor{darkgreen}{(推荐)}}
+        \begin{itemize}
+            \item \textcolor{darkgreen}{技术代际领先}：对齐 2024-2025 行业范式
+            \item Schema-free 降低建模成本
+            \item 产品故事清晰："AI Agent 时代的记忆架构"
+            \item 生态兼容：LangChain、LlamaIndex、MCP
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.05cm}
+
+      \begin{alertblock}{竞品对标}
+        \scriptsize
+        \begin{itemize}
+            \item 传统工具厂商（RAG）：我们有\textbf{关系推理 + 时序追溯}
+            \item AI 创业公司（通用 Memory）：我们\textbf{深耕研发场景}
+            \item 大厂（暴力长 context）：我们\textbf{更省 token、可私有部署}
         \end{itemize}
       \end{alertblock}
     \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{落地路线}
+        \scriptsize
+        \textbf{Phase 1 (MVP)}：基于 Graphiti 开源版快速验证
+        \begin{itemize}
+            \item 场景：SWE-bench Lite
+            \item 目标：主动总结失败模式，不再重复犯错
+        \end{itemize}
+
+        \vspace{0.05cm}
+        \textbf{Phase 2 (产品化)}：定制研发领域 Entity Types
+        \begin{itemize}
+            \item 场景：C/C++ 遗留系统
+            \item 技术：AST 依赖 + Context Graph 协同
+        \end{itemize}
+
+        \vspace{0.05cm}
+        \textbf{Phase 3 (差异化)}：多 Agent 协作 + 知识迁移
+        \begin{itemize}
+            \item 跨项目迁移成熟图谱
+            \item 项目级知识沉淀与复用
+        \end{itemize}
+      \end{block}
+
+      \vspace{0.05cm}
+
+      \begin{tcolorbox}[colback=layer1, title=\textbf{业务价值}]
+        \scriptsize
+        \textbf{降本}：Token 节约 85-93\% (Benchmark)
+        \newline \textbf{增效}：Bug 解决率 +20-30\%
+        \newline \textbf{资产化}：算力 $\to$ 企业私有知识资产
+      \end{tcolorbox}
+    \end{column}
   \end{columns}
 
-  \vspace{0.3cm}
+  \vspace{0.15cm}
   \centering
-  \textbf{\small 我们构建的不是工具，而是具备"经验记忆"的 Autonomous Engineer。}
+  \textbf{\scriptsize 构建具备"经验记忆"的 Autonomous Engineer，非工具而是进化的智能体。}
 \end{frame}
 
 % Page 4
 \begin{frame}
-  \frametitle{4. 业界实践与趋势：从向量到图谱的演进}
+  \frametitle{4. 头部公司选择与行业洞察}
 
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \begin{block}{主流产品记忆机制现状}
-        \footnotesize
-        \begin{itemize}
-          \item \textbf{ChatGPT}: 跨会话向量检索（2025）。
-          \textcolor{dotred}{局限：丢失关系链。}
-
-          \item \textbf{Claude}: 100K 超长上下文 + 知识库。
-
-          \item \textbf{Gemini}: 1M tokens + Personal Intelligence（整合 Gmail/Photos）。
-
-          \item \textbf{开源 (LangChain/Auto-GPT)}: 向量数据库。
-        \end{itemize}
+      \begin{block}{头部公司 Memory 方案对比}
+        \scriptsize
+        \begin{tabular}{lll}
+        \toprule
+        \textbf{公司} & \textbf{方案} & \textbf{路线} \\
+        \midrule
+        OpenAI & Dual-layer & 算力暴力 \\
+        Google & 2M Context & 算力暴力 \\
+        Anthropic & 文件系统式 & 透明可编辑 \\
+        \textcolor{darkgreen}{Zep (YC)} & \textcolor{darkgreen}{Context Graph} & \textcolor{darkgreen}{架构创新} \\
+        Letta & 虚拟内存 OS & 架构创新 \\
+        \bottomrule
+        \end{tabular}
       \end{block}
 
-      \vspace{0.1cm}
+      \vspace{0.05cm}
 
-      \begin{alertblock}{核心痛点}
-        \footnotesize
-        向量 RAG 找"相似内容"，但\textbf{不知因果关系}，无法多跳推理。
+      \begin{alertblock}{关键洞察}
+        \scriptsize
+        \begin{itemize}
+          \item \textbf{大厂路线}：算力暴力（超长 context、超大模型）
+          \item \textbf{创业路线}：架构创新（Context Graph）
+          \item \textcolor{darkgreen}{对企业级系统}：架构创新更可控、可私有部署、成本可预测
+        \end{itemize}
       \end{alertblock}
+
+      \vspace{0.05cm}
+
+      \begin{block}{开源生态支持}
+        \scriptsize
+        \begin{itemize}
+          \item \textbf{Graphiti (Zep)}: 时序图谱参考实现
+          \item \textbf{LangGraph}: StateGraph 流程控制
+          \item \textbf{Mem0}: 向量 + 图混合方案
+          \item \textbf{GraphRAG}: 社区检测 + 层级摘要
+        \end{itemize}
+      \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{block}{Context Graph 新趋势}
-        \footnotesize
-        \textbf{业界转向 Graph-Enhanced Memory：}
-
+      \begin{block}{技术趋势三大转变}
+        \scriptsize
+        \textbf{1. 被动检索 $\to$ 主动学习}
         \begin{itemize}
-          \item \textbf{Zep/Graphiti}: 时序知识图谱，记录事实演变。准确率 94.8\%，延迟 -90\%。
+          \item RAG: 被动挖掘已有知识
+          \item Context Graph: \textcolor{darkgreen}{主动总结}经验规律
+        \end{itemize}
 
-          \item \textbf{LangGraph}: 控制流图（StateGraph）。
+        \vspace{0.05cm}
+        \textbf{2. 概率匹配 $\to$ 确定性推理}
+        \begin{itemize}
+          \item 向量检索："猜你喜欢"
+          \item 图谱遍历：\textcolor{darkgreen}{沿依赖链精准定位}
+        \end{itemize}
 
-          \item \textbf{GraphRAG}: 社区检测 + 层级摘要。
-
-          \item \textbf{Mem0}: 向量+图混合，速度 +91\%。
+        \vspace{0.05cm}
+        \textbf{3. 单次查询 $\to$ 知识迁移}
+        \begin{itemize}
+          \item 传统：每次重新检索
+          \item Context Graph: \textcolor{darkgreen}{组合已知模式解决未见问题}
         \end{itemize}
       \end{block}
 
-      \vspace{0.1cm}
+      \vspace{0.05cm}
 
-      \begin{tcolorbox}[colback=layer1, title=\textbf{趋势判断}]
-        \footnotesize
-        \textbf{被动检索} $\to$ \textbf{主动学习}
+      \begin{tcolorbox}[colback=layer1, title=\textbf{战略判断}]
+        \scriptsize
+        \textbf{Context Graph 是 AI Agent Memory 的下一代范式}
         \begin{itemize}
-          \item \textcolor{darkgreen}{主动总结}经验 vs 被动挖掘知识
-          \item 确定性推理 vs 概率匹配
-          \item 知识迁移：解决未见过的问题
+          \item 时间窗口：2024-2025 行业转折点
+          \item 机会：大厂尚未形成壁垒
+          \item 壁垒：领域 Schema + 数据飞轮
         \end{itemize}
       \end{tcolorbox}
     \end{column}
