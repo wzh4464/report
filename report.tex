@@ -12,6 +12,22 @@
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
+% Additional packages for slides
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\setbeamertemplate{navigation symbols}{}
+
+\lstset{
+  basicstyle=\ttfamily\tiny,
+  breaklines=true,
+  columns=fullflexible,
+  xleftmargin=0pt,
+}
+
 % 自定义参考文献样式
 \DeclareNameAlias{author}{first-last}
 \DeclareBibliographyDriver{article}{%
@@ -25,30 +41,401 @@
 }
 
 % \usetheme{Berlin}
-\title{Weekly Report}
+\title{CodeReview Agent Integration\\into LingXi-Solutions}
+\subtitle{Implementation Plan}
 \author{WU Zihan}
+\date{\today}
+
 \begin{document}
 \maketitle
+
 \begin{frame}
   \frametitle{Outline}
   \tableofcontents
 \end{frame}
 
-\section{Introduction}
+%============================================================
+\section{Overview}
+%============================================================
 \begin{frame}
-  \frametitle{Introduction}
-  \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
-  \end{itemize}
+  \frametitle{Overview}
+  \textbf{Goal:} Integrate CodeReview as the 4th Agent (alongside Coder, QA, Miner)
+
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \textbf{Two Exposure Modes}
+    \begin{itemize}\small
+      \item TUI/CLI (Textual-based UI)
+      \item REST API (FastAPI)
+    \end{itemize}
+
+    \column{0.48\textwidth}
+    \textbf{Two Review Modes}
+    \begin{itemize}\small
+      \item \textbf{Lightweight:} Scenario detection $\to$ opinions $\to$ report
+      \item \textbf{Deep:} + static analysis + fix generation
+    \end{itemize}
+  \end{columns}
+
+  \vspace{0.6em}
+  \centering
+  \textbf{Core Three-Step Pipeline:}\\[0.3em]
+  \begin{tikzpicture}[
+    box/.style={draw,rounded corners,fill=blue!10,
+      minimum width=2.2cm,minimum height=0.6cm,font=\small},
+    >=Stealth]
+    \node[box](a){Locator};
+    \node[box,right=0.8cm of a](b){Opinion};
+    \node[box,right=0.8cm of b](c){Fix / Report};
+    \draw[->](a)--(b);
+    \draw[->](b)--(c);
+  \end{tikzpicture}
 \end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
+%============================================================
+\section{Architecture}
+%============================================================
+\begin{frame}
+  \frametitle{Workflow Architecture}
+  \centering
+  \begin{tikzpicture}[
+    box/.style={draw,rounded corners,fill=blue!15,
+      minimum width=2.8cm,minimum height=0.5cm,font=\scriptsize,align=center},
+    dbox/.style={draw,rounded corners,fill=orange!15,
+      minimum width=2.8cm,minimum height=0.5cm,font=\scriptsize,align=center},
+    >=Stealth,node distance=0.4cm]
+
+    \node[box](rh){RequestHandler};
+    \node[box,below=of rh](loc){LocatorExecutor};
+
+    % Lightweight path
+    \node[box,below left=0.7cm and 0.6cm of loc](op1){OpinionExtractor};
+    \node[box,below=of op1](r1){ReportGenerator};
+
+    % Deep path
+    \node[dbox,below right=0.7cm and 0.6cm of loc](ca){CodeAnalyzer};
+    \node[dbox,below=of ca](op2){OpinionExtractor+};
+    \node[dbox,below=of op2](fg){FixGenerator};
+    \node[dbox,below=of fg](r2){ReportGenerator};
+
+    \draw[->](rh)--(loc);
+    \draw[->,blue!70,thick](loc)--
+      node[left,font=\tiny,text=blue]{lightweight}(op1);
+    \draw[->](op1)--(r1);
+    \draw[->,orange!70,thick](loc)--
+      node[right,font=\tiny,text=orange]{deep}(ca);
+    \draw[->](ca)--(op2);
+    \draw[->](op2)--(fg);
+    \draw[->](fg)--(r2);
+
+    \node[left=0.1cm of op1,font=\tiny,text=blue!60]{fast};
+    \node[right=0.1cm of ca,font=\tiny,text=orange!60]{full};
+  \end{tikzpicture}
 \end{frame}
 
+%------------------------------------------------------------
+\begin{frame}
+  \frametitle{Component Mapping}
+  {\small
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \textbf{CodeReview Component} & \textbf{LingXi-Solutions Target} \\
+    \midrule
+    \texttt{RoutingTask}          & RequestHandler Executor \\
+    \texttt{CategoryManager}      & \texttt{review\_category/} module \\
+    \texttt{BaseCategory} subs    & Modular \texttt{scenes/} directories \\
+    \texttt{CategoryVisitor}      & Locator / Opinion / Fix Executors \\
+    \texttt{CodeAnalyzer}         & CodeAnalyzer Executor \\
+    Model access                  & Reuse \texttt{src/core/llm/} \\
+    Tree-sitter                   & Reuse existing packages \\
+    \bottomrule
+  \end{tabular}}
+
+  \vspace{0.5em}
+  \textbf{Shared State} (WorkflowContext):\\[0.2em]
+  {\scriptsize
+    \texttt{review\_mode} \textbar{}
+    \texttt{code\_input} \textbar{}
+    \texttt{review\_scenes} \textbar{}
+    \texttt{routing\_results} \textbar{}
+    \texttt{opinion\_results} \textbar{}
+    \texttt{fix\_results}
+  }
+\end{frame}
+
+%============================================================
+\section{Directory Structure}
+%============================================================
+\begin{frame}[fragile]
+  \frametitle{Directory Structure}
+  \begin{columns}[T]
+    \column{0.52\textwidth}
+    {\scriptsize\textbf{Agent Layer}}
+    \begin{lstlisting}
+src/agents/codereview/
++- models/
+|  +- code_review_request.py
++- review_category/
+|  +- category_manager.py
+|  +- base_category.py
+|  +- scenes/
+|     +- security/
+|     +- robustness/
+|     +- performance/
+|     +- core/
++- executors/
+|  +- request_handler.py
+|  +- locator.py
+|  +- opinion_extractor.py
+|  +- code_analyzer.py
+|  +- fix_generator.py
+|  +- report_generator.py
++- workflows/
+   +- codereview_workflow.py
+   +- codereview_workflow_config.py
+    \end{lstlisting}
+
+    \column{0.47\textwidth}
+    {\scriptsize\textbf{TUI Layer}}
+    \begin{lstlisting}
+src/apps/cli/codereview/
++- app.py           # TUI entry
++- headless.py      # CLI mode
++- workflow_runner.py
++- screens/
+   +- input_screen.py
+   +- progress_screen.py
+   +- results_screen.py
+   +- report_screen.py
+    \end{lstlisting}
+    \vspace{0.3em}
+    {\scriptsize\textbf{REST API Layer}}
+    \begin{lstlisting}
+src/apps/server/codereview/
++- api.py           # FastAPI
++- models.py        # Pydantic
++- dependencies.py
++- main.py          # uvicorn
+    \end{lstlisting}
+  \end{columns}
+\end{frame}
+
+%============================================================
+\section{Workflow Design}
+%============================================================
+\begin{frame}
+  \frametitle{Lightweight Review Flow}
+  \centering
+  \begin{tikzpicture}[
+    box/.style={draw,rounded corners,fill=blue!10,
+      minimum width=9cm,minimum height=0.55cm,
+      font=\scriptsize,text width=8.5cm},
+    >=Stealth,node distance=0.3cm]
+    \node[box](rh){\textbf{RequestHandler}
+      \hfill parse input, load scene groups via CategoryManager};
+    \node[box,below=of rh](loc){\textbf{LocatorExecutor}
+      \hfill batch\_execute categories (parallel), LLM routing};
+    \node[box,below=of loc](op){\textbf{OpinionExtractor}
+      \hfill build prompt from routing\_results $\to$ LLM $\to$ issues};
+    \node[box,below=of op](rpt){\textbf{ReportGenerator}
+      \hfill aggregate $\to$ Markdown/JSON report};
+
+    \draw[->](rh)--(loc);
+    \draw[->](loc)--(op);
+    \draw[->](op)--(rpt);
+  \end{tikzpicture}
+
+  \vspace{0.4em}
+  {\scriptsize
+    Tree-sitter AST $\to$
+    Category matching (INDEPENDENT scenes $\parallel$) $\to$
+    LLM opinion generation $\to$
+    structured report
+  }
+\end{frame}
+
+%------------------------------------------------------------
+\begin{frame}
+  \frametitle{Deep Review Flow (additions over lightweight)}
+  \centering
+  \begin{tikzpicture}[
+    box/.style={draw,rounded corners,fill=blue!10,
+      minimum width=3cm,minimum height=0.5cm,
+      font=\scriptsize,align=center},
+    dbox/.style={draw,rounded corners,fill=orange!15,
+      minimum width=3cm,minimum height=0.5cm,
+      font=\scriptsize,align=center},
+    >=Stealth,node distance=0.35cm]
+
+    \node[box](loc){LocatorExecutor};
+
+    \node[dbox,below left=0.6cm and 0.4cm of loc](ca)
+      {CodeAnalyzer\\{\tiny static / complexity / security}};
+    \node[box,below right=0.6cm and 0.4cm of loc](op)
+      {OpinionExtractor\\{\tiny (parallel execution)}};
+
+    \node[dbox,below=1.6cm of loc](merge){Enhanced OpinionExtractor};
+    \node[dbox,below=of merge](fix)
+      {FixGenerator\\{\tiny original $\to$ fixed code + explanation}};
+    \node[box,below=of fix](rpt){ReportGenerator};
+
+    \draw[->](loc)-|(ca);
+    \draw[->](loc)-|(op);
+    \draw[->](ca)|-(merge);
+    \draw[->](op)|-(merge);
+    \draw[->](merge)--(fix);
+    \draw[->](fix)--(rpt);
+  \end{tikzpicture}
+
+  \vspace{0.3em}
+  {\scriptsize\textbf{Deep adds:}
+    CodeAnalyzer $\parallel$ OpinionExtractor $\to$
+    merge results $\to$
+    FixGenerator (LLM-based code fixes)}
+\end{frame}
+
+%============================================================
+\section{API \& Configuration}
+%============================================================
+\begin{frame}
+  \frametitle{REST API Endpoints}
+  {\small
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{Endpoint} & \textbf{Type} & \textbf{Description} \\
+    \midrule
+    \texttt{POST /review}              & One-shot & Lightweight review \\
+    \texttt{POST /deepreview}          & One-shot & Deep review + fixes \\
+    \midrule
+    \texttt{POST /routing/task/location} & Step 1 & Locate issues \\
+    \texttt{POST /routing/task/opinion}  & Step 2 & Extract opinions \\
+    \texttt{POST /routing/task/fix}      & Step 3 & Generate fixes \\
+    \midrule
+    \texttt{POST /routing/opinion}     & Combo & Steps 1+2 \\
+    \texttt{POST /routing/fix}         & Combo & Steps 1+2+3 \\
+    \bottomrule
+  \end{tabular}}
+
+  \vspace{0.4em}
+  {\scriptsize
+    Task state: in-memory store (no SQL), linked by \texttt{task\_id}.
+    Served via \texttt{uvicorn} on port 8001.
+    CORS enabled.
+  }
+\end{frame}
+
+%------------------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Configuration System}
+  \begin{columns}[T]
+    \column{0.54\textwidth}
+    {\scriptsize\textbf{YAML Config}
+      (\texttt{codereview\_config.yaml})}
+    \begin{lstlisting}
+locator:
+  model_id: "glm46"
+  temperature: 0.1
+  max_tokens: 8000
+opinion_extractor:
+  temperature: 0.3
+  max_tokens: 8000
+fix_generator:
+  auto_enable: false
+  temperature: 0.5
+# Feature flags
+enable_deep_analysis: false
+enable_fix: false
+cache_results: true
+    \end{lstlisting}
+
+    \column{0.45\textwidth}
+    {\scriptsize\textbf{Pydantic Config Class}}
+    \begin{lstlisting}
+CodeReviewWorkflowConfig:
+  name: str
+  max_iterations: int
+  enabled_scene_groups: List
+  locator: ExecutorConfig
+  analyzer: Optional[...]
+  opinion_extractor: ExecutorConfig
+  fix_generator: Optional[...]
+  enable_deep_analysis: bool
+  enable_fix: bool
+    \end{lstlisting}
+    \vspace{0.3em}
+    {\scriptsize\textbf{Reused deps:}
+      tree-sitter, openai, fastapi, uvicorn, pydantic}
+  \end{columns}
+\end{frame}
+
+%============================================================
+\section{Implementation}
+%============================================================
+\begin{frame}
+  \frametitle{Implementation Phases}
+  \begin{description}[\scriptsize Phase 7]\scriptsize
+    \item[Phase 1] \textbf{Foundation} ---
+      Directory structure, migrate CategoryManager + BaseCategory,
+      modular scene directory, 10--15 core scenes
+    \item[Phase 2] \textbf{Executors} ---
+      RecursiveExecutor adapter, RequestHandler, Locator,
+      OpinionExtractor, config system
+    \item[Phase 3] \textbf{TUI} ---
+      Input/Progress/Results screens, WorkflowRunner,
+      home screen card integration
+    \item[Phase 4] \textbf{Deep Mode} ---
+      CodeAnalyzer, FixGenerator, ReportGenerator,
+      deep workflow wiring
+    \item[Phase 5] \textbf{REST API} ---
+      FastAPI endpoints, in-memory task store, CORS
+    \item[Phase 6] \textbf{Testing} ---
+      Unit + integration tests, documentation
+    \item[Phase 7] \textbf{Full Migration} ---
+      Remaining 40+ scene classes, comprehensive validation
+  \end{description}
+\end{frame}
+
+%------------------------------------------------------------
+\begin{frame}
+  \frametitle{Risks \& Future Directions}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+    \textbf{Risks / Mitigation}
+    \begin{itemize}\scriptsize
+      \item Tree-sitter version sync\\
+        $\to$ reuse \texttt{language-pack}
+      \item LLM prompt tuning cost\\
+        $\to$ reuse existing templates
+      \item Scene loading performance\\
+        $\to$ on-demand modular loading
+      \item No SQL for task state\\
+        $\to$ memory + file-persist
+      \item Token overflow risk\\
+        $\to$ per-executor estimation
+    \end{itemize}
+
+    \column{0.5\textwidth}
+    \textbf{Future Extensions}
+    \begin{itemize}\scriptsize
+      \item CI/CD Git Hook auto-review
+      \item LSP server for IDE integration
+      \item Custom user-defined scene rules
+      \item Auto-apply fixes to PRs
+      \item Review history \& trend analysis
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+%============================================================
+% End
+%============================================================
+\begin{frame}
+  \centering
+  \vfill
+  {\Large Thank You}\\[1em]
+  {\small Questions \& Discussion}
+  \vfill
+\end{frame}
 
 \end{document}
