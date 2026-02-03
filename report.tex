@@ -9,17 +9,13 @@
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage{booktabs}
 \usepackage{multirow}
-\usepackage{algorithm}
-\usepackage{algpseudocode}
 \usefonttheme[onlymath]{serif}
-\usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
-\addbibresource{ref.bib}
 \usepackage{hyperref}
 
 \usetheme{Madrid}
 \setbeamertemplate{navigation symbols}{}
 
-\title{\small MulVul: Retrieval-Augmented Multi-Agent Code Vulnerability Detection \\via Cross-Model Prompt Evolution}
+\title{\footnotesize MulVul: Retrieval-Augmented Multi-Agent Code Vulnerability Detection \\via Cross-Model Prompt Evolution}
 \author{\scriptsize WU Zihan}
 \date{\scriptsize \today}
 
@@ -30,40 +26,40 @@
 %% Slide 1: Introduction & Problem
 \begin{frame}
 \frametitle{\small Introduction \& Problem Statement}
-\vspace{-0.2cm}
+\vspace{-0.15cm}
 \begin{columns}[t]
 \begin{column}{0.48\textwidth}
 \textbf{\scriptsize Background}
-\begin{itemize}
-  \item[\tiny$\bullet$] {\tiny Code vulnerabilities threaten software security}
-  \item[\tiny$\bullet$] {\tiny LLMs show promise for vulnerability detection}
-  \item[\tiny$\bullet$] {\tiny CWE taxonomy: hierarchical (130 types in 10 categories)}
+\begin{itemize}\setlength{\itemsep}{0pt}
+  \item[\scriptsize$\bullet$] {\scriptsize Code vulnerabilities threaten software security}
+  \item[\scriptsize$\bullet$] {\scriptsize LLMs show promise for detection}
+  \item[\scriptsize$\bullet$] {\scriptsize CWE: 130 types in 10 categories}
 \end{itemize}
 
 \vspace{0.1cm}
 \textbf{\scriptsize Key Challenges}
-\begin{enumerate}
-  \item[{\tiny 1.}] {\tiny \textbf{Heterogeneity}: Single model struggles with diverse vulnerability patterns (buffer overflow vs injection)}
-  \item[{\tiny 2.}] {\tiny \textbf{Scalability}: Manual prompt engineering for 100+ CWE types impractical}
-  \item[{\tiny 3.}] {\tiny \textbf{Hallucination}: Multi-agent systems amplify errors through inter-agent communication}
-  \item[{\tiny 4.}] {\tiny \textbf{Efficiency}: Querying all agents prohibitively expensive}
+\begin{enumerate}\setlength{\itemsep}{1pt}
+  \item[\scriptsize 1.] {\scriptsize \textbf{Heterogeneity}: Single model struggles with diverse patterns}
+  \item[\scriptsize 2.] {\scriptsize \textbf{Scalability}: Manual prompts for 100+ CWEs impractical}
+  \item[\scriptsize 3.] {\scriptsize \textbf{Hallucination}: Multi-agent errors cascade}
+  \item[\scriptsize 4.] {\scriptsize \textbf{Efficiency}: Querying all agents expensive}
 \end{enumerate}
 \end{column}
 
 \begin{column}{0.48\textwidth}
 \textbf{\scriptsize Proposed Solution: MulVul}
-\begin{itemize}
-  \item[\tiny$\star$] {\tiny \textbf{Router-Detector Architecture}: Coarse-to-fine strategy aligned with CWE hierarchy}
-  \item[\tiny$\star$] {\tiny \textbf{Cross-Model Prompt Evolution}: Generator LLM (Claude) proposes prompts, Executor LLM (GPT-4o) evaluates}
-  \item[\tiny$\star$] {\tiny \textbf{Retrieval Augmentation}: SCALE-based knowledge base grounds reasoning}
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item[\scriptsize$\star$] {\scriptsize \textbf{Router-Detector}: Coarse-to-fine strategy}
+  \item[\scriptsize$\star$] {\scriptsize \textbf{Cross-Model Evolution}: Claude proposes, GPT-4o evaluates}
+  \item[\scriptsize$\star$] {\scriptsize \textbf{Retrieval}: SCALE-based knowledge grounding}
 \end{itemize}
 
-\vspace{0.15cm}
+\vspace{0.1cm}
 \textbf{\scriptsize Main Contributions}
-\begin{itemize}
-  \item[\tiny$\diamond$] {\tiny Novel multi-agent framework with specialized tool-augmented reasoning}
-  \item[\tiny$\diamond$] {\tiny Automated prompt optimization mitigating self-correction bias}
-  \item[\tiny$\diamond$] {\tiny SOTA: 34.79\% Macro-F1 (+41.5\% relative improvement)}
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item[\scriptsize$\diamond$] {\scriptsize Multi-agent framework with tool-augmented reasoning}
+  \item[\scriptsize$\diamond$] {\scriptsize Automated prompt optimization}
+  \item[\scriptsize$\diamond$] {\scriptsize SOTA: 34.79\% Macro-F1 (+41.5\% improvement)}
 \end{itemize}
 \end{column}
 \end{columns}
@@ -72,35 +68,36 @@
 %% Slide 2: Methodology
 \begin{frame}
 \frametitle{\small Methodology}
-\vspace{-0.3cm}
+\vspace{-0.2cm}
 \begin{columns}[t]
-\begin{column}{0.55\textwidth}
+\begin{column}{0.52\textwidth}
 \begin{center}
-\includegraphics[width=\textwidth]{workflow.jpg}
+\includegraphics[width=0.98\textwidth]{workflow.jpg}
 \end{center}
-\vspace{-0.15cm}
-{\tiny \textbf{Figure}: MulVul workflow with Router-Detector architecture}
+\vspace{-0.1cm}
+{\scriptsize \textbf{Figure}: Router-Detector architecture workflow}
 \end{column}
 
-\begin{column}{0.42\textwidth}
+\begin{column}{0.45\textwidth}
 \textbf{\scriptsize Offline Preparation}
-\begin{itemize}
-  \item[\tiny 1.] {\tiny \textbf{Knowledge Base}: Convert training samples to SCALE representations $\mathcal{K} = \{(T(x_i), y_i)\}$}
-  \item[\tiny 2.] {\tiny \textbf{Prompt Evolution}:
-    \begin{itemize}
-      \item[\tiny-] Stage I: Optimize Router for Recall@k
-      \item[\tiny-] Stage II: Optimize Detectors for F1
-      \item[\tiny-] Generator ($\mathcal{M}_{\text{evo}}$) mutates prompts
-      \item[\tiny-] Executor ($\mathcal{M}_{\text{exec}}$) evaluates fitness
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item[\scriptsize 1.] {\scriptsize \textbf{Knowledge Base}: SCALE representations}
+
+  {\scriptsize $\mathcal{K} = \{(T(x_i), y_i)\}_{i=1}^{N}$}
+  \item[\scriptsize 2.] {\scriptsize \textbf{Prompt Evolution}:
+    \begin{itemize}\setlength{\itemsep}{0pt}
+      \item[\scriptsize-] Stage I: Optimize Router (Recall@k)
+      \item[\scriptsize-] Stage II: Optimize Detectors (F1)
+      \item[\scriptsize-] Generator mutates, Executor evaluates
     \end{itemize}}
 \end{itemize}
 
-\vspace{0.1cm}
+\vspace{0.08cm}
 \textbf{\scriptsize Online Detection}
-\begin{itemize}
-  \item[\tiny 1.] {\tiny \textbf{Router Agent}: SCALE analysis + Global retrieval $\to$ Top-k categories}
-  \item[\tiny 2.] {\tiny \textbf{Detector Agents}: Contrastive retrieval (in-category + clean + hard negatives) $\to$ Fine-grained CWE types}
-  \item[\tiny 3.] {\tiny \textbf{Isolation}: No inter-agent communication prevents error cascading}
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item[\scriptsize 1.] {\scriptsize \textbf{Router}: SCALE + Global retrieval $\to$ Top-k}
+  \item[\scriptsize 2.] {\scriptsize \textbf{Detectors}: Contrastive retrieval $\to$ CWE types}
+  \item[\scriptsize 3.] {\scriptsize \textbf{Isolation}: No inter-agent communication}
 \end{itemize}
 \end{column}
 \end{columns}
@@ -109,23 +106,24 @@
 %% Slide 3: Results
 \begin{frame}
 \frametitle{\small Experimental Results \& Conclusion}
-\vspace{-0.25cm}
+\vspace{-0.2cm}
 \begin{columns}[t]
-\begin{column}{0.48\textwidth}
-\textbf{\scriptsize Dataset \& Setup}
-\begin{itemize}
-  \item[\tiny$\bullet$] {\tiny PrimeVul: 6,968 vulnerable + 229,764 benign C/C++ functions, 130 CWE types}
-  \item[\tiny$\bullet$] {\tiny Baselines: GPT-4o, LLM$\times$CPG, LLMVulExp, VISION}
+\begin{column}{0.47\textwidth}
+\textbf{\scriptsize Dataset}
+\begin{itemize}\setlength{\itemsep}{0pt}
+  \item[\scriptsize$\bullet$] {\scriptsize PrimeVul: 6,968 vulnerable + 229,764 benign}
+  \item[\scriptsize$\bullet$] {\scriptsize C/C++ functions, 130 CWE types}
 \end{itemize}
 
-\vspace{0.1cm}
+\vspace{0.08cm}
 \textbf{\scriptsize Type-Level Detection (\%)}
-\vspace{-0.1cm}
+\vspace{-0.05cm}
 \begin{center}
-{\tiny
+{\scriptsize
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}lccc@{}}
 \toprule
-\textbf{Method} & \textbf{Macro-P} & \textbf{Macro-R} & \textbf{Macro-F1} \\
+\textbf{Method} & \textbf{P} & \textbf{R} & \textbf{F1} \\
 \midrule
 GPT-4o & 4.76 & 3.28 & 3.86 \\
 LLM$\times$CPG & 16.80 & 45.80 & 24.58 \\
@@ -137,50 +135,50 @@ VISION & 14.91 & 23.12 & 18.12 \\
 }
 \end{center}
 
-\vspace{0.1cm}
-\textbf{\scriptsize Ablation Study (Type-Level Macro-F1)}
-\vspace{-0.1cm}
+\vspace{0.08cm}
+\textbf{\scriptsize Ablation Study}
+\vspace{-0.05cm}
 \begin{center}
-{\tiny
+{\scriptsize
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}lc@{}}
 \toprule
-\textbf{Variant} & \textbf{Macro-F1} \\
+\textbf{Variant} & \textbf{F1} \\
 \midrule
-w/o Retrieval & 21.80 (-12.76) \\
-w/o Agents & 28.61 (-5.95) \\
-w/o Evolution & 22.80 (-11.76) \\
-\textbf{MulVul (Full)} & \textbf{34.56} \\
+w/o Retrieval & 21.80 \\
+w/o Agents & 28.61 \\
+w/o Evolution & 22.80 \\
+\textbf{Full} & \textbf{34.56} \\
 \bottomrule
 \end{tabular}
 }
 \end{center}
 \end{column}
 
-\begin{column}{0.48\textwidth}
+\begin{column}{0.5\textwidth}
 \textbf{\scriptsize Key Findings}
-\begin{itemize}
-  \item[\tiny$\blacktriangleright$] {\tiny \textbf{SOTA Performance}: 34.79\% F1, outperforms best baseline by 41.5\%}
-  \item[\tiny$\blacktriangleright$] {\tiny \textbf{Prompt Evolution}: +51.6\% improvement over manual prompts}
-  \item[\tiny$\blacktriangleright$] {\tiny \textbf{Few-Shot Strength}: 48\% F1 on CWEs with <100 samples (2.4$\times$ vs LLM$\times$CPG)}
-  \item[\tiny$\blacktriangleright$] {\tiny \textbf{Routing Trade-off}: Top-3 balances precision (27.90\%) and recall (46.19\%)}
-  \item[\tiny$\blacktriangleright$] {\tiny \textbf{Component Analysis}:
-    \begin{itemize}
-      \item[\tiny-] Retrieval most critical (-12.76 F1 when removed)
-      \item[\tiny-] Evolution essential (-11.76 F1)
-      \item[\tiny-] Multi-agent architecture improves (-5.95 F1)
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item[\scriptsize$\blacktriangleright$] {\scriptsize \textbf{SOTA}: 34.79\% F1, +41.5\% vs best baseline}
+  \item[\scriptsize$\blacktriangleright$] {\scriptsize \textbf{Evolution}: +51.6\% over manual prompts}
+  \item[\scriptsize$\blacktriangleright$] {\scriptsize \textbf{Few-Shot}: 48\% F1 on <100 samples}
+  \item[\scriptsize$\blacktriangleright$] {\scriptsize \textbf{Components}:
+    \begin{itemize}\setlength{\itemsep}{0pt}
+      \item[\scriptsize-] Retrieval most critical ($-12.76$)
+      \item[\scriptsize-] Evolution essential ($-11.76$)
+      \item[\scriptsize-] Multi-agent helps ($-5.95$)
     \end{itemize}}
 \end{itemize}
 
-\vspace{0.15cm}
+\vspace{0.1cm}
 \textbf{\scriptsize Conclusion}
-\begin{itemize}
-  \item[\tiny$\checkmark$] {\tiny MulVul addresses heterogeneity via specialized agents with cross-model prompt evolution}
-  \item[\tiny$\checkmark$] {\tiny Retrieval augmentation mitigates hallucination and enables few-shot detection}
-  \item[\tiny$\checkmark$] {\tiny Demonstrates scalability \& effectiveness for real-world vulnerability detection}
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item[\scriptsize$\checkmark$] {\scriptsize Specialized agents + cross-model evolution}
+  \item[\scriptsize$\checkmark$] {\scriptsize Retrieval mitigates hallucination}
+  \item[\scriptsize$\checkmark$] {\scriptsize Scalable \& effective for real-world use}
 \end{itemize}
 
-\vspace{0.1cm}
-{\tiny \textbf{Limitations}: Single language (C/C++), computational cost (1+k LLM calls), potential misuse}
+\vspace{0.08cm}
+{\scriptsize \textbf{Limitations}: C/C++ only, 1+k LLM calls, potential misuse}
 \end{column}
 \end{columns}
 \end{frame}
