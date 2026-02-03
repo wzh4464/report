@@ -4,52 +4,185 @@
 % arara: pdflatex: { options: ['-synctex=1', '-interaction=nonstopmode', '-output-directory=build'] }
 % arara: move: { files: ["build/report.pdf"], target: "pdf/" }
 
-\documentclass{beamer}
+\documentclass[aspectratio=169,10pt]{beamer}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usefonttheme[onlymath]{serif}
-% biblatex with biber
 \usepackage[backend=biber,style=numeric,sorting=none,firstinits=true]{biblatex}
 \addbibresource{ref.bib}
 \usepackage{hyperref}
 
-% 自定义参考文献样式
-\DeclareNameAlias{author}{first-last}
-\DeclareBibliographyDriver{article}{%
-  \printnames{author}%
-  \setunit{\addspace}%
-  \printfield{title}%
-  \newunit
-  \printfield{journaltitle}%
-  \setunit{\addspace}%
-  \printfield{year}%
-}
+\usetheme{Madrid}
+\setbeamertemplate{navigation symbols}{}
 
-% \usetheme{Berlin}
-\title{Weekly Report}
-\author{WU Zihan}
+\title{\small MulVul: Retrieval-Augmented Multi-Agent Code Vulnerability Detection \\via Cross-Model Prompt Evolution}
+\author{\scriptsize WU Zihan}
+\date{\scriptsize \today}
+
 \begin{document}
-\maketitle
+
+\frame{\titlepage}
+
+%% Slide 1: Introduction & Problem
 \begin{frame}
-  \frametitle{Outline}
-  \tableofcontents
+\frametitle{\small Introduction \& Problem Statement}
+\vspace{-0.2cm}
+\begin{columns}[t]
+\begin{column}{0.48\textwidth}
+\textbf{\scriptsize Background}
+\begin{itemize}
+  \item[\tiny$\bullet$] {\tiny Code vulnerabilities threaten software security}
+  \item[\tiny$\bullet$] {\tiny LLMs show promise for vulnerability detection}
+  \item[\tiny$\bullet$] {\tiny CWE taxonomy: hierarchical (130 types in 10 categories)}
+\end{itemize}
+
+\vspace{0.1cm}
+\textbf{\scriptsize Key Challenges}
+\begin{enumerate}
+  \item[{\tiny 1.}] {\tiny \textbf{Heterogeneity}: Single model struggles with diverse vulnerability patterns (buffer overflow vs injection)}
+  \item[{\tiny 2.}] {\tiny \textbf{Scalability}: Manual prompt engineering for 100+ CWE types impractical}
+  \item[{\tiny 3.}] {\tiny \textbf{Hallucination}: Multi-agent systems amplify errors through inter-agent communication}
+  \item[{\tiny 4.}] {\tiny \textbf{Efficiency}: Querying all agents prohibitively expensive}
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\textbf{\scriptsize Proposed Solution: MulVul}
+\begin{itemize}
+  \item[\tiny$\star$] {\tiny \textbf{Router-Detector Architecture}: Coarse-to-fine strategy aligned with CWE hierarchy}
+  \item[\tiny$\star$] {\tiny \textbf{Cross-Model Prompt Evolution}: Generator LLM (Claude) proposes prompts, Executor LLM (GPT-4o) evaluates}
+  \item[\tiny$\star$] {\tiny \textbf{Retrieval Augmentation}: SCALE-based knowledge base grounds reasoning}
+\end{itemize}
+
+\vspace{0.15cm}
+\textbf{\scriptsize Main Contributions}
+\begin{itemize}
+  \item[\tiny$\diamond$] {\tiny Novel multi-agent framework with specialized tool-augmented reasoning}
+  \item[\tiny$\diamond$] {\tiny Automated prompt optimization mitigating self-correction bias}
+  \item[\tiny$\diamond$] {\tiny SOTA: 34.79\% Macro-F1 (+41.5\% relative improvement)}
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
-\section{Introduction}
+%% Slide 2: Methodology
 \begin{frame}
-  \frametitle{Introduction}
-  \begin{itemize}
-    \item The main task of this week is to implement the algorithm of the paper.  \cite{yan2017CoclusteringMultidimensionalBig}
-    \item The algorithm is implemented in Python.
-    \item The algorithm is tested on the data of the paper.
-  \end{itemize}
+\frametitle{\small Methodology}
+\vspace{-0.3cm}
+\begin{columns}[t]
+\begin{column}{0.55\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{workflow.jpg}
+\end{center}
+\vspace{-0.15cm}
+{\tiny \textbf{Figure}: MulVul workflow with Router-Detector architecture}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\textbf{\scriptsize Offline Preparation}
+\begin{itemize}
+  \item[\tiny 1.] {\tiny \textbf{Knowledge Base}: Convert training samples to SCALE representations $\mathcal{K} = \{(T(x_i), y_i)\}$}
+  \item[\tiny 2.] {\tiny \textbf{Prompt Evolution}:
+    \begin{itemize}
+      \item[\tiny-] Stage I: Optimize Router for Recall@k
+      \item[\tiny-] Stage II: Optimize Detectors for F1
+      \item[\tiny-] Generator ($\mathcal{M}_{\text{evo}}$) mutates prompts
+      \item[\tiny-] Executor ($\mathcal{M}_{\text{exec}}$) evaluates fitness
+    \end{itemize}}
+\end{itemize}
+
+\vspace{0.1cm}
+\textbf{\scriptsize Online Detection}
+\begin{itemize}
+  \item[\tiny 1.] {\tiny \textbf{Router Agent}: SCALE analysis + Global retrieval $\to$ Top-k categories}
+  \item[\tiny 2.] {\tiny \textbf{Detector Agents}: Contrastive retrieval (in-category + clean + hard negatives) $\to$ Fine-grained CWE types}
+  \item[\tiny 3.] {\tiny \textbf{Isolation}: No inter-agent communication prevents error cascading}
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
-% biblatex bibliography
-\begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \printbibliography
-\end{frame}
+%% Slide 3: Results
+\begin{frame}
+\frametitle{\small Experimental Results \& Conclusion}
+\vspace{-0.25cm}
+\begin{columns}[t]
+\begin{column}{0.48\textwidth}
+\textbf{\scriptsize Dataset \& Setup}
+\begin{itemize}
+  \item[\tiny$\bullet$] {\tiny PrimeVul: 6,968 vulnerable + 229,764 benign C/C++ functions, 130 CWE types}
+  \item[\tiny$\bullet$] {\tiny Baselines: GPT-4o, LLM$\times$CPG, LLMVulExp, VISION}
+\end{itemize}
 
+\vspace{0.1cm}
+\textbf{\scriptsize Type-Level Detection (\%)}
+\vspace{-0.1cm}
+\begin{center}
+{\tiny
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Method} & \textbf{Macro-P} & \textbf{Macro-R} & \textbf{Macro-F1} \\
+\midrule
+GPT-4o & 4.76 & 3.28 & 3.86 \\
+LLM$\times$CPG & 16.80 & 45.80 & 24.58 \\
+LLMVulExp & 19.31 & 27.60 & 22.72 \\
+VISION & 14.91 & 23.12 & 18.12 \\
+\textbf{MulVul} & \textbf{27.90} & \textbf{46.19} & \textbf{34.79} \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+
+\vspace{0.1cm}
+\textbf{\scriptsize Ablation Study (Type-Level Macro-F1)}
+\vspace{-0.1cm}
+\begin{center}
+{\tiny
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Variant} & \textbf{Macro-F1} \\
+\midrule
+w/o Retrieval & 21.80 (-12.76) \\
+w/o Agents & 28.61 (-5.95) \\
+w/o Evolution & 22.80 (-11.76) \\
+\textbf{MulVul (Full)} & \textbf{34.56} \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\textbf{\scriptsize Key Findings}
+\begin{itemize}
+  \item[\tiny$\blacktriangleright$] {\tiny \textbf{SOTA Performance}: 34.79\% F1, outperforms best baseline by 41.5\%}
+  \item[\tiny$\blacktriangleright$] {\tiny \textbf{Prompt Evolution}: +51.6\% improvement over manual prompts}
+  \item[\tiny$\blacktriangleright$] {\tiny \textbf{Few-Shot Strength}: 48\% F1 on CWEs with <100 samples (2.4$\times$ vs LLM$\times$CPG)}
+  \item[\tiny$\blacktriangleright$] {\tiny \textbf{Routing Trade-off}: Top-3 balances precision (27.90\%) and recall (46.19\%)}
+  \item[\tiny$\blacktriangleright$] {\tiny \textbf{Component Analysis}:
+    \begin{itemize}
+      \item[\tiny-] Retrieval most critical (-12.76 F1 when removed)
+      \item[\tiny-] Evolution essential (-11.76 F1)
+      \item[\tiny-] Multi-agent architecture improves (-5.95 F1)
+    \end{itemize}}
+\end{itemize}
+
+\vspace{0.15cm}
+\textbf{\scriptsize Conclusion}
+\begin{itemize}
+  \item[\tiny$\checkmark$] {\tiny MulVul addresses heterogeneity via specialized agents with cross-model prompt evolution}
+  \item[\tiny$\checkmark$] {\tiny Retrieval augmentation mitigates hallucination and enables few-shot detection}
+  \item[\tiny$\checkmark$] {\tiny Demonstrates scalability \& effectiveness for real-world vulnerability detection}
+\end{itemize}
+
+\vspace{0.1cm}
+{\tiny \textbf{Limitations}: Single language (C/C++), computational cost (1+k LLM calls), potential misuse}
+\end{column}
+\end{columns}
+\end{frame}
 
 \end{document}
