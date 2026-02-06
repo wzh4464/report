@@ -21,6 +21,10 @@ build/
 # macOS
 .DS_Store
 
+# Symbolic links to PDF output
+slides/report.pdf
+slides/report.synctex.gz
+
 # LaTeX temporary files
 *.lof
 *.lot

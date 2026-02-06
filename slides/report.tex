@@ -2,7 +2,7 @@
 % arara: biber: { options: ["--output-directory=../build", "../build/report"] }
 % arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode', '-output-directory=../build'] }
 % arara: xelatex: { options: ['-synctex=1', '-interaction=nonstopmode', '-output-directory=../build'] }
-% arara: move: { files: ["../build/report.pdf"], target: "../pdf/" }
+% arara: move: { files: ["../build/report.pdf", "../build/report.synctex.gz"], target: "../pdf/" }
 
 \documentclass[aspectratio=169,10pt]{beamer}
 \usepackage{graphicx}
@@ -361,7 +361,7 @@
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
       \begin{block}{三种节点类型}
-        \footnotesize
+        \scriptsize
         \textbf{类型 1: Action Node（动作节点）}
         \begin{itemize}
           \item \texttt{action\_type}: read\_file | write\_file | run\_test
@@ -392,7 +392,7 @@
 
     \begin{column}{0.48\textwidth}
       \begin{block}{四种边类型}
-        \footnotesize
+        \scriptsize
         \textbf{类型 1: NEXT（时序/因果）}
         \begin{itemize}
           \item Action\_A $\xrightarrow{\text{NEXT}}$ Action\_B
