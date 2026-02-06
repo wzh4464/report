@@ -16,7 +16,9 @@
       "Bash(uv venv:*)",
       "Bash(source:*)",
       "Bash(uv pip install:*)",
-      "Bash(gh release create:*)"
+      "Bash(gh release create:*)",
+      "Bash(xxd:*)",
+      "Bash(awk:*)"
     ]
   }
 }
