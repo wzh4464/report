@@ -126,14 +126,14 @@
     % Agent 路线（左）
     \node[box, fill=agentblue!25] (react) at (-4.5, 1.8) {ReAct};
     \node[box, fill=agentblue!35] (reflexion) at (-4.5, 0.6) {Reflexion};
-    \node[box, fill=agentblue!45] (lats) at (-4.5, -0.6) {LATS};
-    \node[box, fill=agentblue!55] (voyager) at (-4.5, -1.8) {Voyager};
+    \node[box, fill=agentblue!45] (voyager) at (-4.5, -0.6) {Voyager};
+    \node[box, fill=agentblue!55] (lats) at (-4.5, -1.8) {LATS};
 
     % Memory 路线（右）
     \node[box, fill=memgreen!25] (rag) at (4.5, 1.8) {RAG};
-    \node[box, fill=memgreen!35] (graphrag) at (4.5, 0.6) {GraphRAG};
-    \node[box, fill=memgreen!45] (expel) at (4.5, -0.6) {ExpeL / A-Mem};
-    \node[box, fill=memgreen!55] (zep) at (4.5, -1.8) {Zep (Graphiti)};
+    \node[box, fill=memgreen!35] (expel) at (4.5, 0.6) {ExpeL};
+    \node[box, fill=memgreen!45] (graphrag) at (4.5, -0.6) {GraphRAG};
+    \node[box, fill=memgreen!55] (zep) at (4.5, -1.8) {Zep / A-Mem};
 
     % 终点
     \node[box, fill=cgold, font=\bfseries, minimum width=3.5cm, minimum height=0.9cm] (cg) at (0, -3.2) {\large Context Graph};
@@ -147,15 +147,15 @@
     % 连线 Agent
     \draw[->, thick, lineblue] (llm) -- (-2, 1.8) -- (react);
     \draw[->, lineblue] (react) -- node[right, font=\scriptsize, text=graytext] {+反思} (reflexion);
-    \draw[->, lineblue] (reflexion) -- node[right, font=\scriptsize, text=graytext] {+树搜索} (lats);
-    \draw[->, lineblue] (lats) -- node[right, font=\scriptsize, text=graytext] {+持久化} (voyager);
-    \draw[->, thick, lineblue] (voyager) -- (-2, -3.2) -- (cg);
+    \draw[->, lineblue] (reflexion) -- node[right, font=\scriptsize, text=graytext] {+持久化} (voyager);
+    \draw[->, lineblue] (voyager) -- node[right, font=\scriptsize, text=graytext] {+树搜索} (lats);
+    \draw[->, thick, lineblue] (lats) -- (-2, -3.2) -- (cg);
 
     % 连线 Memory
     \draw[->, thick, linegreen] (llm) -- (2, 1.8) -- (rag);
-    \draw[->, linegreen] (rag) -- node[left, font=\scriptsize, text=graytext] {+静态图} (graphrag);
-    \draw[->, linegreen] (graphrag) -- node[left, font=\scriptsize, text=graytext] {+自组织} (expel);
-    \draw[->, linegreen] (expel) -- node[left, font=\scriptsize, text=graytext] {+双时态} (zep);
+    \draw[->, linegreen] (rag) -- node[left, font=\scriptsize, text=graytext] {+经验学习} (expel);
+    \draw[->, linegreen] (expel) -- node[left, font=\scriptsize, text=graytext] {+图结构} (graphrag);
+    \draw[->, linegreen] (graphrag) -- node[left, font=\scriptsize, text=graytext] {+时序/双时态} (zep);
     \draw[->, thick, linegreen] (zep) -- (2, -3.2) -- (cg);
 
     % 关键注释
@@ -435,7 +435,7 @@
 \begin{frame}
   \frametitle{Agent 演进史}
 
-  \footnotesize
+  \scriptsize
   \renewcommand{\arraystretch}{1.3}
   \centering
   \begin{tabular}{>{\centering}p{2cm}|p{3.5cm}|p{2.5cm}|p{3cm}}
@@ -445,17 +445,17 @@
     \hline
     \textbf{Reflexion} \cite{shinn2023reflexion} & 语言化自我反思 & 反思列表（滑动窗口） & 经验无法跨任务 \\
     \hline
-    \textbf{LATS} \cite{zhou2024lats} & MCTS 树搜索+价值函数 & 搜索树节点 & 树不持久化 \\
+    \textbf{Gen. Agents} \cite{park2023generative} & 记忆流+反思+计划 & Memory Stream & 线性增长，无图结构 \\
     \hline
     \textbf{Voyager} \cite{wang2024voyager} & 自动课程+技能库 & 代码技能库 & 扁平列表，无关联 \\
     \hline
-    \textbf{Gen. Agents} \cite{park2023generative} & 记忆流+反思+计划 & Memory Stream & 线性增长，无图结构 \\
+    \textbf{LATS} \cite{zhou2024lats} & MCTS 树搜索+价值函数 & 搜索树节点 & 树不持久化 \\
   \end{tabular}
 
   \vspace{0.3cm}
 
   \begin{alertblock}{演进趋势：Agent 越强，越需要结构化记忆}
-    ReAct（无记忆）$\rightarrow$ Reflexion（反思列表）$\rightarrow$ LATS（搜索树）$\rightarrow$ Voyager（扁平技能库）$\rightarrow$ \textbf{Context Graph}（结构化知识图）
+    ReAct（无记忆）$\rightarrow$ Reflexion（反思列表）$\rightarrow$ Voyager（扁平技能库）$\rightarrow$ LATS（搜索树）$\rightarrow$ \textbf{Context Graph}（结构化知识图）
   \end{alertblock}
 \end{frame}
 
@@ -549,29 +549,29 @@
 \begin{frame}
   \frametitle{Memory 演进史}
 
-  \footnotesize
+  \scriptsize
   \renewcommand{\arraystretch}{1.3}
   \centering
   \begin{tabular}{>{\centering}p{2.2cm}|p{3cm}|p{2.5cm}|p{3cm}}
     \textbf{系统} & \textbf{核心创新} & \textbf{记忆结构} & \textbf{局限} \\
     \hline
-    \textbf{RAG} & 向量检索增强 & 文本块列表 & 丢失关系 \\
+    \textbf{RAG} (2020) & 向量检索增强 & 文本块列表 & 丢失关系 \\
+    \hline
+    \textbf{ExpeL} \cite{zhao2024expel} & 经验学习+洞察提取 & 洞察列表+轨迹 & 列表存储 \\
     \hline
     \textbf{GraphRAG} \cite{microsoft2024graphrag} & 社区检测+分层摘要 & 实体图+社区 & 静态快照 \\
     \hline
     \textbf{CGR³} \cite{xu2024cgr3} & 上下文增强 KG & 扩展三元组 & 无 Agent 交互 \\
     \hline
-    \textbf{ExpeL} \cite{zhao2024expel} & 经验学习+洞察提取 & 洞察列表+轨迹 & 列表存储 \\
+    \textbf{Zep} \cite{rasmussen2025zep} & 时序知识图谱 & Episode+Entity+Community & 双时态，最接近 CG \\
     \hline
     \textbf{A-Mem} \cite{xu2025amem} & Zettelkasten 自组织 & 动态链接笔记 & 缺少时序 \\
-    \hline
-    \textbf{Zep} \cite{rasmussen2025zep} & 时序知识图谱 & Episode+Entity+Community & 双时态，最接近 CG \\
   \end{tabular}
 
   \vspace{0.3cm}
 
   \begin{alertblock}{演进趋势：Memory 越高级，越趋向图结构}
-    文本块 $\rightarrow$ 实体图 $\rightarrow$ 上下文图 $\rightarrow$ 动态链接 $\rightarrow$ \textbf{时序知识图谱} = Context Graph
+    文本块（RAG）$\rightarrow$ 经验列表（ExpeL）$\rightarrow$ 实体图（GraphRAG）$\rightarrow$ 时序图（Zep）$\rightarrow$ \textbf{Context Graph}
   \end{alertblock}
 \end{frame}
 
@@ -888,15 +888,15 @@
     \hline
     Reflexion & Agent & 自我反思 & 反思列表 & \textcolor{red}{\ding{55}} & \textcolor{red}{\ding{55}} & NeurIPS 23 \\
     \hline
-    LATS & Agent & MCTS 搜索 & 搜索树 & \textcolor{red}{\ding{55}} & \textcolor{darkgreen}{\ding{51}} & ICML 24 \\
+    Gen. Agents & Agent & 记忆流+反思 & Memory Stream & \textcolor{darkgreen}{\ding{51}} & \textcolor{red}{\ding{55}} & UIST 23 \\
     \hline
     Voyager & Agent & 技能库 & 代码列表 & \textcolor{darkgreen}{\ding{51}} & \textcolor{red}{\ding{55}} & arXiv 23 \\
     \hline
-    Gen. Agents & Agent & 记忆流+反思 & Memory Stream & \textcolor{darkgreen}{\ding{51}} & \textcolor{red}{\ding{55}} & UIST 23 \\
-    \hline
-    GraphRAG & Memory & 社区检测 & 实体图+社区 & \textcolor{darkgreen}{\ding{51}} & \textcolor{darkgreen}{\ding{51}} & arXiv 24 \\
+    LATS & Agent & MCTS 搜索 & 搜索树 & \textcolor{red}{\ding{55}} & \textcolor{darkgreen}{\ding{51}} & ICML 24 \\
     \hline
     ExpeL & Memory & 经验学习 & 洞察列表 & \textcolor{darkgreen}{\ding{51}} & \textcolor{red}{\ding{55}} & AAAI 24 \\
+    \hline
+    GraphRAG & Memory & 社区检测 & 实体图+社区 & \textcolor{darkgreen}{\ding{51}} & \textcolor{darkgreen}{\ding{51}} & arXiv 24 \\
     \hline
     A-Mem & Memory & Zettelkasten & 动态链接 & \textcolor{darkgreen}{\ding{51}} & \textcolor{darkgreen}{\ding{51}} & NeurIPS 25 \\
     \hline
@@ -1179,7 +1179,7 @@
       \hrule height 1pt
       \vspace{0.2cm}
 
-      \footnotesize
+      % \footnotesize
       \textbf{Q1: 节点粒度}
       \begin{itemize}
         \item 每个 action 一个节点？
@@ -1210,7 +1210,7 @@
       \hrule height 1pt
       \vspace{0.2cm}
 
-      \footnotesize
+      % \footnotesize
       \textbf{Q4: 检索效率}
       \begin{itemize}
         \item 图规模增长后如何保持效率？
@@ -1241,7 +1241,7 @@
       \hrule height 1pt
       \vspace{0.2cm}
 
-      \footnotesize
+      % \footnotesize
       \textbf{Q7: Bug 表示}
       \begin{itemize}
         \item 如何判断 Bug 相似性？
@@ -1324,8 +1324,8 @@
 
   \begin{block}{核心论点}
     \begin{itemize}
-      \item \textbf{Agent 演进}（Reflexion $\rightarrow$ LATS $\rightarrow$ Voyager）：越来越需要结构化记忆
-      \item \textbf{Memory 演进}（RAG $\rightarrow$ GraphRAG $\rightarrow$ A-Mem $\rightarrow$ Zep）：越来越趋向图结构
+      \item \textbf{Agent 演进}（Reflexion $\rightarrow$ Voyager $\rightarrow$ LATS）：越来越需要结构化记忆
+      \item \textbf{Memory 演进}（RAG $\rightarrow$ ExpeL $\rightarrow$ GraphRAG $\rightarrow$ Zep）：越来越趋向图结构
       \item 两条路的终点是\textbf{同一个}：\textbf{Context Graph} = 图结构 + 决策痕迹 + 动态学习
     \end{itemize}
   \end{block}
