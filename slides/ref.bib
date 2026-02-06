@@ -1,3 +1,4 @@
+% ===== Industry & Concept =====
 @online{foundationcapital2024context,
   title        = {AI's trillion-dollar opportunity: Context graphs},
   author       = {Gupta, Jaya and Garg, Ashu},
@@ -7,19 +8,6 @@
   organization = {Foundation Capital},
   url          = {https://foundationcapital.com/context-graphs-ais-trillion-dollar-opportunity/},
   urldate      = {2025-01-22}
-}
-
-@article{xu2024cgr3,
-  title        = {Context Graph},
-  author       = {Xu, Chengjin and Li, Muzhi and Yang, Cehao and Jiang, Xuhui and Tang, Lumingyuan and Qi, Yiyan and Guo, Jian},
-  year         = {2024},
-  month        = {6},
-  journal      = {arXiv preprint arXiv:2406.11160},
-  url          = {https://arxiv.org/abs/2406.11160},
-  eprint       = {2406.11160},
-  archivePrefix = {arXiv},
-  primaryClass = {cs.AI},
-  note         = {Proposes CGR³ (Context Graph Reasoning) paradigm}
 }
 
 @online{atlan2024context,
@@ -61,79 +49,58 @@
   urldate      = {2025-01-22}
 }
 
+% ===== Agent Evolution =====
+@article{shinn2023reflexion,
+  title        = {Reflexion: Language Agents with Verbal Reinforcement Learning},
+  author       = {Shinn, Noah and Cassano, Federico and Gopinath, Ashwin and Narasimhan, Karthik and Yao, Shunyu},
+  journal      = {Advances in Neural Information Processing Systems},
+  volume       = {36},
+  year         = {2023}
+}
+
+@inproceedings{zhou2024lats,
+  title        = {Language Agent Tree Search Unifies Reasoning, Acting, and Planning in Language Models},
+  author       = {Zhou, Andy and Yan, Kai and Shlapentokh-Rothman, Michal and Wang, Haohan and Wang, Yu-Xiong},
+  booktitle    = {Proceedings of the 41st International Conference on Machine Learning (ICML)},
+  year         = {2024}
+}
+
+@article{wang2024voyager,
+  title        = {Voyager: An Open-Ended Embodied Agent with Large Language Models},
+  author       = {Wang, Guanzhi and Xie, Yuqi and Jiang, Yunfan and Mandlekar, Ajay and Xiao, Chaowei and Zhu, Yuke and Fan, Linxi and Anandkumar, Anima},
+  journal      = {arXiv preprint arXiv:2305.16291},
+  year         = {2024}
+}
+
+@inproceedings{park2023generative,
+  title        = {Generative Agents: Interactive Simulacra of Human Behavior},
+  author       = {Park, Joon Sung and O'Brien, Joseph C and Cai, Carrie J and Morris, Meredith Ringel and Liang, Percy and Bernstein, Michael S},
+  booktitle    = {Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology (UIST)},
+  year         = {2023}
+}
+
+% ===== Memory Evolution: GraphRAG family =====
 @online{microsoft2024graphrag,
   title        = {GraphRAG: Unlocking LLM discovery on narrative private data},
   author       = {{Microsoft Research}},
   year         = {2024},
   organization = {Microsoft Research},
   url          = {https://www.microsoft.com/en-us/research/blog/graphrag-unlocking-llm-discovery-on-narrative-private-data/},
-  note         = {Official documentation: https://microsoft.github.io/graphrag/},
+  note         = {From Local to Global: A Graph RAG Approach to Query-Focused Summarization, arXiv:2404.16130},
   urldate      = {2025-01-22}
 }
 
-@inproceedings{zhang2025gor,
-  title        = {Graph of Records: Boosting Retrieval Augmented Generation for Long-context Summarization with Graphs},
-  author       = {Zhang, Haozhen and Feng, Tao and You, Jiaxuan},
-  year         = {2025},
-  booktitle    = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-  pages        = {23780--23799},
-  address      = {Vienna, Austria},
-  publisher    = {Association for Computational Linguistics},
-  url          = {https://aclanthology.org/2025.acl-long.1159/},
-  doi          = {10.18653/v1/2025.acl-long.1159}
-}
-
-@inproceedings{zhao2024expel,
-  title        = {ExpeL: LLM Agents Are Experiential Learners},
-  author       = {Zhao, Andrew and Huang, Daniel and Xu, Quentin and Lin, Matthieu and Liu, Yong-Jin and Huang, Gao},
+@article{xu2024cgr3,
+  title        = {Context Graph},
+  author       = {Xu, Chengjin and Li, Muzhi and Yang, Cehao and Jiang, Xuhui and Tang, Lumingyuan and Qi, Yiyan and Guo, Jian},
   year         = {2024},
-  booktitle    = {Proceedings of the AAAI Conference on Artificial Intelligence},
-  volume       = {38},
-  number       = {17},
-  pages        = {19632--19642},
-  url          = {https://ojs.aaai.org/index.php/AAAI/article/view/29936},
-  eprint       = {2308.10144},
+  month        = {6},
+  journal      = {arXiv preprint arXiv:2406.11160},
+  url          = {https://arxiv.org/abs/2406.11160},
+  eprint       = {2406.11160},
   archivePrefix = {arXiv},
   primaryClass = {cs.AI},
-  note         = {GitHub: https://github.com/LeapLabTHU/ExpeL}
-}
-
-@inproceedings{xu2025amem,
-  title        = {A-Mem: Agentic Memory for LLM Agents},
-  author       = {Xu, Wujiang and Liang, Zujie and Mei, Kai and Gao, Hang and Tan, Juntao and Zhang, Yongfeng},
-  year         = {2025},
-  booktitle    = {Advances in Neural Information Processing Systems},
-  volume       = {38},
-  publisher    = {Curran Associates, Inc.},
-  url          = {https://openreview.net/forum?id=FiM0M8gcct},
-  eprint       = {2502.12110},
-  archivePrefix = {arXiv},
-  primaryClass = {cs.AI},
-  note         = {NeurIPS 2025, GitHub: https://github.com/WujiangXu/A-mem}
-}
-
-@article{xia2025trainable,
-  title        = {From Experience to Strategy: Empowering LLM Agents with Trainable Graph Memory},
-  author       = {Xia, Siyu and Xu, Zekun and Chai, Jiajun and Fan, Wentian and Song, Yan and Wang, Xiaohan and Yin, Guojun and Lin, Wei and Zhang, Haifeng and Wang, Jun},
-  year         = {2025},
-  month        = {11},
-  journal      = {arXiv preprint arXiv:2511.07800},
-  url          = {https://arxiv.org/abs/2511.07800},
-  eprint       = {2511.07800},
-  archivePrefix = {arXiv},
-  primaryClass = {cs.AI}
-}
-
-@article{zhu2025fail,
-  title        = {Where LLM Agents Fail and How They Can Learn From Failures},
-  author       = {Zhu, Kunlun and Liu, Zijia and Li, Bingxuan and Tian, Muxin and Yang, Yingxuan and Zhang, Jiaxun and Han, Pengrui and Xie, Qipeng and Cui, Fuyang and Zhang, Weijia and Ma, Xiaoteng and Yu, Xiaodong and Ramesh, Gowtham and Wu, Jialian and Liu, Zicheng and Lu, Pan and Zou, James and You, Jiaxuan},
-  year         = {2025},
-  month        = {9},
-  journal      = {arXiv preprint arXiv:2509.25370},
-  url          = {https://arxiv.org/abs/2509.25370},
-  eprint       = {2509.25370},
-  archivePrefix = {arXiv},
-  primaryClass = {cs.AI}
+  note         = {Proposes CGR\textsuperscript{3} (Context Graph Reasoning) paradigm}
 }
 
 @inproceedings{sarthi2024raptor,
@@ -184,4 +151,82 @@
   archivePrefix = {arXiv},
   primaryClass = {cs.CL},
   note         = {Proposes GraphRAG-Bench benchmark}
+}
+
+@inproceedings{zhang2025gor,
+  title        = {Graph of Records: Boosting Retrieval Augmented Generation for Long-context Summarization with Graphs},
+  author       = {Zhang, Haozhen and Feng, Tao and You, Jiaxuan},
+  year         = {2025},
+  booktitle    = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
+  pages        = {23780--23799},
+  address      = {Vienna, Austria},
+  publisher    = {Association for Computational Linguistics},
+  url          = {https://aclanthology.org/2025.acl-long.1159/},
+  doi          = {10.18653/v1/2025.acl-long.1159}
+}
+
+% ===== Memory Evolution: Agent Memory =====
+@inproceedings{zhao2024expel,
+  title        = {ExpeL: LLM Agents Are Experiential Learners},
+  author       = {Zhao, Andrew and Huang, Daniel and Xu, Quentin and Lin, Matthieu and Liu, Yong-Jin and Huang, Gao},
+  year         = {2024},
+  booktitle    = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume       = {38},
+  number       = {17},
+  pages        = {19632--19642},
+  url          = {https://ojs.aaai.org/index.php/AAAI/article/view/29936},
+  eprint       = {2308.10144},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI},
+  note         = {GitHub: https://github.com/LeapLabTHU/ExpeL}
+}
+
+@inproceedings{xu2025amem,
+  title        = {A-Mem: Agentic Memory for LLM Agents},
+  author       = {Xu, Wujiang and Liang, Zujie and Mei, Kai and Gao, Hang and Tan, Juntao and Zhang, Yongfeng},
+  year         = {2025},
+  booktitle    = {Advances in Neural Information Processing Systems},
+  volume       = {38},
+  publisher    = {Curran Associates, Inc.},
+  url          = {https://openreview.net/forum?id=FiM0M8gcct},
+  eprint       = {2502.12110},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI},
+  note         = {NeurIPS 2025, GitHub: https://github.com/WujiangXu/A-mem}
+}
+
+@article{rasmussen2025zep,
+  title        = {Zep: A Temporal Knowledge Graph Architecture for Agent Memory},
+  author       = {Rasmussen, Preston and Paliychuk, Pavlo and Beauvais, Travis and Ryan, Jack and Chalef, Daniel},
+  year         = {2025},
+  journal      = {arXiv preprint arXiv:2501.13956},
+  url          = {https://arxiv.org/abs/2501.13956},
+  eprint       = {2501.13956},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI}
+}
+
+@article{xia2025trainable,
+  title        = {From Experience to Strategy: Empowering LLM Agents with Trainable Graph Memory},
+  author       = {Xia, Siyu and Xu, Zekun and Chai, Jiajun and Fan, Wentian and Song, Yan and Wang, Xiaohan and Yin, Guojun and Lin, Wei and Zhang, Haifeng and Wang, Jun},
+  year         = {2025},
+  month        = {11},
+  journal      = {arXiv preprint arXiv:2511.07800},
+  url          = {https://arxiv.org/abs/2511.07800},
+  eprint       = {2511.07800},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI}
+}
+
+% ===== Failure Learning & Coding Agents =====
+@article{zhu2025fail,
+  title        = {Where LLM Agents Fail and How They Can Learn From Failures},
+  author       = {Zhu, Kunlun and Liu, Zijia and Li, Bingxuan and Tian, Muxin and Yang, Yingxuan and Zhang, Jiaxun and Han, Pengrui and Xie, Qipeng and Cui, Fuyang and Zhang, Weijia and Ma, Xiaoteng and Yu, Xiaodong and Ramesh, Gowtham and Wu, Jialian and Liu, Zicheng and Lu, Pan and Zou, James and You, Jiaxuan},
+  year         = {2025},
+  month        = {9},
+  journal      = {arXiv preprint arXiv:2509.25370},
+  url          = {https://arxiv.org/abs/2509.25370},
+  eprint       = {2509.25370},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI}
 }
