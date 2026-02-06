@@ -1171,25 +1171,47 @@
 \begin{frame}
   \frametitle{实验设计：验证 Context Graph 的价值}
 
-  \begin{block}{数据来源}
-    SWE-bench Lite + SWE-agent (Llama-70B)：\textbf{3,591 条}轨迹
-    \begin{itemize}
-      \item 成功：342 条 (9.5\%)
-      \item 失败：3,249 条 (90.5\%)
-    \end{itemize}
-  \end{block}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{数据来源}
+        SWE-bench Lite + SWE-agent (Llama-70B)
+        \begin{itemize}
+          \item 总轨迹：\textbf{3,591 条}
+          \item 成功：342 条 (9.5\%)
+          \item 失败：3,249 条 (90.5\%)
+        \end{itemize}
+      \end{block}
 
-  \begin{block}{三个实验}
-    \begin{enumerate}
-      \item \textbf{实验 1}：循环检测与量化 — 验证"循环陷阱"假设
-      \item \textbf{实验 2}：失败轨迹图结构化 — 验证 Schema 表达能力
-      \item \textbf{实验 3}：跨轨迹模式匹配 — \textcolor{red}{核心创新}，验证经验迁移可行性
-    \end{enumerate}
-  \end{block}
+      \begin{block}{研究问题}
+        \begin{enumerate}
+          \item Agent 失败的\textbf{主要模式}是什么？
+          \item 这些模式能否用\textbf{图结构}表达？
+          \item 成功经验能否\textbf{迁移}到失败案例？
+        \end{enumerate}
+      \end{block}
+    \end{column}
 
-  \begin{alertblock}{核心问题}
-    Context Graph 能否通过存储成功经验，\textbf{避免 Agent 重复犯错}？
-  \end{alertblock}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{三个实验}
+        \footnotesize
+        \textbf{实验 1}：循环检测与量化\\
+        \textcolor{gray}{→ 全量 3,591 条轨迹，验证循环假设}
+
+        \vspace{0.15cm}
+        \textbf{实验 2}：失败轨迹图结构化\\
+        \textcolor{gray}{→ 100 条失败轨迹，验证 Schema 表达力}
+
+        \vspace{0.15cm}
+        \textbf{实验 3}：跨轨迹模式匹配\\
+        \textcolor{gray}{→ 342 成功 vs 200 失败，验证经验迁移}
+      \end{block}
+
+      \begin{alertblock}{核心假设}
+        Context Graph 存储成功经验\\
+        $\Rightarrow$ 可\textbf{避免 Agent 重复犯错}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
@@ -1345,13 +1367,103 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{典型案例分析：四种失败模式}
+
+  \scriptsize
+  \renewcommand{\arraystretch}{1.2}
+  \centering
+  \begin{tabular}{>{\centering}p{2.8cm}|>{\centering}p{1cm}|>{\centering}p{2.5cm}|>{\centering\arraybackslash}p{4.5cm}}
+    \textbf{案例} & \textbf{步数} & \textbf{失败类型} & \textbf{关键错误} \\
+    \hline
+    \texttt{iterative/dvc-6933} & 226 & 循环陷阱 + 任务误解 & 功能请求当 Bug 修复，陷入超时循环 50+ 次 \\
+    \hline
+    \texttt{aio-libs/aioftp-113} & 6 & 技术知识错误 & \texttt{\%s} 在 strptime 无效，未验证即提交 \\
+    \hline
+    \texttt{mesa-1343} & 30 & 不完整重构 & 遗漏 \texttt{@property} 方法，edit 循环 10+ 次 \\
+    \hline
+    \textcolor{darkgreen}{\texttt{networkx-3848}} & \textcolor{darkgreen}{8} & \textcolor{darkgreen}{成功} & \textcolor{darkgreen}{路径直接：search→open→edit→submit} \\
+  \end{tabular}
+
+  \vspace{0.3cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{失败模式总结}
+        \begin{enumerate}
+          \item \textbf{循环陷阱}：相同命令重复执行
+          \item \textbf{任务误解}：错误理解任务类型
+          \item \textbf{技术错误}：API 知识缺陷
+          \item \textbf{不完整重构}：遗漏关键代码
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{成功 vs 失败的关键差异}
+        \begin{itemize}
+          \item 成功：\textbf{路径直接}，无探索迷失
+          \item 失败：早期偏离 $\rightarrow$ 循环 $\rightarrow$ 越走越远
+          \item \textbf{干预窗口}：前 5--10 步最关键
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{案例深度剖析：循环陷阱的形成}
+
+  \begin{block}{案例：\texttt{iterative/dvc-6933}（226 步，失败）}
+    \textbf{任务}：为 DVC 添加 parallel coordinates plot 功能（\textcolor{red}{功能请求}，非 Bug）
+  \end{block}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{决策链分析}
+        \scriptsize
+        \textbf{步骤 1--3}：创建复现脚本\\
+        \textcolor{red}{$\times$ 错误：这是功能请求，不是 Bug}
+
+        \vspace{0.1cm}
+        \textbf{步骤 4--10}：遇到 pygit2 依赖错误\\
+        \textcolor{red}{$\times$ 错误：尝试 pip install 解决环境问题}
+
+        \vspace{0.1cm}
+        \textbf{步骤 11--50}：反复运行 \texttt{dvc exp show}\\
+        \textcolor{red}{$\times$ 陷入超时循环 40+ 次}
+
+        \vspace{0.1cm}
+        \textbf{步骤 51--226}：创建输出文件、重定向...\\
+        \textcolor{red}{$\times$ 完全偏离正轨}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{核心洞察}
+        Agent \textbf{从未尝试阅读代码}\\或理解如何实现该功能
+
+        \vspace{0.2cm}
+        完全陷入"复现 Bug"的\\固定模式
+      \end{alertblock}
+
+      \begin{block}{CG 干预点}
+        \begin{itemize}
+          \item 第 1 步：识别任务类型
+          \item 第 4 步：检测环境问题
+          \item 第 11 步：循环预警
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
   \frametitle{实验总结：Context Graph 的价值验证}
 
   \begin{block}{三个实验的核心发现}
     \begin{enumerate}
-      \item \textbf{循环是失败的强信号}：检测到循环 $\Rightarrow$ 60\% 概率失败
-      \item \textbf{图结构可表达失败模式}：Schema 能捕获 98\% 的失败原因
-      \item \textbf{跨轨迹匹配可行}：95\% 失败可匹配成功策略，77\% 可早期干预
+      \item \textbf{循环是失败的强信号}：检测到循环 $\Rightarrow$ 60\% 概率失败，3+ 循环 $\Rightarrow$ 8.4x 失败率
+      \item \textbf{图结构可表达失败模式}：Schema 能捕获 98\% 的失败原因（loop\_trap, error\_accumulation, technical\_error）
+      \item \textbf{跨轨迹匹配可行}：95\% 失败可匹配成功策略，77\% 具有中高干预潜力
     \end{enumerate}
   \end{block}
 
@@ -1362,22 +1474,22 @@
         \begin{itemize}
           \item 成功修复策略（Action 序列）
           \item 失败模式（循环、错误累积）
-          \item 任务 $\rightarrow$ 策略映射
+          \item 任务类型 $\rightarrow$ 策略映射
         \end{itemize}
       \end{column}
       \begin{column}{0.48\textwidth}
         \textbf{应提供的能力}
         \begin{itemize}
           \item 实时循环检测与预警
-          \item 策略匹配与推荐
-          \item 分歧点检测与干预
+          \item 策略匹配与下一步推荐
+          \item 分歧点检测与早期干预
         \end{itemize}
       \end{column}
     \end{columns}
   \end{alertblock}
 
   \begin{block}{Schema 增强建议}
-    新增 \texttt{StrategyNode}、\texttt{MATCHES\_STRATEGY} 边、\texttt{SUGGESTS\_NEXT} 边
+    新增 \texttt{StrategyNode}（修复策略模板）、\texttt{MATCHES\_STRATEGY} 边、\texttt{SUGGESTS\_NEXT} 边
   \end{block}
 \end{frame}
 
