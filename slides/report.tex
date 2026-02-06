@@ -31,12 +31,36 @@
 
 % 自定义引用格式
 \DeclareNameAlias{author}{first-last}
+
+% Article 类型
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
   \setunit{\addspace}%
   \printfield{title}%
   \newunit
   \printfield{journaltitle}%
+  \setunit{\addspace}%
+  \printfield{year}%
+}
+
+% Inproceedings 类型（会议论文）
+\DeclareBibliographyDriver{inproceedings}{%
+  \printnames{author}%
+  \setunit{\addspace}%
+  \printfield{title}%
+  \newunit
+  \printfield{booktitle}%
+  \setunit{\addspace}%
+  \printfield{year}%
+}
+
+% Online 类型（在线资源）
+\DeclareBibliographyDriver{online}{%
+  \printnames{author}%
+  \setunit{\addspace}%
+  \printfield{title}%
+  \newunit
+  \printfield{url}%
   \setunit{\addspace}%
   \printfield{year}%
 }
@@ -96,8 +120,8 @@
 
     \tikzstyle{box} = [rectangle, rounded corners=3pt, minimum width=2cm, minimum height=0.7cm, text centered, draw=none, font=\small]
 
-    % 起点
-    \node[box, fill=agentblue!15, font=\small\bfseries] (llm) at (0, 3) {LLM};
+    % 起点（中性色，体现两条路线的共同基石）
+    \node[box, fill=gray!15, font=\small\bfseries] (llm) at (0, 3) {LLM};
 
     % Agent 路线（左）
     \node[box, fill=agentblue!25] (react) at (-4.5, 1.8) {ReAct};
@@ -116,27 +140,27 @@
 
     % 路线标签
     \node[font=\small\bfseries, text=lineblue] at (-4.5, 2.6) {Agent 演进};
-    \node[font=\scriptsize, text=graytext] at (-4.5, 2.3) {如何让 Agent 更聪明？};
+    \node[font=\scriptsize, text=graytext] at (-4.5, 2.3) {从决策过程到经验沉淀};
     \node[font=\small\bfseries, text=linegreen] at (4.5, 2.6) {Memory 演进};
-    \node[font=\scriptsize, text=graytext] at (4.5, 2.3) {如何让记忆更有效？};
+    \node[font=\scriptsize, text=graytext] at (4.5, 2.3) {从静态图到时序图};
 
     % 连线 Agent
     \draw[->, thick, lineblue] (llm) -- (-2, 1.8) -- (react);
     \draw[->, lineblue] (react) -- node[right, font=\scriptsize, text=graytext] {+反思} (reflexion);
-    \draw[->, lineblue] (reflexion) -- node[right, font=\scriptsize, text=graytext] {+搜索} (lats);
-    \draw[->, lineblue] (lats) -- node[right, font=\scriptsize, text=graytext] {+技能库} (voyager);
+    \draw[->, lineblue] (reflexion) -- node[right, font=\scriptsize, text=graytext] {+树搜索} (lats);
+    \draw[->, lineblue] (lats) -- node[right, font=\scriptsize, text=graytext] {+持久化} (voyager);
     \draw[->, thick, lineblue] (voyager) -- (-2, -3.2) -- (cg);
 
     % 连线 Memory
     \draw[->, thick, linegreen] (llm) -- (2, 1.8) -- (rag);
-    \draw[->, linegreen] (rag) -- node[left, font=\scriptsize, text=graytext] {+图结构} (graphrag);
-    \draw[->, linegreen] (graphrag) -- node[left, font=\scriptsize, text=graytext] {+经验学习} (expel);
-    \draw[->, linegreen] (expel) -- node[left, font=\scriptsize, text=graytext] {+时序KG} (zep);
+    \draw[->, linegreen] (rag) -- node[left, font=\scriptsize, text=graytext] {+静态图} (graphrag);
+    \draw[->, linegreen] (graphrag) -- node[left, font=\scriptsize, text=graytext] {+自组织} (expel);
+    \draw[->, linegreen] (expel) -- node[left, font=\scriptsize, text=graytext] {+双时态} (zep);
     \draw[->, thick, linegreen] (zep) -- (2, -3.2) -- (cg);
 
     % 关键注释
-    \node[font=\scriptsize, text=graytext, text width=2.5cm, align=center] at (-1.8, -0.6) {Agent 越复杂\\越需要结构化记忆};
-    \node[font=\scriptsize, text=graytext, text width=2.5cm, align=center] at (1.8, -0.6) {Memory 越高级\\越趋向图结构};
+    \node[font=\scriptsize, text=graytext, text width=2.5cm, align=center] at (-1.8, -0.6) {决策过程\\需要记忆};
+    \node[font=\scriptsize, text=graytext, text width=2.5cm, align=center] at (1.8, -0.6) {记忆组织\\需要图结构};
   \end{tikzpicture}
   \end{center}
 \end{frame}
@@ -431,7 +455,7 @@
   \vspace{0.3cm}
 
   \begin{alertblock}{演进趋势：Agent 越强，越需要结构化记忆}
-    ReAct（无记忆）$\rightarrow$ Reflexion（反思列表）$\rightarrow$ LATS（搜索树）$\rightarrow$ Voyager（技能图谱）$\rightarrow$ \textbf{Context Graph}（结构化知识图）
+    ReAct（无记忆）$\rightarrow$ Reflexion（反思列表）$\rightarrow$ LATS（搜索树）$\rightarrow$ Voyager（扁平技能库）$\rightarrow$ \textbf{Context Graph}（结构化知识图）
   \end{alertblock}
 \end{frame}
 
@@ -541,7 +565,7 @@
     \hline
     \textbf{A-Mem} \cite{xu2025amem} & Zettelkasten 自组织 & 动态链接笔记 & 缺少时序 \\
     \hline
-    \textbf{Zep} \cite{rasmussen2025zep} & 时序知识图谱 & Episode+Entity+Community & $\approx$ Context Graph \\
+    \textbf{Zep} \cite{rasmussen2025zep} & 时序知识图谱 & Episode+Entity+Community & 双时态，最接近 CG \\
   \end{tabular}
 
   \vspace{0.3cm}
@@ -791,12 +815,13 @@
     \end{column}
 
     \begin{column}{0.42\textwidth}
-      \begin{alertblock}{Zep $\approx$ Context Graph}
-        Zep/Graphiti 是目前最接近\\Context Graph 愿景的\textbf{实现}：
+      \begin{alertblock}{Zep 与 Context Graph}
+        Zep/Graphiti 是目前\textbf{最接近}\\Context Graph 愿景的技术实现：
         \begin{itemize}
-          \item Episodic + Semantic 双记忆
-          \item 时序感知的动态更新
-          \item 分层社区组织
+          \item \textcolor{darkgreen}{已解决}：时序感知的动态图
+          \item \textcolor{darkgreen}{已解决}：双记忆层次组织
+          \item \textcolor{red}{待完善}：决策过程建模
+          \item \textcolor{red}{待完善}：因果关系溯源
         \end{itemize}
 
         \vspace{0.1cm}
@@ -894,7 +919,6 @@
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
       \begin{block}{\textcolor{blue}{Agent 路线的 Gap}}
-        \footnotesize
         \begin{itemize}
           \item Reflexion 的反思不持久化
           \item LATS 的搜索树不跨任务
@@ -906,7 +930,6 @@
       \end{block}
 
       \begin{block}{\textcolor{green!50!black}{Memory 路线的 Gap}}
-        \footnotesize
         \begin{itemize}
           \item GraphRAG 是静态的，无 Agent 交互
           \item ExpeL 洞察是列表，缺图结构
@@ -920,7 +943,6 @@
 
     \begin{column}{0.48\textwidth}
       \begin{alertblock}{交汇点：Context Graph for Coding}
-        \footnotesize
         融合两条路线的优势：
         \begin{itemize}
           \item Agent 路线的\textbf{动态交互}能力
@@ -928,11 +950,12 @@
           \item 领域特定的\textbf{Coding 知识}
         \end{itemize}
         \vspace{0.1cm}
-        \textbf{=} 一个能从 Bug 修复经验中\\学习的结构化知识图谱
+        \textbf{核心创新}：代码静态逻辑（AST/Call Graph）\\
+        $\oplus$ 动态决策轨迹（Context Graph）\\
+        \textbf{=} 可生长的 Coding 记忆架构
       \end{alertblock}
 
       \begin{block}{FlexRule 警示 \cite{flexrule2024critique}}
-        \footnotesize
         轨迹是``收据''，不是``食谱''\\
         $\Rightarrow$ CG 需区分\textbf{描述性} vs \textbf{规范性}知识
       \end{block}
@@ -1010,7 +1033,6 @@
     % 为什么选 Bug 修复
     \begin{column}{0.32\textwidth}
       \begin{block}{为什么选 Bug 修复？}
-        \footnotesize
         \begin{itemize}
           \item 最主流的 Coding Agent 任务
           \item 成熟的 benchmark 和 leaderboard
@@ -1019,7 +1041,6 @@
       \end{block}
 
       \begin{alertblock}{CG 能回答}
-        \footnotesize
         \begin{itemize}
           \item 这个 Bug 模式之前见过吗？
           \item 修复类似 Bug 的最优策略是？
@@ -1031,7 +1052,6 @@
     % 当前痛点
     \begin{column}{0.32\textwidth}
       \begin{block}{当前痛点}
-        \footnotesize
         \textbf{1. 成功率}
         \begin{itemize}
           \item 同类 Bug 反复出错
@@ -1055,7 +1075,6 @@
     % CG 如何帮助
     \begin{column}{0.32\textwidth}
       \begin{block}{CG 辅助示例}
-        \footnotesize
         \textbf{问}：这个项目怎么构建？\\
         \textcolor{gray}{答：项目用 gradle 不用 maven}
 
